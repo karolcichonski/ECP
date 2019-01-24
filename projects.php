@@ -3,6 +3,7 @@
 	include 'func.php';
 	require_once('connect.php');
 	is_loged_check();
+	unset_worker_mode();
 	$db_table_name="projects";
 	
 	if(isset($_POST['new_project_name']) and $_SESSION['logged_worker_permissions']>1 )
@@ -28,6 +29,7 @@
 <meta charset="UTF-8">
 <title>ALPHAROB PROJECT PLATFORM</title>
 <link rel="stylesheet" type="text/css" href="mystyle.css">
+<link href="https://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Francois+One&amp;subset=latin-ext" rel="stylesheet"> 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="scripts.js"></script>
@@ -41,19 +43,19 @@
 				<font color="white"  size="7"> offline robots programing </font>
 			</h1>
 		</header>
-		
-		<nav> 
-			<ul class="navigation">
-				<li> <a href="workers.php" >Workers</a></li>
-				<li> <a href="projects.php" >Projects</a></li>
-				<li> <a href="areas.php" >Areas</a></li>
-				<li> <a href="robots.php" >Robots</a></li>
-				<li> <a href="ecp.php" >ECP</a></li>
-				<li> <a href="old_ecp.php" >OLD ECP</a></li>
-				<li> <a href="logout.php"> Log Out: <?php echo $_SESSION['logged_worker_name']." ".$_SESSION['logged_worker_surname']; ?> </a></li>
-			</ul>
-		</nav>
-		
+		<div>
+			<nav> 
+				<ul class="navigation">
+					<li> <a href="workers.php" >Workers</a></li>
+					<li style="background-color:#424242";"> <a href="projects.php" >Projects</a></li>
+					<li> <a href="areas.php" >Areas</a></li>
+					<li> <a href="robots.php" >Robots</a></li>
+					<li> <a href="ecp.php" >ECP</a></li>
+					<li> <a href="old_ecp.php" >OLD ECP</a></li>
+					<li> <a href="logout.php"> Log Out: <?php echo $_SESSION['logged_worker_name']." ".$_SESSION['logged_worker_surname']; ?> </a></li>
+				</ul>
+			</nav>
+		</div>
 		<main>
 			<div id="container">
 				<section>

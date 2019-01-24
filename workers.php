@@ -88,7 +88,7 @@ if(isset($_SESSION['worker_mode']))
 		<div>
 			<nav> 
 				<ul class="navigation">
-					<li> <a href="workers.php" >Workers</a></li>
+					<li style="background-color:#424242";"> <a href="workers.php" >Workers</a></li>
 					<li> <a href="projects.php" >Projects</a></li>
 					<li> <a href="areas.php" >Areas</a></li>
 					<li> <a href="robots.php" >Robots</a></li>
@@ -136,7 +136,7 @@ if(isset($_SESSION['worker_mode']))
 							<div style="clear:both;"></div>
 						</div>
 					</form>
-
+						<div class="form_container">
 							<form method="post" id="Add_form">
 								<div  class="form_row">
 								<label> LOGIN <input type="text" class="form_field" name="new_worker_login" required> </label>
@@ -281,6 +281,7 @@ if(isset($_SESSION['worker_mode']))
 								<input type="submit" value="CHANGE PASSWORD" class="form_button">
 								</div>
 							</form>
+						</div>
 				</section>
 				</div>
 			</div>

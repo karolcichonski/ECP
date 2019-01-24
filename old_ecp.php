@@ -3,6 +3,7 @@
 	include 'func.php';
 	require_once('connect.php');
 	is_loged_check();
+	unset_worker_mode();
 	$db_table_name="old_ecp";
 	
 	$workers_table=Workers_Id_Table();
@@ -49,6 +50,7 @@
 <meta charset="UTF-8">
 <title>ALPHAROB PROJECT PLATFORM</title>
 <link rel="stylesheet" type="text/css" href="mystyle.css">
+<link href="https://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Francois+One&amp;subset=latin-ext" rel="stylesheet"> 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="jquery-3.3.1.min.js"></script>
@@ -73,7 +75,7 @@
 					<li> <a href="areas.php" >Areas</a></li>
 					<li> <a href="robots.php" >Robots</a></li>
 					<li> <a href="ecp.php" >ECP</a></li>
-					<li> <a href="old_ecp.php" >OLD ECP</a></li>
+					<li style="background-color:#424242";"> <a href="old_ecp.php" >OLD ECP</a></li>
 					<li> <a href="logout.php"> Log Out: <?php echo $_SESSION['logged_worker_name']." ".$_SESSION['logged_worker_surname']; ?> </a></li>
 				</ul>
 			</nav>
@@ -84,8 +86,9 @@
 				<section>
 					<div class="form_row">
 						<form method="post">
-							 <label><select class="selector" name="old_ecp_worker">
+							 <label><select class="selector" name="old_ecp_worker" onchange="this.form.submit()">
 								<?php
+								if($_SESSION['logged_worker_permissions']>1){
 								for ($i=0;$i<count($workers_table); $i++){
 									if ($_SESSION['old_ecp_worker']==$workers_table[$i][0]){
 										echo '<option value="'.$workers_table[$i][0].'" selected>'.$workers_table[$i][1]." ".$workers_table[$i][2].'</option>';
@@ -93,11 +96,15 @@
 										echo '<option value="'.$workers_table[$i][0].'">'.$workers_table[$i][1]." ".$workers_table[$i][2].'</option>';
 									}
 								}
+								}else{
+									echo '<option value="'.$_SESSION['logged_worker_id'].'" selected>'.$_SESSION['logged_worker_name']." ".$_SESSION['logged_worker_surname'].'</option>';
+								}
+								
 								?>
 							</select></label>
-								<label><input type="date" class="form_field" name="old_ecp_date_filter1"  value="<?php echo $_SESSION['old_ecp_date_filter3']?>"></label>
-								<label><input type="date" class="form_field" name="old_ecp_date_filter2"  value="<?php echo $_SESSION['old_ecp_date_filter4']?>"></label>
-							<input type="submit" class="form_button" value="FILTER" id="add_button" style="width:60px;">
+								<label><input type="date" class="form_field" name="old_ecp_date_filter1" onchange="this.form.submit()"  value="<?php echo $_SESSION['old_ecp_date_filter3']?>"></label>
+								<label><input type="date" class="form_field" name="old_ecp_date_filter2" onchange="this.form.submit()" value="<?php echo $_SESSION['old_ecp_date_filter4']?>"></label>
+							
 						</form>
 					</div>
 				</section>
@@ -109,7 +116,7 @@
 						$table_title="ECP";
 
 						$table_array=create_table($ecp_table, $table_title, $db_name, $table_headers, $row_number);
-					
+						//import_csv();
 					?>
 				</section>
 			</div>
