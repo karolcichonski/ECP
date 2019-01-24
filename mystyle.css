@@ -155,6 +155,7 @@ form
 	/* background-color:#414141; */
 	align:center;
 	margin:auto;
+
 }
 
 .form_field
@@ -195,7 +196,7 @@ form
 	font-weight:700;
 }
 
-#add_button
+.form_button
 {
 	border: 2px solid white;
 	background-color:gray;
@@ -205,12 +206,41 @@ form
 	margin-top:20px;
 }
 
-#add_button:hover
+
+.form_button:hover
 {
 	background-color:lightgray;
 }
 
+#user_select
+{
+	height:1;
+}
 
+#worker_select
+{
+	display: none;
+}
+
+.mode_select
+{
+	display: inline-block;
+}
+
+#Update_form
+{
+	display: none;
+}
+
+#Delete_form
+{
+	display: none;
+}
+
+#modul_select_form
+{
+	padding:20px;
+}
 
 footer
 {
