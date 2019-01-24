@@ -67,66 +67,77 @@
 				
 				<section>
 					<div id="form">
-					
-						<form method="post">
-							<div class="form_row">
-							<label> PROJECT NAME <input type="text" class="form_field" name="new_project_name" required> </label>				
-							<label> BRAND <input type="text"  class="form_field" name="new_project_brand"> </label>
-							</div>
-							<div class="form_row">
-							<label> SOFTWARE <input type="text" class="form_field" name="new_project_software"> </label>
-							<label> RCS <input type="text" class="form_field" name="new_project_rcs"> </label>
-							<label> ROBOT TYPE<input type="text" class="form_field" name="new_project_robots"> </label>
-							</div>
-							<div class="form_row">
-							<label> TAKT TIME<input type="text" class="form_field" name="new_project_takt"> </label>
-							<label> CUSTOMER<input type="text" class="form_field" name="new_project_customer"> </label>
-							</div>
-							<div class="form_row">
-							<label> MAIN T.<select class="selector" name="new_project_main"> 
-										<option value=0 selected>NO</option>
-										<option value=1>YES</option>
-							</select></label>
-							<label> SERVICE T.<select class="selector" name="new_project_service"> 
-										<option value=0 selected>NO</option>
-										<option value=1>YES</option>
-							</select></label>
-							<label> SIGNALS <select class="selector" name="new_project_signals"> 
-										<option value=0 selected>NO</option>
-										<option value=1>YES</option>
-							</select></label>
-							<label> DOWNLOADS<select class="selector" name="new_project_download"> 
-										<option value=0 selected>NO</option>
-										<option value=1>YES</option>
-							</select></label>
-							<label> MRS/SOP<select class="selector" name="new_project_mrs"> 
-										<option value=0 selected>NO</option>
-										<option value=1>YES</option>
-							</select></label>
-							<label> UPLOAD<select class="selector" name="new_project_upload"> 
-										<option value=0 selected>NO</option>
-										<option value=1>YES</option>
-							</select></label>
-							</div>
-								<?php 
-									if (isset($_SESSION['AddProjectStatusOK'])){
-										echo '<div class="form_success">'.$_SESSION['AddProjectStatusOK'].'</div>';
-										/* sleep(5); */
-										unset($_SESSION['AddProjectStatusOK']);
-										/* header ("Refresh:0"); */
-										}
-									
-									
-									if(isset($_SESSION['AddProjectStatusER'])){
-										echo '<div class="form_error_com">'.$_SESSION['AddProjectStatusER'].'</div>';
-										/* sleep(5); */
-										unset($_SESSION['AddProjectStatusER']);
-										/* header ("Refresh:0"); */
-										}
-								?>
-							<input type="submit" value="ADD PROJECT" class="form_button">
-					
-						</form>
+						<?php 
+							if($_SESSION['logged_worker_permissions']<2)
+							{
+								echo '<div style="display:none;">';
+							}
+							else
+							{
+								echo '<div style="display:block;">';
+							}
+							
+						?>
+							<form method="post">
+								<div class="form_row">
+								<label> PROJECT NAME <input type="text" class="form_field" name="new_project_name" required> </label>				
+								<label> BRAND <input type="text"  class="form_field" name="new_project_brand"> </label>
+								</div>
+								<div class="form_row">
+								<label> SOFTWARE <input type="text" class="form_field" name="new_project_software"> </label>
+								<label> RCS <input type="text" class="form_field" name="new_project_rcs"> </label>
+								<label> ROBOT TYPE<input type="text" class="form_field" name="new_project_robots"> </label>
+								</div>
+								<div class="form_row">
+								<label> TAKT TIME<input type="text" class="form_field" name="new_project_takt"> </label>
+								<label> CUSTOMER<input type="text" class="form_field" name="new_project_customer"> </label>
+								</div>
+								<div class="form_row">
+								<label> MAIN T.<select class="selector" name="new_project_main"> 
+											<option value=0 selected>NO</option>
+											<option value=1>YES</option>
+								</select></label>
+								<label> SERVICE T.<select class="selector" name="new_project_service"> 
+											<option value=0 selected>NO</option>
+											<option value=1>YES</option>
+								</select></label>
+								<label> SIGNALS <select class="selector" name="new_project_signals"> 
+											<option value=0 selected>NO</option>
+											<option value=1>YES</option>
+								</select></label>
+								<label> DOWNLOADS<select class="selector" name="new_project_download"> 
+											<option value=0 selected>NO</option>
+											<option value=1>YES</option>
+								</select></label>
+								<label> MRS/SOP<select class="selector" name="new_project_mrs"> 
+											<option value=0 selected>NO</option>
+											<option value=1>YES</option>
+								</select></label>
+								<label> UPLOAD<select class="selector" name="new_project_upload"> 
+											<option value=0 selected>NO</option>
+											<option value=1>YES</option>
+								</select></label>
+								</div>
+									<?php 
+										if (isset($_SESSION['AddProjectStatusOK'])){
+											echo '<div class="form_success">'.$_SESSION['AddProjectStatusOK'].'</div>';
+											/* sleep(5); */
+											unset($_SESSION['AddProjectStatusOK']);
+											/* header ("Refresh:0"); */
+											}
+										
+										
+										if(isset($_SESSION['AddProjectStatusER'])){
+											echo '<div class="form_error_com">'.$_SESSION['AddProjectStatusER'].'</div>';
+											/* sleep(5); */
+											unset($_SESSION['AddProjectStatusER']);
+											/* header ("Refresh:0"); */
+											}
+									?>
+								<input type="submit" value="ADD PROJECT" class="form_button">
+						
+							</form>
+						</div>
 					</div>
 				</section>
 			</div>

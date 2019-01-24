@@ -276,6 +276,62 @@ function Projects_Id_Table()
 	return $Project_Id_table;
 }
 
+function Get_first_area_in_project($project){
+	require('connect.php');
+	$sql="SELECT id FROM areas WHERE project_id='$project' ORDER BY id ASC LIMIT 1";
+	$result=$db->query($sql);
+	$result_table=$result->fetchAll();
+	if (isset($result_table[0]['id'])){
+		$Area=$result_table[0]['id'];
+	}else{
+		$Area=0;
+	}
+	
+	return $Area;
+}
+
+function Get_first_robot_in_area($area){
+	require('connect.php');
+	$sql="SELECT id FROM robots WHERE area_id='$area' ORDER BY id ASC LIMIT 1";
+	$result=$db->query($sql);
+	$result_table=$result->fetchAll();
+	if (isset($result_table[0]['id'])){
+		$Robot=$result_table[0]['id'];
+	}else{
+		$Robot=0;
+	}
+	
+	return $Robot;
+}
+
+function Get_last_area_in_project($project){
+	require('connect.php');
+	$sql="SELECT id FROM areas WHERE project_id='$project' ORDER BY id DESC  LIMIT 1";
+	$result=$db->query($sql);
+	$result_table=$result->fetchAll();
+	if (isset($result_table[0]['id'])){
+		$Area=$result_table[0]['id'];
+	}else{
+		$Area=0;
+	}
+	
+	return $Area;
+}
+
+function Get_last_project_id(){
+	require('connect.php');
+	$sql="SELECT id FROM projects ORDER BY id DESC LIMIT 1";
+	$result=$db->query($sql);
+	$result_table=$result->fetchAll();
+	if (isset($result_table[0]['id'])){
+		$Project=$result_table[0]['id'];
+	}else{
+		$Project=0;
+	}
+	
+	return $Project;
+}
+
 //generate assotiative table where id is name 
 function Areas_Id_aTable()
 {
@@ -317,6 +373,45 @@ function Areas_Id_Table($selected_project)
 	}
 }
 
+function Robots_Id_aTable()
+{
+	require('connect.php');
+	$sql="SELECT * FROM robots ORDER BY id ASC";
+	$result=$db->query($sql);
+	$RobotsID=$result->fetchAll();
+	
+	for ($i=0; $i<count($RobotsID); $i++ )
+	{
+		$Robots_Id_table[$RobotsID[$i]['id']]=$RobotsID[$i]['name'];
+	}
+	if (isset($Robots_Id_table)){
+		return $Robots_Id_table;
+	}else{
+		$Robots_Id_table=array();
+		return $Robots_Id_table;
+	}
+	
+}
+
+function Robots_Id_Table($area)
+{
+	require('connect.php');
+	$sql="SELECT * FROM robots WHERE area_id='{$area}' ORDER BY id ASC";
+	$result=$db->query($sql);
+	$RobotsID=$result->fetchAll();
+	
+	for ($i=0; $i<count($RobotsID); $i++ )
+	{
+		$Robots_Id_table[$i]=array($RobotsID[$i]['id'],$RobotsID[$i]['name']);
+	}
+	
+	if (isset($Robots_Id_table)){
+		return $Robots_Id_table;
+	}else{
+		$Robots_Id_table=array();
+		return $Robots_Id_table;
+	}
+}
 
 class Worker
 {
@@ -583,13 +678,47 @@ function add_area(){
 	$new_area= new Area;
 	//$new_worker->correct_data_flag=true;
 	//$new_worker->errors_drscriptions="";
-	$new_area->project_id=$_POST['project_id_add_area'];
+	$new_area->project_id=$_SESSION['area_selected_project'];
 	$new_area->name=$_POST['add_area_name'];
 	$new_area->part=$_POST['add_area_part'];
 	$new_area->numbers_of_robots=$_POST['add_num_robots'];
 	
 	$new_area->insert_area_to_db();
 
+}
+
+function add_robot(){
+	$new_robot= new Robot;
+	//$new_worker->correct_data_flag=true;
+	//$new_worker->errors_drscriptions="";
+	$new_robot->name=$_POST['add_robot_name'];
+	$new_robot->brand=$_POST['add_robot_brand'];
+	$new_robot->project_id=$_SESSION['robot_selected_project'];
+	$new_robot->area_id=$_SESSION['robot_selected_area'];
+	$new_robot->tasks=$_POST['add_robot_tasks'];
+	$new_robot->seventh_axis=$_POST['add_robot_seventh_axis'];
+	$new_robot->type=$_POST['add_robot_type'];
+	
+	$new_robot->insert_robot_to_db();
+
+}
+
+function add_ecp(){
+	$new_ecp= new ECP_record;
+	$new_ecp->set_start_time();
+	$new_ecp->set_end_time();
+	$new_ecp->set_sum_time();
+	$new_ecp->set_worker();
+	$new_ecp->place=$_POST['ecp_place'];
+	$new_ecp->project=$_SESSION['ecp_selected_project'];
+	$new_ecp->area=$_SESSION['ecp_selected_area'];
+	$new_ecp->robot=$_SESSION['ecp_selected_robot'];
+	$new_ecp->op_time=$_POST['ecp_time'];
+	$new_ecp->set_AH();
+	$new_ecp->work_type=$_POST['ecp_type_of_work'];
+	$new_ecp->description=$_POST['ecp_description'];
+	$new_ecp->insert_ecp_to_db();
+	
 }
 
 class Project{
@@ -651,13 +780,108 @@ class Area{
 		}
 		
 		if ($db->errorCode()==0){
-				$_SESSION['AddAreaStatusOK']="Project added successfully";
+				$_SESSION['AddAreaStatusOK']="Area added successfully";
 		}
-			
-		//Header("Location: projects.php");
-		$_POST = array();
+	}
+}
+
+class Robot{
+	private $id;
+	public $name;
+	public $brand;
+	public $project_id;
+	public $area_id;
+	public $tasks;
+	public $seventh_axis;
+	public $type;
+	
+	public function insert_robot_to_db()
+	{
+		require('connect.php');
+		$this->id="null";
+		$sql="INSERT INTO robots VALUES ('$this->id', '$this->name', '$this->brand', '$this->project_id','$this->area_id','$this->tasks','$this->seventh_axis','$this->type')";
+
+		try{
+		$db->query($sql);
+		}catch(PDOException $error){	
+			$_SESSION['AddRobotStatusER']=$error->getMessage();
+		}
+		
+		if ($db->errorCode()==0){
+				$_SESSION['AddRobotStatusOK']="Robot added successfully";
+		}
 	}
 	
 	
 }
-?>
+
+class ECP_record{ 
+	private $id;
+	private $worker;
+	private $start_time;
+	private $end_time;
+	private $sum_time;
+	public $place;
+	public $project;
+	public $area;
+	public $robot;
+	public $op_time;
+	public $additional_hour;
+	public $work_type;
+	public $decription;
+	private $start_timestamp;
+	private $end_timestamp;
+	
+	
+	public function set_start_time(){
+		$Starttime= $_POST['ecp_date']." ".$_POST['ecp_starttime'];
+		$newStarttime= new DateTime($Starttime);
+		$this->start_time=$newStarttime;
+		$this->start_time=$newStarttime->format('U');
+		echo $this->start_time;
+	}
+	public function set_end_time(){
+		$Endtime= $_POST['ecp_date']." ".$_POST['ecp_endtime'];
+		$newEndtime= new DateTime($Endtime);
+		$this->end_time=$newEndtime;
+		$this->end_time=$newEndtime->format('U');
+		echo $this->end_time;
+				
+	}
+	public function set_worker(){
+		$this->worker=$_SESSION['logged_worker_id'];
+	}
+	
+	public function set_sum_time(){
+		if (isset($start_timestamp) && isset($end_timestamp)){
+			$this->sum_time=($this->end_time-$this->start_time)/60;
+		}
+	}
+	
+	public function set_AH(){
+		if(isset($_POST['ecp_additionalhours'])){
+			$this->additional_hour=1;
+		}else {
+			$this->additional_hour=0;
+		}
+	}
+	
+	public function insert_ecp_to_db()
+	{
+		require('connect.php');
+		$this->id="null";
+		$sql="INSERT INTO ecp VALUES ('$this->id', '$this->worker', '$this->start_time', '$this->end_time','$this->sum_time','$this->place',
+		'$this->project','$this->area','$this->robot','$this->op_time','$this->additional_hour','$this->work_type','$this->description')";
+
+		try{
+		$db->query($sql);
+		}catch(PDOException $error){	
+			$_SESSION['AddECPStatusER']=$error->getMessage();
+		}
+		
+		if ($db->errorCode()==0){
+				$_SESSION['AddECPStatusOK']="ECP record added successfully";
+		}
+	}
+	
+}

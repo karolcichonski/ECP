@@ -200,9 +200,30 @@ footer
 	padding:5px;
 }
 
+#mode_selector_cont
+{
+width:808px;
+margin-left:auto;
+margin-right:auto;
+border-right: 2px solid white;
+}
+
 .mode_select
 {
-	display: inline-block;
+	/*display: inline-block;*/
+	background-color:#595959;
+	color:white;
+	border-left: 2px solid white;
+	border-top: 2px solid white;
+	border-bottom: 2px solid white;
+	width:200px;
+	float:left;
+	/*padding:5px 0px;*/
+}
+
+.mode_select:hover
+{
+	background-color: #808080;
 }
 
 #errors_panel
@@ -218,6 +239,7 @@ footer
 #Update_form
 {
 	display: none;
+	/*border: 1px solid white;*/
 }
 
 #Delete_form
@@ -254,4 +276,9 @@ footer
 	padding:20px 2px;
 	float:left;
 	/* border: 2px solid white; */
+}
+
+
+.ecp_filter_form{
+	display:inline;
 }

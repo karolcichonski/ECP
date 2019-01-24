@@ -48,6 +48,7 @@
 <title>ALPHAROB PROJECT PLATFORM</title>
 <link rel="stylesheet" type="text/css" href="mystyle.css">
 <link href="https://fonts.googleapis.com/css?family=Francois+One&amp;subset=latin-ext" rel="stylesheet"> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="scripts.js"></script>
 
 </head>
@@ -71,10 +72,10 @@ if(isset($_SESSION['worker_mode']))
 	}
 	
 }
-elseif(!isset($_SESSION['worker_mode']))
+/* elseif(!isset($_SESSION['worker_mode']))
 {
 	echo '<body onload="add_worker_selected()">';
-}
+} */
 ?>	
 
 		<header>
@@ -124,12 +125,17 @@ elseif(!isset($_SESSION['worker_mode']))
 						}
 						
 					?>
-						<form method="post" id="modul_select_form">
-							<div class="mode_select"><label><input type="radio" onclick="add_worker_selected()" id="worker_add" name="form_action"> Add new worker </label></div>
-							<div class="mode_select"><label><input type="radio" onclick="update_worker_selected()" id="worker_update" name="form_action"> Updadte worker</label></div>
-							<div class="mode_select"><label><input type="radio" onclick="delete_worker_selected()" id="worker_delete" name="form_action"> Delete worker</label></div>
-							<div class="mode_select"><label><input type="radio" onclick="change_password_selected()" id="change_password" name="form_action"> Change password</label></div>
-						</form>
+					
+					<form method="post" id="modul_select_form">
+						<div id="mode_selector_cont">
+							<div class="mode_select"><label><input type="radio"  onclick="add_worker_click()" id="worker_add" name="form_action"> Add new worker </label></div>
+							<div class="mode_select"><label><input type="radio"  onclick="update_worker_click()" id="worker_update" name="form_action"> Updadte worker  </label></div>
+							<div class="mode_select"><label><input type="radio"  onclick="delete_worker_click()" id="worker_delete" name="form_action"> Delete worker  </label></div>
+							<div class="mode_select"><label><input type="radio"  onclick="change_password_click()" id="change_password" name="form_action"> Change password  </label></div>
+							<div style="clear:both;"></div>
+						</div>
+					</form>
+
 							<form method="post" id="Add_form">
 								<div  class="form_row">
 								<label> LOGIN <input type="text" class="form_field" name="new_worker_login" required> </label>
@@ -187,7 +193,7 @@ elseif(!isset($_SESSION['worker_mode']))
 									</select></label>
 								</div>
 								<div  class="form_row">
-								<label> NAME <input type="text" class="form_field" name="update_worker_name" id="WorkerNameField"> </label>				
+								<label> NAME <input type="text" class="form_field" name="update_worker_name"> </label>				
 								<label> SURNAME <input type="text"  class="form_field" name="update_worker_surname"> </label>
 								<label> E-MAIL <input type="email" class="form_field" name="update_worker_email"> </label>
 								</div>
@@ -209,7 +215,7 @@ elseif(!isset($_SESSION['worker_mode']))
 									}
 								?>
 								
-								<input type="submit" value="UPDATE WORKER" id="delete_button" class="form_button">
+								<input type="submit" value="UPDATE WORKER"  class="form_button">
 							</form>
 							
 							<form method="post" id="Delete_form">
@@ -234,7 +240,7 @@ elseif(!isset($_SESSION['worker_mode']))
 										unset($_SESSION['DeleteStatusER']);
 									}
 								?>
-								<input type="submit" value="DELETE WORKER" id="delete_button" class="form_button">
+								<input type="submit" value="DELETE WORKER" class="form_button">
 								</div>
 							</form>
 							
@@ -271,13 +277,11 @@ elseif(!isset($_SESSION['worker_mode']))
 									} */
 								?>
 								
-								<input type="submit" value="CHANGE PASSWORD" id="delete_button" class="form_button">
+								<input type="submit" value="CHANGE PASSWORD" class="form_button">
 								</div>
 							</form>
-							
-							
-					</div>
 				</section>
+				</div>
 			</div>
 		</main>
 		<footer>
