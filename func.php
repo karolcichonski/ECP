@@ -914,7 +914,7 @@ function import_csv(){
 require('connect.php');
 $row = 0;
 $dummy_ecp_table=array();
-$uchwyt = fopen ("bazy/ECP_DOLINSKI.csv","r");
+$uchwyt = fopen ("bazy/ECP_BUGDOL.csv","r");
 while (($data=fgetcsv($uchwyt, 5000, ";"))!==false)
 {
 	$num = count($data);
@@ -925,7 +925,7 @@ fclose ($uchwyt);
 
 for($i=1; $i<=count($dummy_ecp_table); $i++){
 	if($dummy_ecp_table[$i][6]!=""){
-		$worker= 7;
+		$worker= 4;
 		$starttime= $dummy_ecp_table[$i][0]." ".$dummy_ecp_table[$i][7];
 		$endtime= $dummy_ecp_table[$i][0]." ".$dummy_ecp_table[$i][8];
 		$TS_Start= new DateTime($starttime);

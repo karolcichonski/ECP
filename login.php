@@ -44,7 +44,7 @@
 					
 					//$result->free_result();
 					/* echo $logged_user->name; */
-					header('Location: workers.php');
+					header('Location: ecp.php');
 				}
 				else
 				{

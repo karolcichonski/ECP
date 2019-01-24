@@ -125,9 +125,16 @@
 				
 				?>
 				</section>
-				
-				<form method="post">
-					<div id="form">
+				<form method="post" id="modul_select_form" >
+					<div class="mode_selector_3">
+						<div class="mode_select" onclick="add_click()" id="worker_add" name="form_action">Add robot</div>
+						<div class="mode_select" onclick="update_click()" id="worker_update" name="form_action"> Update robot </div>
+						<div class="mode_select" onclick="delete_click()" id="worker_delete" name="form_action"> Delete robot  </div>
+						<div style="clear:both;"></div>
+					</div>
+				</form>
+				<div id="form_container">
+					<form method="post">
 						<div class="form_row">
 							<form method="post" class="ecp_filter_form">
 								<label> PROJECT <select name="ecp_selected_project" class="selector" onchange="this.form.submit()">
@@ -228,8 +235,8 @@
 						?>
 						<input type="submit" class="form_button" value="ADD TO EPC" id="add_button">
 						<?php /*echo import_csv();*/?> 
-					</div>
-				</form>
+					</form>
+				</div>
 			</div>
 		</main>
 		<footer>
