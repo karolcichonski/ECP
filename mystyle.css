@@ -207,7 +207,6 @@ select:focus{
 	padding-left:10px;
 	padding-right:10px;
 	max-width:250px;
-	user-select: none;
 }
 .table_column:hover
 {
@@ -219,7 +218,6 @@ select:focus{
 	text-align:center;
 	font-size:14px;
 	color:black;
-	user-select: none;
 }
 
 .table_row:hover{
@@ -455,7 +453,9 @@ select:focus{
 	margin-left:auto; 
 	margin-right:auto;
 	/* background-color:rgba(255, 255, 255, 0.2); */
-	background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0.1) 100%);
+	background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 0%, rgba(125, 125, 125, 0.2) 100%);
+	margin-top:20px;
+	margin-bottom:20px;
 }
 
 .single_graph_bar{
@@ -484,10 +484,14 @@ h3{
 	margin:0px;
 }
 .graph_header{
-	background-color:rgba(255, 255, 255, 0.2);
+	background-color:rgba(255, 255, 255, 0.1);
 	border-top-left-radius:10px;
 	border-top-right-radius:10px;
 	padding:10px;
+}
+
+.graph_header:hover{
+	background-color:rgba(255, 153, 0, 0.1);
 }
 
 .graph_container{
@@ -496,4 +500,15 @@ h3{
 	margin:20px;
 	width:650px;
 	text-align:right;
+}
+
+.no_border_table{
+	margin-left:auto; 
+	margin-right:auto; 
+	border: 0px solid black;
+	border-collapse: collapse;
+}
+
+.summary_module{
+	display:none;
 }

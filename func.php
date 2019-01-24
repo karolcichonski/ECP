@@ -342,7 +342,7 @@ function Get_last_project_id(){
 function Areas_Id_aTable()
 {
 	require('connect.php');
-	$sql="SELECT * FROM areas ORDER BY id ASC";
+	$sql="SELECT * FROM areas ORDER BY name ASC";
 	$result=$db->query($sql);
 	$AreasID=$result->fetchAll();
 	
@@ -362,7 +362,7 @@ function Areas_Id_aTable()
 function Areas_Id_Table($selected_project)
 {
 	require('connect.php');
-	$sql="SELECT * FROM areas WHERE project_id='{$selected_project}'  ORDER BY id ASC";
+	$sql="SELECT * FROM areas WHERE project_id='{$selected_project}'  ORDER BY name ASC";
 	$result=$db->query($sql);
 	$AreasID=$result->fetchAll();
 	
@@ -382,7 +382,7 @@ function Areas_Id_Table($selected_project)
 function Robots_Id_aTable()
 {
 	require('connect.php');
-	$sql="SELECT * FROM robots ORDER BY id ASC";
+	$sql="SELECT * FROM robots ORDER BY name ASC";
 	$result=$db->query($sql);
 	$RobotsID=$result->fetchAll();
 	
@@ -402,7 +402,7 @@ function Robots_Id_aTable()
 function Robots_Id_Table($area)
 {
 	require('connect.php');
-	$sql="SELECT * FROM robots WHERE area_id='{$area}' ORDER BY id ASC";
+	$sql="SELECT * FROM robots WHERE area_id='{$area}' ORDER BY name ASC";
 	$result=$db->query($sql);
 	$RobotsID=$result->fetchAll();
 	
@@ -1107,7 +1107,7 @@ $workers_table=Workers_Id_Table();
 
 $sql="SELECT * FROM areas WHERE project_id=".$projectID;
 $num_of_areas=how_many_in_db1($sql);
-$sql="SELECT * FROM robots WHERE project_id=".$projectID;
+$sql="SELECT * FROM robots WHERE project_id=".$projectID." ORDER BY name ASC;";
 $num_of_robots=how_many_in_db1($sql);
 
 $sql_old_ecp="SELECT * FROM old_ecp WHERE project LIKE '%".$project_name."%'";
@@ -1135,11 +1135,15 @@ for ($i=0; $i<count($workers_table); $i++){
 	}		
 }
 
+
+echo '<div class="summary_graph" >';
+$module_jq_name="summary_module1";
+echo "<div class='graph_header' onclick='toggle_summary($module_jq_name)'>";
+echo "<h3>Project $project_name overview</h3>";
+echo "</div>";
+echo '<div id="summary_module1" style:"display:none;" class="summary_module">';
 echo<<<END
 <table id="table">
-<tr bgcolor="#555555">
-<th colspan="$colspan_num">$project_name</th>
-</tr>
 <tr bgcolor="#666666">
 END;
 for ($i=0;$i<$column_number; $i++)
@@ -1234,9 +1238,11 @@ if ($num_of_robots!=0 && $sum_day_array[0][1]!=0){
 	echo '<td colspan=6>No data</td>';	
 }
 echo '</tr>';	
-workers_time_tasks_array($projectID);
 echo '</table><br/></br>';
+echo '</div>';
+echo '</div>';
 
+workers_time_tasks_array($projectID);
 }
 
 function workers_time_tasks_array($projectID){
@@ -1256,7 +1262,6 @@ function workers_time_tasks_array($projectID){
 		$work_sum_table[$num_workers+1][0]="SUM";
 		$work_sum_table[$num_workers+2][0]="%";
 		for ($i=0;$i<$num_workers;$i++){
-			//echo $workers_table[$i][0]."</br>";
 				$work_sum_table[$i+1][0]=$workers_array[$workers_table[$i][0]];
 			for($j=0; $j<$num_of_work_type;$j++){
 				$sql="SELECT SUM(operation_time) FROM ecp WHERE project_id=$projectID AND worker_id=".$workers_table[$i][0]." AND type_of_work='".$work_type[$j]."'";
@@ -1279,40 +1284,42 @@ function workers_time_tasks_array($projectID){
 	}
 	
 	if ($num_workers>0){
-		$tempsum=0;
 		for($i=1; $i<=$num_of_work_type; $i++ ){
 			if ($sum_time_on_project!=0){
 				$work_sum_table[$num_workers+2][$i]=round(($work_sum_table[$num_workers+1][$i]/$sum_time_on_project)*100,1);
-				$tempsum=$tempsum+$work_sum_table[$num_workers+2][$i];
 			}else{
 				$work_sum_table[$num_workers+2][$i]=0;
 			}
 		}
-		echo $tempsum;
-		
-		echo '<br/></br>';
-		echo '<table id="table">';
-		echo '<tr bgcolor="#555555">';
-		echo '<th colspan='.($num_workers+3).'>Hours per tasks</th>';
-		echo '</tr>';
+		echo '<div class="summary_graph">';
+		$module_jq_name="summary_module2";
+		echo '<div class="graph_header" onclick="toggle_summary('.$module_jq_name.')"><h3>Hours per tasks</h3></div>';
+		echo '<div id="summary_module2" class="summary_module">';
+		echo '<table class="no_border_table" >';
 		echo '<tr></tr>';
 			for($j=0; $j<=$num_of_work_type;$j++){
-				echo '<tr class="table_row" bgcolor="#BBBBBB">';
-				for ($i=0;$i<=$num_workers+2;$i++){	
-						echo "<td>";
-						echo $work_sum_table[$i][$j];
-						echo "</td>";
+					echo '<tr>';
+				for ($i=0;$i<=$num_workers+1;$i++){	
+					if($j%2!=0){
+						echo '<td>';
+					}else{
+						echo '<td style="background-color:rgba(255, 255, 255,0.05);">';
+					}
+					echo $work_sum_table[$i][$j];
+					echo "</td>";
 						
 			}
 			echo "</tr>";
 		}
-		echo '<tr bgcolor="#555555">';
-		echo '<th colspan='.($num_workers+3).'>Sum time on project [h]</th>';
+		echo '<tr>';
+		echo '<th colspan='.($num_workers+2).' style="background-color:rgba(153, 204, 0,0.2);" >Sum time on project [h]</th>';
 		echo '</tr>';
-		echo '<tr class="table_row" bgcolor=#BBBBBB>';
-		echo '<th colspan='.($num_workers+3).'>'.$sum_time_on_project.'</th>';
+		echo '<tr>';
+		echo '<th colspan='.($num_workers+2).' style="background-color:rgba(153, 204, 0,0.2);">'.$sum_time_on_project.'</th>';
 		echo '</tr>';
 		echo '</table><br/></br>';
+		echo '</div>';
+		echo '</div>';
 	}
 	$row_num=0;
 	for($i=1; $i<=$num_of_work_type;$i++){
@@ -1323,22 +1330,21 @@ function workers_time_tasks_array($projectID){
 		}
 	}
 
-	array_multisort($percentage_table1,SORT_DESC,  $percentage_table0);
+	
 
-	if(isset($percentage_table1))create_graph($percentage_table0,$percentage_table1 );
-	
-	
-	//$workers_table=Workers_Id_Table();
-	//for ($i=0; $i)
-	//$sql_old_ecp="SELECT * FROM old_ecp WHERE project LIKE '%".$project_name."%' and worker=".$workers_table[$i][0]."";
+	if(isset($percentage_table1)){
+		array_multisort($percentage_table1,SORT_DESC,  $percentage_table0);
+		create_graph($percentage_table0,$percentage_table1 );
+	}
 }
 
 function create_graph($table_name, $table_percentage){
 echo "<div class='summary_graph'>";
-echo "<div class='graph_header' >";
+$module_jq_name="summary_module3";
+echo "<div class='graph_header' onclick='toggle_summary($module_jq_name)'>";
 echo "<h3>Summary graph</h3>";
 echo "</div>";
-echo "<div class='graph_container'>";
+echo "<div id='summary_module3' class='summary_module graph_container '>";
 echo "100%";
  for($i=0; $i<count($table_name);$i++){
 	echo "<div class='single_graph_comment'>".$table_name[$i].": ".$table_percentage[$i]."% </div>";

@@ -200,31 +200,32 @@
 									</form>
 								</div>
 								<div id="mode4" class="single_mode_container" style="min-height:700px;">
-									<form method="post">
-										<label> PROJECT <select name="summary_selected_project" class="selector" style="width:200px; margin-top:20px;">
-											<?php
-												
-												for($i=0; $i<count($project_id_table); $i++)
-												{
-													if($_SESSION['summary_selected_project']==$project_id_table[$i][1]){
-														echo '<option value="'.$project_id_table[$i][1].'" selected>'.$project_id_table[$i][1].'</option>';
-													}else{
-														echo '<option value="'.$project_id_table[$i][1].'">'.$project_id_table[$i][1].'</option>';	
+									<div>
+										<form method="post">
+											<label> PROJECT <select name="summary_selected_project" class="selector" onchange="this.form.submit()" style="width:200px; margin-top:20px;">
+												<?php
+													
+													for($i=0; $i<count($project_id_table); $i++)
+													{
+														if($_SESSION['summary_selected_project']==$project_id_table[$i][1]){
+															echo '<option value="'.$project_id_table[$i][1].'" selected>'.$project_id_table[$i][1].'</option>';
+														}else{
+															echo '<option value="'.$project_id_table[$i][1].'">'.$project_id_table[$i][1].'</option>';	
+														}
 													}
-												}
-											
-											?>
-										</select></label>
-																
-										<input type="submit" value="Generate Summary" class="form_button" style="width:200px;"></input>
-									</form>
-									<?php 
-										if(isset($_SESSION['summary_selected_project'])){
-											create_summary_table($summary_table, $projectID);
-											unset($_SESSION['summary_selected_project']);
-										}
-									?>
-									
+												
+												?>
+											</select></label>
+																	
+
+										</form>
+									</div>
+										<?php 
+											if(isset($_SESSION['summary_selected_project'])){
+												create_summary_table($summary_table, $projectID);
+												unset($_SESSION['summary_selected_project']);
+											}
+										?>
 								</div>
 							</div>
 						</div>

@@ -72,6 +72,10 @@ function hide_table(){
 	}
 }
 
+function toggle_summary(module_name){
+	$(document).ready(function(){$(module_name).toggle(200);});
+}
+
 function StickyNavigation()
 {
 	$(document).ready(function() {
