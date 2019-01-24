@@ -20,6 +20,11 @@
 		add_area();
 	}
 	
+	if (isset($_POST['record_to_remove'])){
+		remove_record_in_db($_POST['record_to_remove'], "areas");
+		unset($_POST['record_to_remove']);
+	}
+	
 	$sql="SELECT*FROM {$db_table_name} WHERE project_id={$_SESSION['area_selected_project']} ORDER BY id ASC";
 	
 	
@@ -51,7 +56,7 @@
 <script src="scripts.js"></script>
 </head>
 
-<body>
+<body onload='onload_module(3,"area_mode_number")'>
 		<header>
 			<h1 id="logo"> 
 				<font color="#cc3333" size="7">alpha </font>
@@ -117,45 +122,66 @@
 						}
 						
 					?>
-						<form method="post" id="modul_select_form" >
-							<div class="mode_selector_container">
-								<div class="mode_select" onclick="add_click()" id="add_module" name="form_action">Add area</div>
-								<div class="mode_select" onclick="update_click()" id="update_module" name="form_action"> Update area </div>
-								<div class="mode_select mode_select_last" onclick="delete_click()" id="delete_module" name="form_action"> Delete area  </div>
-							</div>
-						</form>
-							
+					<div>
+						<ul class="mode_navigation">
+							<li onclick='module_nav_click(1,3,"area_mode_number")' id="mode_butt_1">Add area</li>
+							<li onclick='module_nav_click(2,3,"area_mode_number")' id="mode_butt_2">Update area</li>
+							<li onclick='module_nav_click(3,3,"area_mode_number")' id="mode_butt_3">Delete area</li>
+						</ul>
+					</div>
 						<div class="form_container" >
-							<form method="post" id="Add_form">
-								<div class="form_row">
-								<label> AREA NAME <input type="text"  class="form_field" name="add_area_name" required> </label>
-								<label> PART <input type="text"  class="form_field" name="add_area_part"> </label>
-								<label> NUMBER OF ROBOTS <input type="number"  class="add_form_field" name="add_num_robots"> </label>
-								</div>
-									<?php 
-										if (isset($_SESSION['AddAreaStatusOK'])){
-											echo '<div class="form_success">'.$_SESSION['AddAreaStatusOK'].'</div>';
-											/* sleep(5); */
-											unset($_SESSION['AddAreaStatusOK']);
-											/* header ("Refresh:0"); */
+							<div id="mode1" class="single_mode_container">
+								<form method="post">
+									<div class="form_row">
+									<label> AREA NAME <input type="text"  class="form_field" name="add_area_name" required> </label>
+									<label> PART <input type="text"  class="form_field" name="add_area_part"> </label>
+									<label> NUMBER OF ROBOTS <input type="number"  class="form_field" name="add_num_robots"> </label>
+									</div>
+										<?php 
+											if (isset($_SESSION['AddAreaStatusOK'])){
+												echo '<div class="form_success">'.$_SESSION['AddAreaStatusOK'].'</div>';
+												/* sleep(5); */
+												unset($_SESSION['AddAreaStatusOK']);
+												/* header ("Refresh:0"); */
+												}
+											
+											
+											if(isset($_SESSION['AddAreaStatusER'])){
+												echo '<div class="form_error_com">'.$_SESSION['AddAreaStatusER'].'</div>';
+												/* sleep(5); */
+												unset($_SESSION['AddAreaStatusER']);
+												/* header ("Refresh:0"); */
+												}
+										?>
+									<input type="submit" value="ADD AREA " id="add_area_button" class="form_button">
+								</form>
+							</div>
+							<div id="mode2" class="single_mode_container">
+								<form method="post">
+									update test
+								</form>
+							</div>
+							<div id="mode3" class="single_mode_container">
+									<form method="post">
+									<label> LP <select name="record_to_remove" class="selector">
+									<?php
+										for($i=0; $i<$row_number; $i++){
+											echo '<option value="'.$areas_table[$i]["id"].'">'.($i+1).'</option>';
+										}
+										echo "</select></label>";
+										if (isset($_SESSION['RemoveRecordOK'])){
+											echo '<div class="form_success">'.$_SESSION['RemoveRecordOK'].'</div>';
+											unset($_SESSION['RemoveRecordOK']);
 											}
-										
-										
-										if(isset($_SESSION['AddAreaStatusER'])){
-											echo '<div class="form_error_com">'.$_SESSION['AddAreaStatusER'].'</div>';
-											/* sleep(5); */
-											unset($_SESSION['AddAreaStatusER']);
-											/* header ("Refresh:0"); */
+
+										if(isset($_SESSION['RemoveRecordErr'])){
+											echo '<div class="form_error_com">'.$_SESSION['RemoveRecordErr'].'</div>';
+											unset($_SESSION['RemoveRecordErr']);
 											}
 									?>
-								<input type="submit" value="ADD AREA " id="add_area_button" class="form_button">
-							</form>
-							<form method="post" id="Update_form">
-								update test
-							</form>
-							<form method="post" id="Delete_form">
-								delete test
-							</form>
+									<input type="submit" class="form_button" value="REMOVE" style="width:100px;" ></input>
+								</form>
+							</div>
 						</div>
 					</div>
 				</section>

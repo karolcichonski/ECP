@@ -168,7 +168,7 @@ select:focus{
 
 .mode_navigation>li:hover
 {
-	border:3px solid #888888;
+	border:2px solid #888888;
 	background-color: #888888;
 	border-color:white;
 	cursor:pointer;
@@ -206,6 +206,12 @@ select:focus{
 	padding-left:10px;
 	padding-right:10px;
 	max-width:250px;
+	user-select: none;
+
+}
+.table_column:hover
+{
+	coursor:deafult;
 }
 
 .table_row
@@ -213,6 +219,11 @@ select:focus{
 	text-align:center;
 	font-size:14px;
 	color:black;
+	user-select: none;
+}
+
+.table_row:hover{
+	coursor:deafult;
 }
 
 #form
@@ -259,8 +270,9 @@ select:focus{
 
 .form_button
 {
-	border: 2px solid white;
-	background-color:gray;
+	border: 2px solid black;
+	background-color:#595959;
+	color:white;
 	font-weight:700;
 	padding:5px;
 	width:500px;	
@@ -271,7 +283,8 @@ select:focus{
 
 .form_button:hover
 {
-	background-color:lightgray;
+	background-color:#888888;
+	border-color:white;
 }
 
 #user_select
@@ -286,7 +299,7 @@ select:focus{
 
 .selector
 {
-	height:1;
+	min-height:18px;
 	padding:5px;
 	font-weight:700;
 	margin-left:10px;
@@ -301,22 +314,17 @@ select:focus{
 
 #mode_selector_cont
 {
-/* width:808px; */
-margin-left:auto;
-margin-right:auto;
-font-size:0;
-/* border-right: 2px solid black; */
+	margin-left:auto;
+	margin-right:auto;
+	font-size:0;
 }
 
 .mode_selector_container
 {
-	/* width:606px; */
 	margin-left:auto;
 	margin-right:auto;
 	margin-bottom:10px;
 	font-size:0;
-	/* border-right: 2px solid black; */
-	
 }
 
 .mode_select

@@ -53,35 +53,7 @@
 <script src="scripts.js"></script>
 
 </head>
-/<?php
-/* if(isset($_SESSION['worker_mode']))
-{
-	switch($_SESSION['worker_mode'])
-	{
-		case 1:
-			echo '<body onload="add_worker_selected()">';
-			break;
-		case 2:
-			echo '<body onload="update_worker_selected()">';
-			break;
-		case 3:
-			echo '<body onload="delete_worker_selected()">';
-			break;
-		case 4:
-			echo '<body onload="change_password_selected()">';
-			break;
-	}
-	
-}else{
-	echo '<body>';
-} */
-
-/* elseif(!isset($_SESSION['worker_mode']))
-{
-	echo '<body onload="add_worker_selected()">';
-} */
-?> 
-<body onload="onload_module()">	
+<body onload='onload_module(4,"worker_mode_number")'>	
 		<header>
 			<h1 id="logo"> 
 				<font color="#cc3333" size="7">alpha </font>
@@ -130,22 +102,12 @@
 						}
 						
 					?>
-					
-					<div class="mode_selector_container">
-						<form method="post" id="modul_select_form" >
-							<div class="mode_select" onclick="add_worker_click()" id="worker_add" name="form_action">Add new worker</div>
-							<div class="mode_select" onclick="update_worker_click()" id="worker_update" name="form_action"> Updadte worker </div>
-							<div class="mode_select" onclick="delete_worker_click()" id="worker_delete" name="form_action"> Delete worker  </div>
-							<div class="mode_select mode_select_last" onclick="change_password_click()" id="change_password" name="form_action"> Change password </div>
-						</form>
-					</div>
 					<div>
 						<ul class="mode_navigation">
-							<li onclick="module_nav_click(1,4)" id="mode_butt_1">Add new worker</li>
-							<li onclick="module_nav_click(2,4)" id="mode_butt_2">Update worker</li>
-							<li onclick="module_nav_click(3,4)"  id="mode_butt_3">Delete worker</li>
-							<li onclick="module_nav_click(4,4)" id="mode_butt_4">Change password </li>
-							<li onclick="module_nav_hide(4)">^</li>
+							<li onclick='module_nav_click(1,4,"worker_mode_number")' id="mode_butt_1">Add new worker</li>
+							<li onclick='module_nav_click(2,4,"worker_mode_number")' id="mode_butt_2">Update worker</li>
+							<li onclick='module_nav_click(3,4,"worker_mode_number")' id="mode_butt_3">Delete worker</li>
+							<li onclick='module_nav_click(4,4,"worker_mode_number")' id="mode_butt_4">Change password </li>
 						</ul>
 					</div>
 						<div class="form_container">

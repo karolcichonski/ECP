@@ -46,6 +46,11 @@
 		
 	}
 	
+	if (isset($_POST['record_to_remove'])){
+		remove_record_in_db($_POST['record_to_remove'], "ecp");
+		unset($_POST['record_to_remove']);
+	}
+	
 	if (!isset($_SESSION['ecp_selected_project'])){
 		$_SESSION['ecp_selected_project']=Get_last_project_id();
 		$_SESSION['ecp_selected_area']=Get_first_area_in_project($_SESSION['ecp_selected_project']);
@@ -113,11 +118,13 @@
 	$SumAdditionalHours=0;
 	
 	for($i=0; $i<$days_in_ecp_range; $i++){
-		$TempStartTime= new DateTime($_SESSION['ecp_date_filter4']);
+		$TempStartTime= new DateTime($_SESSION['ecp_date_filter4'],new DateTimeZone('Europe/Warsaw'));
 		$TempStartTime->modify('-'.$i.' day');
 		$TempTime=$TempStartTime->format('Y-m-d');
 		$tempDay=$TempStartTime->format('l');
 		$is_in_ecp=false;
+		
+		//echo $TempTime;
 		
 		for($j=0; $j<$num_ecp_records; $j++){
 			if($TempTime==$ecp_table[$j]['date']){
@@ -136,6 +143,7 @@
 				$ecp_full_table[$NumberOfRecords]['AH']=$ecp_table[$j]['AH'];
 				$ecp_full_table[$NumberOfRecords]['type_of_work']=$ecp_table[$j]['type_of_work'];
 				$ecp_full_table[$NumberOfRecords]['description']=$ecp_table[$j]['description'];
+				$ecp_full_table[$NumberOfRecords]['id']=$ecp_table[$j]['id'];
 				if($ecp_full_table[$NumberOfRecords]['type_of_work']=="URLOP"){
 					$ecp_full_table[$NumberOfRecords]['color']="rgba(236, 214, 169, 0.8)";
 				}elseif($ecp_full_table[$NumberOfRecords]['day']=="ND"){
@@ -235,30 +243,9 @@
 <script>StickyNavigation();</script>
 </head>
 
-<?php
-if(isset($_SESSION['ecp_mode']))
-{
-	switch($_SESSION['ecp_mode'])
-	{
-		case 1:
-			echo '<body onload="show_add_form()">';
-			break;
-		case 2:
-			echo '<body onload="show_add_form()">';
-			break;
-		case 3:
-			echo '<body onload="show_add_form()">';
-			break;
-	}
-	
-}else{
-	echo '<body>';
-}
-/* elseif(!isset($_SESSION['worker_mode']))
-{
-	echo '<body onload="add_worker_selected()">';
-} */
-?>	
+
+<body onload='onload_module(3,"ecp_mode_number")'>	
+<?php echo $_SESSION['ecp_date_filter1']." ".$_SESSION['ecp_date_filter2']." ".$_SESSION['ecp_date_filter3']." ".$_SESSION['ecp_date_filter4'];?>
 		<header>
 			<h1 id="logo"> 
 				<font color="#cc3333" size="7">alpha </font>
@@ -334,17 +321,16 @@ if(isset($_SESSION['ecp_mode']))
 				
 				?>
 				</section>
-				
-				<form method="post" id="modul_select_form">
-					<div class="mode_selector_container">
-						<div class="mode_select" onclick="add_click()" id="ECP_add" name="form_action">Add to ECP</div>
-						<div class="mode_select" onclick="update_click()" id="ECP_generate" name="form_action"> Generate ECP </div>
-						<div class="mode_select" onclick="delete_click()" id="ECP_Summary" name="form_action"> Summary </div>
-						<div class="mode_select mode_select_last" onclick="hide_click()" id="ECP_Hide" name="form_action" style="width:50px;"> ^ </div>
+				<section>
+					<div>
+						<ul class="mode_navigation">
+							<li onclick='module_nav_click(1,3,"ecp_mode_number")' id="mode_butt_1">Add to ECP</li>
+							<li onclick='module_nav_click(2,3,"ecp_mode_number")' id="mode_butt_2">Remove record</li>
+							<li onclick='module_nav_click(3,3,"ecp_mode_number")' id="mode_butt_3">Generate ECP</li>
+						</ul>
 					</div>
-				</form>
 				<div  class="form_container" >
-					<div id="Add_form">
+					<div id="mode1" class="single_mode_container">
 						<form method="post">
 							<div class="form_row">
 								<form method="post" class="ecp_filter_form">
@@ -431,27 +417,38 @@ if(isset($_SESSION['ecp_mode']))
 							<?php 
 								if (isset($_SESSION['AddECPStatusOK'])){
 									echo '<div class="form_success">'.$_SESSION['AddECPStatusOK'].'</div>';
-									/* sleep(5); */
 									unset($_SESSION['AddECPStatusOK']);
-									/* header ("Refresh:0"); */
 									}
-								
-								
 								if(isset($_SESSION['AddECPStatusER'])){
 									echo '<div class="form_error_com">'.$_SESSION['AddECPStatusER'].'</div>';
-									/* sleep(5); */
 									unset($_SESSION['AddECPStatusER']);
-									/* header ("Refresh:0"); */
 									}
 							?>
 							<input type="submit" class="form_button" value="ADD TO EPC" id="add_button">
-							<?php /*echo import_csv();*/?> 
 						</form>
 					</div>
-					<div id="Update_form">
-						test
+					<div id="mode2" class="single_mode_container">
+						<form method="post">
+							<label> LP <select name="record_to_remove" class="selector">
+							<?php
+								for($i=0; $i<$row_number; $i++){
+									echo '<option value="'.$ecp_full_table[$i]["id"].'">'.($i+1).'</option>';
+								}
+								echo "</select></label>";
+								if (isset($_SESSION['RemoveRecordOK'])){
+									echo '<div class="form_success">'.$_SESSION['RemoveRecordOK'].'</div>';
+									unset($_SESSION['RemoveRecordOK']);
+									}
+
+								if(isset($_SESSION['RemoveRecordErr'])){
+									echo '<div class="form_error_com">'.$_SESSION['RemoveRecordErr'].'</div>';
+									unset($_SESSION['RemoveRecordErr']);
+									}
+							?>
+							<input type="submit" class="form_button" value="REMOVE" style="width:100px;" ></input>
+						</form>
 					</div>					
-					<div id="Delete_form">
+					<div id="mode3" class="single_mode_container">
 						test
 					</div>
 				</div>

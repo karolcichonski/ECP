@@ -914,6 +914,19 @@ class ECP_record{
 	
 }
 
+function remove_record_in_db($record_ID, $TableName){
+	require('connect.php');
+	$sql="DELETE FROM $TableName WHERE id='$record_ID'";
+	//echo $sql;
+	try{
+		$db->query($sql);
+	}catch(PDOException $error){	
+		$_SESSION['RemoveRecordErr']=$error->getMessage();
+	}
+	if ($db->errorCode()==0){
+		$_SESSION['RemoveRecordOK']="ECP record deleted successfully";
+	}
+}
 
 function import_csv(){
 require('connect.php');

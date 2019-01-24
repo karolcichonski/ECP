@@ -30,6 +30,11 @@
 			}
 	}
 	
+	if (isset($_POST['record_to_remove'])){
+		remove_record_in_db($_POST['record_to_remove'], "robots");
+		unset($_POST['record_to_remove']);
+	}
+	
 	$Areas_id_name_table=Areas_Id_Table($_SESSION['robot_selected_project']);	
 	$Areas_id_name_atable=Areas_Id_aTable();
 	$Project_id_name_atable=Projects_Id_aTable();
@@ -64,7 +69,7 @@
 <script src="jquery-3.3.1.min.js"></script>
 </head>
 
-<body>
+<body onload='onload_module(3,"robot_mode_number")'>
 		<div id="header">
 			<header>
 				<h1 id="logo"> 
@@ -153,53 +158,75 @@
 						}
 						
 					?>	
-						<form method="post" id="modul_select_form" >
-							<div class="mode_selector_container">
-								<div class="mode_select" onclick="add_click()" id="worker_add" name="form_action">Add robot</div>
-								<div class="mode_select" onclick="update_click()" id="worker_update" name="form_action"> Update robot </div>
-								<div class="mode_select mode_select_last" onclick="delete_click()" id="worker_delete" name="form_action"> Delete robot  </div>
-							</div>
-						</form>
+					<div>
+						<ul class="mode_navigation">
+							<li onclick='module_nav_click(1,3,"robot_mode_number")' id="mode_butt_1">Add robot</li>
+							<li onclick='module_nav_click(2,3,"robot_mode_number")' id="mode_butt_2">Update robot</li>
+							<li onclick='module_nav_click(3,3,"robot_mode_number")' id="mode_butt_3">Delete robot</li>
+						</ul>
+					</div>
 						<div  class="form_container" >
-							<form method="post" id="Add_form">
-								<div class="form_row">
-									<label> ROBOT NAME <input type="text" class="form_field" style="width:120px;" name="add_robot_name" required> </label>	
-									<label> 7yh Axis
-										<select id="ax_select" name="add_robot_seventh_axis" class="selector">
-											<option value="YES" > YES </option>
-											<option value="NO" selected> NO </option>
-										</select>
-									</label>
-									<label> ROBOT BRAND<input type="text" class="form_field" style="width:120px;" name="add_robot_brand" > </label>
-								</div>
-								<div class="form_row">
-									<label> ROBOT TYPE<input type="text" class="form_field" style="width:120px;" name="add_robot_type" > </label>
-									<label> TASKS <input type="text" class="form_field" style="width:400px;" name="add_robot_tasks" > </label>
-								</div>
+							<div id="mode1" class="single_mode_container">
+								<form method="post">
+									<div class="form_row">
+										<label> ROBOT NAME <input type="text" class="form_field" style="width:120px;" name="add_robot_name" required> </label>	
+										<label> 7yh Axis
+											<select id="ax_select" name="add_robot_seventh_axis" class="selector">
+												<option value="YES" > YES </option>
+												<option value="NO" selected> NO </option>
+											</select>
+										</label>
+										<label> ROBOT BRAND<input type="text" class="form_field" style="width:120px;" name="add_robot_brand" > </label>
+									</div>
+									<div class="form_row">
+										<label> ROBOT TYPE<input type="text" class="form_field" style="width:120px;" name="add_robot_type" > </label>
+										<label> TASKS <input type="text" class="form_field" style="width:400px;" name="add_robot_tasks" > </label>
+									</div>
 									<?php 
-										if (isset($_SESSION['AddRobotStatusOK'])){
-											echo '<div class="form_success">'.$_SESSION['AddRobotStatusOK'].'</div>';
-											/* sleep(5); */
-											unset($_SESSION['AddRobotStatusOK']);
-											/* header ("Refresh:0"); */
-											}
-										
-										
-										if(isset($_SESSION['AddRobotStatusER'])){
-											echo '<div class="form_error_com">'.$_SESSION['AddRobotStatusER'].'</div>';
-											/* sleep(5); */
-											unset($_SESSION['AddRobotStatusER']);
-											/* header ("Refresh:0"); */
-											}
+									if (isset($_SESSION['AddRobotStatusOK'])){
+										echo '<div class="form_success">'.$_SESSION['AddRobotStatusOK'].'</div>';
+										/* sleep(5); */
+										unset($_SESSION['AddRobotStatusOK']);
+										/* header ("Refresh:0"); */
+										}
+									
+									
+									if(isset($_SESSION['AddRobotStatusER'])){
+										echo '<div class="form_error_com">'.$_SESSION['AddRobotStatusER'].'</div>';
+										/* sleep(5); */
+										unset($_SESSION['AddRobotStatusER']);
+										/* header ("Refresh:0"); */
+										}
 									?>
 									<input type="submit" value="ADD ROBOT" class="form_button"> 
-							</form>
-							<form method="post" id="Update_form">
-								update test
-							</form>
-							<form method="post" id="Delete_form">
-								delete test
-							</form>
+								</form>
+							</div>
+							<div id="mode2" class="single_mode_container">
+								<form method="post">
+									update test
+								</form>
+							</div>
+							<div id="mode3" class="single_mode_container">
+								<form method="post">
+									<label> LP <select name="record_to_remove" class="selector">
+									<?php
+										for($i=0; $i<$row_number; $i++){
+											echo '<option value="'.$robots_table[$i]["id"].'">'.($i+1).'</option>';
+										}
+										echo "</select></label>";
+										if (isset($_SESSION['RemoveRecordOK'])){
+											echo '<div class="form_success">'.$_SESSION['RemoveRecordOK'].'</div>';
+											unset($_SESSION['RemoveRecordOK']);
+											}
+
+										if(isset($_SESSION['RemoveRecordErr'])){
+											echo '<div class="form_error_com">'.$_SESSION['RemoveRecordErr'].'</div>';
+											unset($_SESSION['RemoveRecordErr']);
+											}
+									?>
+									<input type="submit" class="form_button" value="REMOVE" style="width:100px;" ></input>
+								</form>
+							</div>
 						</div>
 					</div>	
 				</section>
