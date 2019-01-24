@@ -152,6 +152,12 @@ footer
 	margin-top:5px;
 }
 
+.form_success
+{
+	color: #ADFF2F;
+	margin-top:5px;
+}
+
 .form_button
 {
 	border: 2px solid white;
@@ -203,8 +209,12 @@ footer
 	padding:10px;
 	margin-top:10px;
 }
+#Add_form
+{
+	display: none;
+}
 
-/* #Update_form
+#Update_form
 {
 	display: none;
 }
@@ -217,7 +227,7 @@ footer
 #Password_form
 {
 	display: none;
-} */
+}
 
 #modul_select_form
 {

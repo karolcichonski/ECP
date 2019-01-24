@@ -12,22 +12,25 @@
 			exit();
 	}
 	
-	$db_connecting=connect_to_db();
+	require('connect.php');
 	
-	if(isset($db_connecting))
+	if(isset($db))
 	{
 		$login=$_POST['login'];
 		$password=$_POST['password'];
 		$login=htmlentities($login, ENT_QUOTES, "UTF-8");
-		$sql="SELECT*FROM workers WHERE login='$login' and password='$password'";
 		
-		if($result=@$db_connecting->query(sprintf("SELECT*FROM workers WHERE login='%s'",
-		mysqli_real_escape_string($db_connecting, $login))))
-		{
-			$users_num=$result->num_rows;
+		try {
+			$result=$db->query("SELECT*FROM workers WHERE login='$login'");
+		}catch(PDOException $error){
+			echo $error->getMessage();
+		}
+		
+		If (isset($result)){
+			$users_num=$result->rowCount();
 			if($users_num>0)
 			{
-				$db_record=$result->fetch_assoc();
+				$db_record=$result->fetch();
 				if(password_verify($password,$db_record['password'])==True and $db_record['permissions']>0)
 				{
 					$_SESSION['is_logged'] = true;
@@ -39,7 +42,7 @@
 					
 					unset($_SESSION['login_error']);
 					
-					$result->free_result();
+					//$result->free_result();
 					/* echo $logged_user->name; */
 					header('Location: workers.php');
 				}
@@ -58,6 +61,5 @@
 				
 			}
 		}
-		$db_connecting->close();
 	}
 ?>

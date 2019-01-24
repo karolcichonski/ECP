@@ -2,15 +2,17 @@
 	session_start();
 	include 'func.php';
 	is_loged_check();
-
-	$db_connecting=connect_to_db();	
-	$sql="SELECT*FROM workers";
-		
-	if($result=@$db_connecting->query($sql))
+	$db_table_name="workers";
+	
+	require_once('connect.php');
+	
+	$sql="SELECT*FROM {$db_table_name}";
+	
+	if($result=$db->query($sql))
 	{
-		$num_workers=$result->num_rows;
+		$num_workers=$result->rowCount();
+		$workers_table=$result->fetchAll();
 	} 
-	$db_connecting->close();
 	
 	if(isset($_POST['new_worker_name']) and $_SESSION['logged_worker_permissions']>1 )
 	{
@@ -36,7 +38,6 @@
 		$_SESSION['worker_mode']=4;
 		change_password($_POST['workers_change_password'],$_POST['change_password_old'],$_POST['change_password_new_1'],$_POST['change_password_new_2']);
 	}
-	
 ?>
 
  <!DOCTYPE html>
@@ -97,60 +98,26 @@ elseif(!isset($_SESSION['worker_mode']))
 		<main>
 		<div id="container">
 				<section>
-					<table id="table">
-						<tr bgcolor="#555555">
-							<th colspan="8"> WORKERS LIST</th>
-						</tr>
-						
-						<tr bgcolor="#666666">
-							<td width="80"> Name </td>
-							<td width="80"> Surname </td>
-							<td width="80"> Email </td>
-							<td width="80"> Login </td>
-							<td width="80"> Phone </td>
-							<td width="80"> Computer number</td>
-							<td width="80"> Birthday</td>
-							<td width="80"> Permissions </td>
-						</tr>
-						
-						<?php
-							for ($i = 1; $i <= $num_workers; $i++) 
-							{
-		
-								$row = mysqli_fetch_assoc($result);
-								$a1 = $row['ID'];
-								$Worker_ID_table[$i]=$a1;
-								$a2 = $row['name'];
-								$a3 = $row['surname'];
-								$a4 = $row['email'];
-								$a5 = $row['login'];
-								$Worker_login_table[$i]=$a5;
-								$a6 = $row['phone'];
-								$a7 = $row['computer_num'];
-								$a8 = $row['birthday'];
-								$a9 = $row['permissions'];		
-		
-echo<<<END
-<tr class="table_row" bgcolor="#999999">
-<td class="table_column">$a2</td>
-<td class="table_column">$a3</td>
-<td class="table_column">$a4</td>
-<td class="table_column">$a5</td>
-<td class="table_column">$a6</td>
-<td class="table_column">$a7</td>
-<td class="table_column">$a8</td>
-<td class="table_column">$a9</td>
-</tr>
+				<?php
+				$db_name=array('ID','name','surname','email','login','phone','computer_num','birthday','permissions');
+				$table_headers=array('ID','Name','Surname','Email','Login','Phone','Computer number','Birthday','Permissions');
+				$row_number=$num_workers;
+				$table_title="WORKERS LIST";
 
-END;
-			
-	}
-						?>
-					</table>
-				</section>
+				$table_array=create_table($workers_table, $table_title, $db_name, $table_headers, $row_number);
 				
+/* 				for($i=1; $i<=$num_workers; $i++)
+				{
+					$row = mysqli_fetch_assoc($result);
+					$Worker_ID_table[$i]=$row['ID'];
+					$Worker_login_table[$i]=$row['login'];
+				} */
+				?>
+
+				</section>
+
 				<section>
-					
+
 					<?php 
 						if($_SESSION['logged_worker_permissions']<2)
 						{
@@ -167,7 +134,6 @@ END;
 							<div class="mode_select"><label><input type="radio" onclick="update_worker_selected()" id="worker_update" name="form_action"> Updadte worker</label></div>
 							<div class="mode_select"><label><input type="radio" onclick="delete_worker_selected()" id="worker_delete" name="form_action"> Delete worker</label></div>
 							<div class="mode_select"><label><input type="radio" onclick="change_password_selected()" id="change_password" name="form_action"> Change password</label></div>
-						
 						</form>
 							<form method="post" id="Add_form">
 								<div  class="form_row">
@@ -175,15 +141,6 @@ END;
 								<label> PASSWORD<input type="password" class="form_field" name="new_worker_password"> </label>
 								<label> REPEAT PASSWORD<input type="password" class="form_field" name="new_worker_password_1"> </label>
 								</div>
-									<?php 
-										if(isset($new_worker)){
-											if($new_worker->correct_data_flag==FALSE)
-											{
-												echo '<div class="form_error_com">'.$new_worker->errors_descriptions.'</div>';
-											}
-											
-										}
-									?>
 								<div  class="form_row">
 								<label> NAME <input type="text" class="form_field" name="new_worker_name" id="WorkerNameField"> </label>				
 								<label> SURNAME <input type="text"  class="form_field" name="new_worker_surname"> </label>
@@ -201,8 +158,18 @@ END;
 										<option value=2>2-Admin</option>
 									</select></label>
 								</div>
+								<?php 
+									if (isset($_SESSION['AddStatusOK'])){
+										echo '<div class="form_success">'.$_SESSION['AddStatusOK'].'</div>';
+										unset($_SESSION['AddStatusOK']);
+									}
+									
+									if(isset($_SESSION['AddStatusER'])){
+										echo '<div class="form_error_com">'.$_SESSION['AddStatusER'].'</div>';
+										unset($_SESSION['AddStatusER']);
+									}
+								?>
 								<input type="submit" value="ADD WORKER" id="add_button" class="form_button">
-						
 							</form>
 							
 							<form method="post" id="Update_form">
@@ -210,16 +177,17 @@ END;
 								<label> LOGIN
 								<select name="worker_id_to_update" class="selector" >
 								<?php
-								for ($i = 1; $i <= $num_workers; $i++) 
+								for ($i = 0; $i < $num_workers; $i++) 
 									{
-									echo '<option value="'.$Worker_ID_table[$i].'">'.$Worker_login_table[$i].'</option>';
+									echo '<option value="'.$workers_table[$i]['ID'].'">'.$workers_table[$i]['login'].'</option>';
 									}
 								?>
 								</select> </label>
 								
 									<label> PERMISSIONS <select class="selector" name="update_worker_permissions"> 
+										<option value=9 selected>No change</option>
 										<option value=0>0-User is blocked</option>
-										<option value=1 selected>1-Normal user </option>
+										<option value=1 >1-Normal user </option>
 										<option value=2>2-Admin</option>
 									</select></label>
 								</div>
@@ -228,13 +196,6 @@ END;
 								<label> SURNAME <input type="text"  class="form_field" name="update_worker_surname"> </label>
 								<label> E-MAIL <input type="email" class="form_field" name="update_worker_email"> </label>
 								</div>
-								<?php 
-									if(isset($_SESSION['AddError']))
-									{
-									echo '<div class="form_error_com">'.$_SESSION['AddError'].'</div>';
-									unset($_SESSION['AddError']);
-									}
-								?>
 								<div  class="form_row">
 								<label> PHONE<input type="tel" class="form_field" name="update_worker_phone"> </label>
 								<label> COMPUTER NUMBER<input type="text" class="form_field" name="update_worker_computer"> </label>
@@ -242,33 +203,40 @@ END;
 								</div>
 								
 								<?php 
-									if(isset($_SESSION['UpdateError']))
-									{
-									echo '<div class="form_error_com">'.$_SESSION['UpdateError'].'</div>';
-									unset($_SESSION['UpdateError']);
+									if (isset($_SESSION['UpdateStatusOK'])){
+										echo '<div class="form_success">'.$_SESSION['UpdateStatusOK'].'</div>';
+										unset($_SESSION['UpdateStatusOK']);
+									}
+									
+									if(isset($_SESSION['UpdateStatusER'])){
+										echo '<div class="form_error_com">'.$_SESSION['UpdateStatusER'].'</div>';
+										unset($_SESSION['UpdateStatusER']);
 									}
 								?>
 								
 								<input type="submit" value="UPDATE WORKER" id="delete_button" class="form_button">
-						
 							</form>
 							
 							<form method="post" id="Delete_form">
 								<div>
-								<label> LOGIN
+								<label> NAME
 								<select name="workers_id_to_delete" class="selector">
 								<?php
-								for ($i = 1; $i <= $num_workers; $i++) 
+								for ($i = 0; $i < $num_workers; $i++) 
 									{
-									echo '<option value="'.$Worker_ID_table[$i].'">'.$Worker_login_table[$i].'</option>';
+									echo '<option value="'.$workers_table[$i]['ID'].'">'.$workers_table[$i]['name']." ".$workers_table[$i]['surname'].'</option>';
 									}
 								?>
 								</select></label>
 								<?php 
-									if(isset($_SESSION['DelError']))
-									{
-									echo '<div class="form_error_com">'.$_SESSION['DelError'].'</div>';
-									unset($_SESSION['DelError']);
+									if (isset($_SESSION['DeleteStatusOK'])){
+										echo '<div class="form_success">'.$_SESSION['DeleteStatusOK'].'</div>';
+										unset($_SESSION['DeleteStatusOK']);
+									}
+									
+									if(isset($_SESSION['DeleteStatusER'])){
+										echo '<div class="form_error_com">'.$_SESSION['DeleteStatusER'].'</div>';
+										unset($_SESSION['DeleteStatusER']);
 									}
 								?>
 								<input type="submit" value="DELETE WORKER" id="delete_button" class="form_button">
@@ -277,12 +245,12 @@ END;
 							
 							<form method="post" id="Password_form">
 								<div>
-								<label> LOGIN
+								<label> NAME
 								<select name="workers_change_password" class="selector">
 								<?php
-								for ($i = 1; $i <= $num_workers; $i++) 
-									{
-									echo '<option value="'.$Worker_ID_table[$i].'">'.$Worker_login_table[$i].'</option>';
+								for ($i = 0; $i < $num_workers; $i++) 
+									{	
+										echo '<option value="'.$workers_table[$i]['ID'].'">'.$workers_table[$i]['name']." ".$workers_table[$i]['surname'].'</option>';
 									}
 								?>
 								</select></label>
@@ -291,11 +259,21 @@ END;
 								<div> <label> NEW PASSWORD<input type="password" class="form_field" name="change_password_new_1"> </label> </div>
 								<div> <label> REPEAT PASSWORD<input type="password" class="form_field" name="change_password_new_2"> </label> </div>
 								<?php 
+									if (isset($_SESSION['PassStatusOK'])){
+										echo '<div class="form_success">'.$_SESSION['PassStatusOK'].'</div>';
+										unset($_SESSION['PassStatusOK']);
+									}
+									
 									if(isset($_SESSION['PassError']))
 									{
 									echo '<div class="form_error_com">'.$_SESSION['PassError'].'</div>';
 									unset($_SESSION['PassError']);
 									}
+/* 									if(isset($_SESSION['ConnectionError']))
+									{
+									echo '<div class="form_error_com">'.$_SESSION['ConnectionError'].'</div>';
+									unset($_SESSION['ConnectionError']);
+									} */
 								?>
 								
 								<input type="submit" value="CHANGE PASSWORD" id="delete_button" class="form_button">

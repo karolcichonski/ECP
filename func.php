@@ -9,69 +9,71 @@ function is_loged_check()
 		exit();
 	}
 }
-	
-function connect_to_db()
+
+
+function connect_to_db_PDO()
 {
 	$host="localhost";
 	$db_user="root";
 	$db_password="";
 	$db_name="ECP";
-	/* Throw mysqli_sql_exception for errors instead of warnings */
-	//errors are generated in exceptions instead of warnings.
-	mysqli_report(MYSQLI_REPORT_STRICT);
 	
-	try
-	{
-		$connecting=new mysqli ($host, $db_user, $db_password, $db_name);
-		if($connecting->connect_errno!=0)
-		{
-			throw new Exception(mysqli_connect_errno());
-		}
-		else
-		{
-			mysqli_query($connecting, "SET CHARSET utf8");
-			mysqli_query($connecting, "SET NAMES 'utf8' COLLATE 'utf8_polish_ci'");
-			return $connecting;
-		}
-		
-	}
-	catch(Exception $connection_error)
-	{
-		echo '<span style="color:red;">Connection to database failed!</span>';
-		/* echo $connection_error; */
-	}
-}
+	try{
+	$db= new PDO("mysql:host={$host};dbname={$db_name};charset=utf8",$db_user, $db_password, [
+	PDO::ATTR_EMULATE_PREPARES=>false, 
+	PDO::ATTR_ERRMODE=> PDO::ERRMODE_EXCEPTION
+	]);
+	
+	} catch (PDOException $PDO_error)
 
+	{
+		echo $PDO_error->getMessage();
+		exit('Database error');
+	}
+	
+}
+		
 function how_many_in_db($table_name, $atribut_name, $variable_name)
 {
-		$db_connecting=connect_to_db();
+		require('connect.php');
 		
-		$sql="SELECT * FROM ".$table_name." WHERE ".$atribut_name."="."'$variable_name'";
-		$result=$db_connecting->query($sql);
-		$how_many=$result->num_rows;
+		$query="SELECT * FROM $table_name  WHERE $atribut_name = '$variable_name'";
+		try{
+		$result=$db->query($query);
+		}catch(PDOException $error){
+			echo $error->getMessage();
+			exit();
+		}
+		$how_many=$result->rowCount();
 		return $how_many;
-		$db_connecting->close();
 }
 
 function delete_worker_via_ID($id)
 {
-	$db_connecting=connect_to_db();
-	$sql_check_per="SELECT permissions FROM workers WHERE ID=$id";
-	$actual_permissions=$db_connecting->query($sql_check_per);
-	$db_record=$actual_permissions->fetch_assoc();
+	require('connect.php');
+	$permissions_quwery=$db->query("SELECT * FROM workers WHERE ID=$id");
+	$db_record=$permissions_quwery->fetch();
 	
 	if ($db_record['permissions']!=3)
 	{
+		try{
 		$sql="DELETE FROM `workers` WHERE ID=$id";
-		$db_connecting->query($sql);
-		header ("Refresh:0");
+		$db->query($sql);
+		}catch (PDOException $error){
+		}
+		
+	if ($db->errorCode()>0){
+			$_SESSION['DeleteStatusER']=$error->getMessage();
+		}
+		else{
+			$_SESSION['DeleteStatusOK']="Worker delete success";
+		}
 	}
 	Else
 	{
-		$_SESSION['DelError']="You can't delete this user!";
+		$_SESSION['DeleteStatusER']="You can't delete this user!";
 	}
 	
-	$db_connecting->close();
 }
 
 function update_worker()
@@ -141,19 +143,25 @@ function add_worker()
 		}
 		if ($new_worker->correct_data_flag==false)
 		{
-			$_SESSION['AddError']=$new_worker->errors_descriptions;
+			$_SESSION['AddStatusER']=$new_worker->errors_descriptions;
 		}
 	}
 	
 function change_password($id, $old_password, $new_password1, $new_password2) 
 {
+	require('connect.php');
 	$worker= new Worker;
 	$worker->correct_data_flag=true;
 	$worker->errors_drscriptions="";
-	$db_connecting=connect_to_db();	
 	$sql_check_per="SELECT * FROM workers WHERE ID=$id";
-	$actual_permissions=$db_connecting->query($sql_check_per);
-	$db_record=$actual_permissions->fetch_assoc();
+	try{
+		$actual_permissions=$db->query($sql_check_per);
+		$db_record=$actual_permissions->fetch();
+	}catch (PDOException $error){		
+		$_SESSION['PassError']=$error->getMessage();
+		exit();
+	}
+		
 	
 	if ($db_record['permissions']==3 and $_SESSION['logged_worker_permissions']!=3)
 		{
@@ -174,7 +182,12 @@ function change_password($id, $old_password, $new_password1, $new_password2)
 				{	
 					$password=$worker->get_password();
 					$sql="UPDATE workers SET password='$password' WHERE ID=$id";
-					$db_connecting->query($sql);
+					try{
+					$db->query($sql);
+					}catch(PDOException $error){	
+						$_SESSION['PassError']=$error->getMessage();
+						exit();
+					}
 				}
 			}
 			else
@@ -188,9 +201,45 @@ function change_password($id, $old_password, $new_password1, $new_password2)
 	{
 		$_SESSION['PassError']=$worker->errors_descriptions;
 	}
-	$db_connecting->close();	
-}
 	
+	if(!isset($_SESSION['PassError'])){
+		$_SESSION['PassStatusOK']="Password changed successfully";
+	}
+}
+
+function create_table($workers_table, $table_title, $db_name, $table_headers, $row_number)
+{
+$column_number=count($db_name);
+
+echo<<<END
+<table id="table">
+<tr bgcolor="#555555">
+<th colspan="$column_number"> $table_title</th>
+</tr>
+<tr bgcolor="#666666">
+END;
+for ($i=0;$i<$column_number; $i++)
+{
+	echo "<td>$table_headers[$i]</td>";
+}
+
+echo"</tr>";
+						
+for ($j = 0; $j < $row_number; $j++) 
+{
+echo '<tr class="table_row" bgcolor="#999999">';
+	
+	for ($i=0;$i<$column_number; $i++)
+	{
+		$table_val=$workers_table[$j][$db_name[$i]];
+		echo '<td class="table_column">'.$table_val.'</td>';
+	}
+echo '</tr>';
+}
+echo '</table>';
+
+}
+
 
 class Worker
 {
@@ -317,18 +366,28 @@ class Worker
 		
 	public function set_permissions($permissions)
 		{
-			$this->permissions=$permissions;
+			if ($permissions!=9){
+			$this->permissions=$permissions;}
 		}
 	
 	
 	public function insert_worker_to_db()
 	{
-		$db_connecting=connect_to_db();	
+		require('connect.php');
 		$sql="INSERT INTO workers VALUES (NULL, '$this->name', '$this->surname', '$this->email', '$this->login',
 		'$this->password', '$this->phone', '$this->computer_num', '$this->birthday', '$this->permissions')";
-		$db_connecting->query($sql);
-		$db_connecting->close();
-		header ("Refresh:0");
+		try{
+		$db->query($sql);
+		}catch(PDOException $error){	
+			$_SESSION['AddStatusER']=$error->getMessage();
+			exit();
+		}
+		
+		
+		if ($db->errorCode()==0){
+				$_SESSION['AddStatusOK']="Worker added successfully";
+			}
+
 	}
 	
 	public function get_password()
@@ -338,72 +397,87 @@ class Worker
 	
 	public function update_worker_in_db($id)
 	{
-/* 		$sql="UPDATE `workers` SET ";
-		if (strlen($this->name)>0)
-		{
-				$sql=$sql."name='$this->name'";
-		}
-		$sql=$sql." WHERE ID=$id"; */
+		require('connect.php');
 		
 		$sql="UPDATE workers SET ID=$id ";
-		$db_connecting=connect_to_db();	
-		
+
+		$is_change=false;
 		if (isset($this->name))
 		{
 		$sql=$sql." ,name='$this->name'";
+		$is_change=true;
 		}
 		
 		if (isset($this->surname))
 		{
 		$sql=$sql." ,surname='$this->surname'";
+		$is_change=true;
 		}
 		
 		if (isset($this->email))
 		{
 		$sql=$sql." ,email='$this->email'";
+		$is_change=true;
 		}
 		
 		if (isset($this->phone))
 		{
 		$sql=$sql." ,phone='$this->phone'";
+		$is_change=true;
 		}
 		
 		if (isset($this->computer_num))
 		{
 		$sql=$sql." ,computer_num='$this->computer_num'";
+		$is_change=true;
 		}
 		
 		if (isset($this->birthday))
 		{
 		$sql=$sql." ,birthday='$this->birthday'";
+		$is_change=true;
 		}
 		
 		if (isset($this->permissions))
 		{
 			$sql_check_per="SELECT permissions FROM workers WHERE ID=$id";
-			$actual_permissions=$db_connecting->query($sql_check_per);
-			$db_record=$actual_permissions->fetch_assoc();
+			$actual_permissions=$db->query($sql_check_per);
+			$db_record=$actual_permissions->fetch();
 			if ($db_record['permissions']!=3 and $_SESSION['logged_worker_permissions']>1)
 			{
 				$sql=$sql." ,permissions='$this->permissions'";
+				$is_change=true;
 			}
 			elseif($db_record['permissions']==3 and $_SESSION['logged_worker_permissions']==3)
 			{
 				$sql=$sql." ,permissions='$this->permissions'";
+				$is_change=true;
 			}
 			else
 			{
-				$_SESSION['UpdateError']="You can't change permissions fo this user!";
+				$_SESSION['UpdateStatusER']="You can't change permissions fo this user!";
 			}
 
 		}
 
 		$sql=$sql." WHERE ID=$id";
-		$db_connecting->query($sql);
-		$db_connecting->close();
-		header ("Refresh:0");
+		
+		if ($is_change==true)
+		{
+			try{
+			$db->query($sql);
+			}catch (PDOException $error){
+				$_SESSION['UpdateStatusER']=$error->getMessage();
+			}
+			
+			if(!isset($_SESSION['UpdateStatusER'])){
+				$_SESSION['UpdateStatusOK']="Worker updated successfully";
+			}
+
+		/* header ("Refresh:0"); */
 	}
 	
 
+	}
 }
 ?>

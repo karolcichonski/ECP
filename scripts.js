@@ -46,10 +46,10 @@ function change_password_selected()
 	var UpdateForm=document.getElementById("Update_form");
 	var DeleteForm=document.getElementById("Delete_form");
 	var PasswordForm=document.getElementById("Password_form");
-	var PasswordSelector=document.getElementById("change_password");
+	var PassSelector=document.getElementById("change_password");
 	AddForm.style.display="none";
 	UpdateForm.style.display="none";
 	DeleteForm.style.display="none";
 	PasswordForm.style.display="block";
-	PasswordSelector.checked=true;
+	PassSelector.checked=true;
 }
