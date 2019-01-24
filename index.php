@@ -37,7 +37,7 @@
 					
 						<form action="login.php" method="post">
 							<div>
-							<label> LOGIN <input type="text" class="form_field" name="login"> </label>				
+							<label> LOGIN <input type="text" class="form_field" name="login" autofocus> </label>				
 							<label> PASSWORD <input type="password"  class="form_field" name="password" > </label>
 							</div>
 							

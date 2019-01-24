@@ -18,6 +18,12 @@
 		$project_filter=0;
 	}
 	
+	
+	if(isset($_POST['project_id_add_area']) and $_SESSION['logged_worker_permissions']>1 )
+	{
+		add_area();
+	}
+	
 
 	if ($project_filter==0){
 		$sql="SELECT*FROM {$db_table_name} ORDER BY id DESC limit {$limit_filter}";
@@ -111,7 +117,7 @@
 					
 						<form method="post">
 							<div class="form_row">			
-							<label> PROJECT NAME <select name="project_name_add_areas" class="selector">
+							<label> PROJECT NAME <select name="project_id_add_area" class="selector">
 								<?php
 									for($i=0; $i<count($project_id_name_table); $i++)
 									{
@@ -121,11 +127,26 @@
 							</select></label>
 							</div>
 							<div class="form_row">
-							<label> AREA NAME <input type="text"  class="form_field" name="area_name"> </label>
-							<label> PART <input type="text"  class="form_field" name="area_name"> </label>
-							<label> NUMBER OF ROBOTS <input type="number"  class="form_field" name="area_name"> </label>
+							<label> AREA NAME <input type="text"  class="form_field" name="add_area_name" required> </label>
+							<label> PART <input type="text"  class="form_field" name="add_area_part"> </label>
+							<label> NUMBER OF ROBOTS <input type="number"  class="add_form_field" name="add_num_robots"> </label>
 							</div>
-							
+								<?php 
+									if (isset($_SESSION['AddAreaStatusOK'])){
+										echo '<div class="form_success">'.$_SESSION['AddAreaStatusOK'].'</div>';
+										/* sleep(5); */
+										unset($_SESSION['AddAreaStatusOK']);
+										/* header ("Refresh:0"); */
+										}
+									
+									
+									if(isset($_SESSION['AddAreaStatusER'])){
+										echo '<div class="form_error_com">'.$_SESSION['AddAreaStatusER'].'</div>';
+										/* sleep(5); */
+										unset($_SESSION['AddAreaStatusER']);
+										/* header ("Refresh:0"); */
+										}
+								?>
 							<input type="submit" value="ADD AREA " id="add_area_button" class="form_button">
 					
 						</form>

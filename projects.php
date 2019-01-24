@@ -5,6 +5,11 @@
 	is_loged_check();
 	$db_table_name="projects";
 	
+	if(isset($_POST['new_project_name']) and $_SESSION['logged_worker_permissions']>1 )
+	{
+		add_project();
+	}
+	
 	$sql="SELECT*FROM {$db_table_name} ORDER BY id DESC";
 	
 	if($result=$db->query($sql))
@@ -13,10 +18,7 @@
 		$projects_table=$result->fetchAll();
 	} 
 	
-	if(isset($_POST['new_project_name']) and $_SESSION['logged_worker_permissions']>1 )
-	{
-		add_project();
-	}
+
 	
 ?>
 
@@ -68,7 +70,7 @@
 					
 						<form method="post">
 							<div class="form_row">
-							<label> PROJECT NAME <input type="text" class="form_field" name="new_project_name"> </label>				
+							<label> PROJECT NAME <input type="text" class="form_field" name="new_project_name" required> </label>				
 							<label> BRAND <input type="text"  class="form_field" name="new_project_brand"> </label>
 							</div>
 							<div class="form_row">
@@ -87,13 +89,17 @@
 								<?php 
 									if (isset($_SESSION['AddProjectStatusOK'])){
 										echo '<div class="form_success">'.$_SESSION['AddProjectStatusOK'].'</div>';
+										/* sleep(5); */
 										unset($_SESSION['AddProjectStatusOK']);
+										/* header ("Refresh:0"); */
 										}
 									
 									
 									if(isset($_SESSION['AddProjectStatusER'])){
 										echo '<div class="form_error_com">'.$_SESSION['AddProjectStatusER'].'</div>';
+										/* sleep(5); */
 										unset($_SESSION['AddProjectStatusER']);
+										/* header ("Refresh:0"); */
 										}
 								?>
 							<input type="submit" value="ADD PROJECT" class="form_button">

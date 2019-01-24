@@ -2,6 +2,27 @@
  	session_start();
 	include 'func.php';
 	is_loged_check();
+	
+	if(isset($_POST['ecp_selected_project'])){
+		$_SESSION['ecp_selected_project']=$_POST['ecp_selected_project'];
+	}
+	
+	if(isset($_POST['ecp_date'])){
+		$_SESSION['ecp_date']=$_POST['ecp_date'];
+	}
+	
+	if(isset($_POST['ecp_selected_area'])){
+		$_SESSION['ecp_selected_area']=$_POST['ecp_selected_area'];
+	}
+	
+	if (isset($_SESSION['ecp_selected_project'])){
+		$Areas_id_name_atable=Areas_Id_aTable($_SESSION['ecp_selected_project']);
+		$Areas_id_name_table=Areas_Id_Table($_SESSION['ecp_selected_project']);	
+	}
+	
+	$Project_id_name_atable=Projects_Id_aTable();
+	$project_id_name_table=Projects_Id_Table();
+	
 ?>
 
 <!DOCTYPE html>
@@ -59,7 +80,7 @@
 						<tr class="table_row" bgcolor="#999999" >
 							<td> 1 </td>
 							<td> 01.11.2018 </td>
-							<td> PO992 </td>
+							<td> PO99245 </td>
 							<td> ARG1 </td>
 							<td> 116415R01 </td>
 							<td> Optymalizacja tasku KLB </td>
@@ -132,35 +153,69 @@
 				<form method="post">
 					<div id="form">
 					
-						<div>
-						<label> DATE <input type="date" class="form_field" id="f_date"> </label>				
+						<div class="form_row">
+						<form>
+						<label> DATE <input type="date" class="form_field" name="ecp_date" value="<?php echo date('Y-m-d')?>"</label>	
 						<label> START TIME <input type="time"  class="form_field" id="f_starttime" value="06:00"> </label>
 						<label> END TIME <input type="time" class="form_field" id="f_endtime" value="14:00"> </label>
 						<label> PLACE <input type="text" class="form_field" id="f_place" value="Gliwice"> </label>
 						</div>
 						
-						<div>
-						<label> PROJECT <input type="text" class="form_field" id="f_project"> </label>				
-						<label> AREA <input type="text"  class="form_field" id="f_area"> </label>
-						<label> ROBOT <input type="text" class="form_field" id="f_robot"> </label>
+						<fieldset>
+						<div class="form_row">
+						
+						<label> PROJECT <select name="ecp_selected_project" class="selector" onchange="this.form.submit()">
+								<?php
+									for($i=0; $i<count($project_id_name_table); $i++)
+									{
+										if( isset($_SESSION['ecp_selected_project']) && $_SESSION['ecp_selected_project']==$project_id_name_table[$i][0]){
+											echo '<option value="'.$project_id_name_table[$i][0].'" selected>'.$project_id_name_table[$i][1].'</option>';
+										}elseif (!isset($_SESSION['ecp_selected_project']) && $i==0){
+											echo '<option value="'.$project_id_name_table[$i][0].'" selected>'.$project_id_name_table[$i][1].'</option>';
+										}else{
+											echo '<option value="'.$project_id_name_table[$i][0].'">'.$project_id_name_table[$i][1].'</option>';
+										}
+									}
+								
+								?>
+							</select></label>
+							<label> AREA <select name="ecp_selected_area" class="selector" onchange="this.form.submit()">
+								<?php
+									for($i=0; $i<count($Areas_id_name_table); $i++)
+									{
+										if( isset($_SESSION['ecp_selected_area']) && $_SESSION['ecp_selected_area']==$Areas_id_name_table[$i][0]){
+											echo '<option value="'.$Areas_id_name_table[$i][0].'" selected>'.$Areas_id_name_table[$i][1].'</option>';
+										}else{
+											echo '<option value="'.$Areas_id_name_table[$i][0].'" >'.$Areas_id_name_table[$i][1].'</option>';
+										}
+									}
+								?>
+							</select></label>
+						<label> ROBOT <input type="text" class="form_field" id="f_robot" pattern="Additional houers"> </label>
 						<label> TIME <input type="number" class="form_field" id="f_time"> </label>
-						<label> DESCRIPTION <input type="text" class="form_field" id="f_description"> </label>
+						<label> AH <input type="checkbox" class="form_field" id="f_additionalhours" > </label>	
 						</div>
-						
-						<div>
-						<label> PROJECT <input type="text" class="form_field" id="f_project"> </label>				
-						<label> AREA <input type="text"  class="form_field" id="f_area"> </label>
-						<label> ROBOT <input type="text" class="form_field" id="f_robot"> </label>
-						<label> TIME <input type="number" class="form_field" id="f_time"> </label>
-						<label> DESCRIPTION <input type="text" class="form_field" id="f_description"> </label>
+						<div class="form_row">
+						<label> Type of work <select name="ecp_type_of_work" class="selector">
+							<option value=1>Simulation checking</option>
+							<option value=2>Preparing robot for OLP</option>
+							<option value=3>Main tasks path</option>
+							<option value=4>Service tasks path</option>
+							<option value=5>Clash</option>
+							<option value=6>Signals/actions</option>
+							<option value=7>Standard in tasks</option>
+							<option value=8>Downloads</option>
+							<option value=9>Prepare cells to send</option>
+							<option value=10>Dokumentation</option>
+							<option value=11>MRS/SOP</option>
+							<option value=12>Simulation changing</option>
+							<option value=13>Upload on plant</option>
+							<option value=14>Others</option>
+						</select></label>
+						<label> DESC. <input type="text" class="form_field" id="f_description" style="width:600px;"> </label>
 						</div>
-						
-						<div>
-						<label> ADDITIONAL HOURS <input type="number" class="form_field" id="f_additionalhours"> </label>				
-						<label> ADDITIONAL HOURS DESCRIPTION <input type="text"  class="form_field" id="f_ahdescription"> </label>
-						</div>
-						
-						<input type="submit" value="ADD TO EPC" id="add_button">
+						</fieldset>
+						<input type="submit" class="form_button" value="ADD TO EPC" id="add_button">
 
 
 					</div>

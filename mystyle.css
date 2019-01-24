@@ -80,6 +80,7 @@ footer
 .navigation>li:hover
 {
 	background-color: #888888;
+	font-size:20px;
 }
 
 .navigation a

@@ -6,14 +6,6 @@
 	
 	require_once('connect.php');
 	
-	$sql="SELECT*FROM {$db_table_name}";
-	
-	if($result=$db->query($sql))
-	{
-		$num_workers=$result->rowCount();
-		$workers_table=$result->fetchAll();
-	} 
-	
 	if(isset($_POST['new_worker_name']) and $_SESSION['logged_worker_permissions']>1 )
 	{
 		$_SESSION['worker_mode']=1;
@@ -38,6 +30,15 @@
 		$_SESSION['worker_mode']=4;
 		change_password($_POST['workers_change_password'],$_POST['change_password_old'],$_POST['change_password_new_1'],$_POST['change_password_new_2']);
 	}
+	
+		
+	$sql="SELECT*FROM {$db_table_name}";
+	
+	if($result=$db->query($sql))
+	{
+		$num_workers=$result->rowCount();
+		$workers_table=$result->fetchAll();
+	} 
 ?>
 
  <!DOCTYPE html>
@@ -131,9 +132,9 @@ elseif(!isset($_SESSION['worker_mode']))
 						</form>
 							<form method="post" id="Add_form">
 								<div  class="form_row">
-								<label> LOGIN <input type="text" class="form_field" name="new_worker_login"> </label>
-								<label> PASSWORD<input type="password" class="form_field" name="new_worker_password"> </label>
-								<label> REPEAT PASSWORD<input type="password" class="form_field" name="new_worker_password_1"> </label>
+								<label> LOGIN <input type="text" class="form_field" name="new_worker_login" required> </label>
+								<label> PASSWORD<input type="password" class="form_field" name="new_worker_password" required> </label>
+								<label> REPEAT PASSWORD<input type="password" class="form_field" name="new_worker_password_1" required> </label>
 								</div>
 								<div  class="form_row">
 								<label> NAME <input type="text" class="form_field" name="new_worker_name" id="WorkerNameField"> </label>				

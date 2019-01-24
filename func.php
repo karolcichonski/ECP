@@ -276,6 +276,47 @@ function Projects_Id_Table()
 	return $Project_Id_table;
 }
 
+//generate assotiative table where id is name 
+function Areas_Id_aTable($selected_project)
+{
+	require('connect.php');
+	$sql="SELECT * FROM areas WHERE project_id='{$selected_project}'  ORDER BY id ASC";
+	$result=$db->query($sql);
+	$AreasID=$result->fetchAll();
+	
+	for ($i=0; $i<count($AreasID); $i++ )
+	{
+		$Areas_Id_table[$AreasID[$i]['id']]=$AreasID[$i]['name'];
+	}
+	if (isset($Areas_Id_table)){
+		return $Areas_Id_table;
+	}else{
+		$Areas_Id_table=array();
+		return $Areas_Id_table;
+	}
+	
+}
+
+function Areas_Id_Table($selected_project)
+{
+	require('connect.php');
+	$sql="SELECT * FROM areas WHERE project_id='{$selected_project}'  ORDER BY id ASC";
+	$result=$db->query($sql);
+	$AreasID=$result->fetchAll();
+	
+	for ($i=0; $i<count($AreasID); $i++ )
+	{
+		$Areas_Id_table[$i]=array($AreasID[$i]['id'],$AreasID[$i]['name']);
+	}
+	
+	if (isset($Areas_Id_table)){
+		return $Areas_Id_table;
+	}else{
+		$Areas_Id_table=array();
+		return $Areas_Id_table;
+	}
+}
+
 
 class Worker
 {
@@ -533,6 +574,19 @@ function add_project(){
 
 }
 
+function add_area(){
+	$new_area= new Area;
+	//$new_worker->correct_data_flag=true;
+	//$new_worker->errors_drscriptions="";
+	$new_area->project_id=$_POST['project_id_add_area'];
+	$new_area->name=$_POST['add_area_name'];
+	$new_area->part=$_POST['add_area_part'];
+	$new_area->numbers_of_robots=$_POST['add_num_robots'];
+	
+	$new_area->insert_area_to_db();
+
+}
+
 class Project{
 	private $id;
 	public $project_name;
@@ -544,10 +598,6 @@ class Project{
 	public $upload;
 	public $customer;
 	
-	public function set_project_name($project_name)
-	{
-		$this->project_name=$project_name;
-	}	
 	
 	public function insert_project_to_db()
 	{
@@ -566,9 +616,40 @@ class Project{
 				$_SESSION['AddProjectStatusOK']="Project added successfully";
 			}
 			
-		Header("Location: projects.php");
+		//Header("Location: projects.php");
 		$_POST = array();
 	}
+	
+}
+
+class Area{
+	private $id;
+	public $project_id;
+	public $name;
+	public $part;
+	public $numbers_of_robots;
+	
+	public function insert_area_to_db()
+	{
+		require('connect.php');
+		$this->id="null";
+		$sql="INSERT INTO areas VALUES ('$this->id', '$this->project_id', '$this->name', '$this->part','$this->numbers_of_robots')";
+		//echo $sql;
+		//exit();
+		try{
+		$db->query($sql);
+		}catch(PDOException $error){	
+			$_SESSION['AddAreaStatusER']=$error->getMessage();
+		}
+		
+		if ($db->errorCode()==0){
+				$_SESSION['AddAreaStatusOK']="Project added successfully";
+		}
+			
+		//Header("Location: projects.php");
+		$_POST = array();
+	}
+	
 	
 }
 ?>
