@@ -53,6 +53,78 @@ function how_many_in_db($table_name, $atribut_name, $variable_name)
 		$db_connecting->close();
 }
 
+function delete_worker_via_ID($id)
+{
+	$db_connecting=connect_to_db();
+	$sql="DELETE FROM `workers` WHERE ID=$id";
+	$db_connecting->query($sql);
+	$db_connecting->close();
+	header ("Refresh:0");
+}
+
+function update_worker()
+{
+	$update_worker= new Worker;
+	$update_worker->correct_data_flag=true;
+	$update_worker->errors_drscriptions="";
+	
+	if(strlen($_POST['update_worker_name'])>0)
+	{
+		$update_worker->set_name($_POST['update_worker_name']);
+	}
+	
+	if(strlen($_POST['update_worker_surname'])>0)
+	{
+		$update_worker->set_surname($_POST['update_worker_surname']);
+	}
+	
+	if(strlen($_POST['update_worker_email'])>0)
+	{
+		$update_worker->set_email($_POST['update_worker_email']);
+	}
+	
+	if(strlen($_POST['update_worker_phone'])>0)
+	{
+		$update_worker->set_phone($_POST['update_worker_phone']);
+	}
+	
+	if(strlen($_POST['update_worker_computer'])>0)
+	{
+		$update_worker->set_computer_num($_POST['update_worker_computer']);
+	}
+	
+	if(strlen($_POST['update_worker_birthday'])>0)
+	{
+		$update_worker->set_birthday($_POST['update_worker_birthday']); 
+	}
+	
+	if ($update_worker->correct_data_flag==true)
+	{
+		$update_worker->update_worker_in_db($_POST['worker_id_to_update']);
+	}
+}
+
+function add_worker()
+	{
+		$new_worker= new Worker;
+		$new_worker->correct_data_flag=true;
+		$new_worker->errors_drscriptions="";
+		$new_worker->set_name($_POST['new_worker_name']);
+		$new_worker->set_surname($_POST['new_worker_surname']);
+		$new_worker->set_email($_POST['new_worker_email']);
+		$new_worker->set_login($_POST['new_worker_login']);
+		$new_worker->set_password($_POST['new_worker_password'],$_POST['new_worker_password_1']);		
+		$new_worker->set_phone($_POST['new_worker_phone']);
+		$new_worker->set_computer_num($_POST['new_worker_computer']);
+		$new_worker->set_birthday($_POST['new_worker_birthday']);
+		$new_worker->set_permissions($_POST['new_worker_permissions']);
+		
+		if ($new_worker->correct_data_flag==true)
+		{
+			$new_worker->insert_worker_to_db();
+		}
+	}
+
 class Worker
 {
 	private $id;
@@ -64,6 +136,7 @@ class Worker
 	private $phone;
 	private $computer_num;
 	private $birthday;
+	private $permissions;
 	public $correct_data_flag;
 	public $errors_descriptions;
 	
@@ -174,12 +247,66 @@ class Worker
 		{
 			$this->birthday=$birthday;
 		}
+		
+	public function set_permissions($permissions)
+		{
+			$this->permissions=$permissions;
+		}
+	
 	
 	public function insert_worker_to_db()
 	{
 		$db_connecting=connect_to_db();	
 		$sql="INSERT INTO workers VALUES (NULL, '$this->name', '$this->surname', '$this->email', '$this->login',
-		'$this->password', '$this->phone', '$this->computer_num', '$this->birthday')";
+		'$this->password', '$this->phone', '$this->computer_num', '$this->birthday', '$this->permissions')";
+		$db_connecting->query($sql);
+		$db_connecting->close();
+		header ("Refresh:0");
+	}
+	
+	public function update_worker_in_db($id)
+	{
+/* 		$sql="UPDATE `workers` SET ";
+		if (strlen($this->name)>0)
+		{
+				$sql=$sql."name='$this->name'";
+		}
+		$sql=$sql." WHERE ID=$id"; */
+		
+		$sql="UPDATE workers SET ID=$id ";
+		$db_connecting=connect_to_db();	
+		
+		if (isset($this->name))
+		{
+		$sql=$sql." ,name='$this->name'";
+		}
+		
+		if (isset($this->surname))
+		{
+		$sql=$sql." ,surname='$this->surname'";
+		}
+		
+		if (isset($this->email))
+		{
+		$sql=$sql." ,email='$this->email'";
+		}
+		
+		if (isset($this->phone))
+		{
+		$sql=$sql." ,phone='$this->phone'";
+		}
+		
+		if (isset($this->computer_num))
+		{
+		$sql=$sql." ,computer_num='$this->computer_num'";
+		}
+		
+		if (isset($this->birthday))
+		{
+		$sql=$sql." ,birthday='$this->birthday'";
+		}
+
+		$sql=$sql." WHERE ID=$id";
 		$db_connecting->query($sql);
 		$db_connecting->close();
 		header ("Refresh:0");
