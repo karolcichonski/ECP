@@ -81,7 +81,7 @@ function add_worker_selected()
 		UpdateForm.style.display="none";
 		DeleteForm.style.display="none";
 		PasswordForm.style.display="none";
-		AddSelector.checked=true;
+		//AddSelector.checked=true;
 
 		$(document).ready(function(){
 			$("#Add_form").slideToggle("slow");
@@ -145,4 +145,64 @@ function change_password_selected()
 function ecp_formfield_hide(){
 	var AddForm=document.getElementById("ecp_formfield");
 	AddForm.style.display="none";
+}
+
+function add_click()
+{
+	var AddForm=document.getElementById("Add_form");
+	var UpdateForm=document.getElementById("Update_form").style.display="none";
+	var DeleteForm=document.getElementById("Delete_form").style.display="none";
+		$(document).ready(function(){
+			$("#Add_form").slideToggle(200);
+			});
+}
+
+function update_click(){
+	var AddForm=document.getElementById("Add_form").style.display="none";
+	var UpdateForm=document.getElementById("Update_form");
+	var DeleteForm=document.getElementById("Delete_form").style.display="none";
+		$(document).ready(function(){
+			$("#Update_form").slideToggle(200);
+			});
+}
+
+function delete_click()
+{
+	var AddForm=document.getElementById("Add_form").style.display="none";
+	var UpdateForm=document.getElementById("Update_form").style.display="none";
+	var DeleteForm=document.getElementById("Delete_form");
+		$(document).ready(function(){
+			$("#Delete_form").slideToggle(200);
+			});
+}
+
+function active_module()
+{
+	var AddSelector=document.getElementById("add_module");
+	var UpdateSelector=document.getElementById("update_module");
+	var DeleteSelector=document.getElementById("delete_module");
+	
+}
+
+function StickyNavigation()
+{
+	$(document).ready(function() {
+	var NavY = $('.nav').offset().top;
+	 
+	var stickyNav = function(){
+	var ScrollY = $(window).scrollTop();
+		  
+	if (ScrollY > NavY) { 
+		$('.nav').addClass('sticky');
+	} else {
+		$('.nav').removeClass('sticky'); 
+	}
+	};
+	 
+	stickyNav();
+	 
+	$(window).scroll(function() {
+		stickyNav();
+	});
+	});
 }

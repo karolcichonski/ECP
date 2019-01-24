@@ -45,6 +45,8 @@
 <title>ALPHAROB PROJECT PLATFORM</title>
 <link rel="stylesheet" type="text/css" href="mystyle.css">
 <link href="https://fonts.googleapis.com/css?family=Francois+One&amp;subset=latin-ext" rel="stylesheet"> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="scripts.js"></script>
 </head>
 
 <body>
@@ -113,8 +115,17 @@
 						}
 						
 					?>
-						<div id="form">
-							<form method="post">
+						<form method="post" id="modul_select_form" >
+							<div class="mode_selector_3">
+								<div class="mode_select" onclick="add_click()" id="add_module" name="form_action">Add area</div>
+								<div class="mode_select" onclick="update_click()" id="update_module" name="form_action"> Update area </div>
+								<div class="mode_select" onclick="delete_click()" id="delete_module" name="form_action"> Delete area  </div>
+								<div style="clear:both;"></div>
+							</div>
+						</form>
+							
+						<div class="form_container" >
+							<form method="post" id="Add_form">
 								<div class="form_row">
 								<label> AREA NAME <input type="text"  class="form_field" name="add_area_name" required> </label>
 								<label> PART <input type="text"  class="form_field" name="add_area_part"> </label>
@@ -137,6 +148,12 @@
 											}
 									?>
 								<input type="submit" value="ADD AREA " id="add_area_button" class="form_button">
+							</form>
+							<form method="post" id="Update_form">
+								update test
+							</form>
+							<form method="post" id="Delete_form">
+								delete test
 							</form>
 						</div>
 					</div>

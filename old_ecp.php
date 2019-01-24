@@ -50,6 +50,10 @@
 <title>ALPHAROB PROJECT PLATFORM</title>
 <link rel="stylesheet" type="text/css" href="mystyle.css">
 <link href="https://fonts.googleapis.com/css?family=Francois+One&amp;subset=latin-ext" rel="stylesheet"> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="jquery-3.3.1.min.js"></script>
+<script src="scripts.js"></script>
+<script>StickyNavigation();</script>
 </head>
 
 <body>
@@ -61,17 +65,19 @@
 			</h1>
 		</header>
 		
-		<nav> 
-			<ul class="navigation">
-				<li> <a href="workers.php" >Workers</a></li>
-				<li> <a href="projects.php" >Projects</a></li>
-				<li> <a href="areas.php" >Areas</a></li>
-				<li> <a href="robots.php" >Robots</a></li>
-				<li> <a href="ecp.php" >ECP</a></li>
-				<li> <a href="old_ecp.php" >OLD ECP</a></li>
-				<li> <a href="logout.php"> Log Out: <?php echo $_SESSION['logged_worker_name']." ".$_SESSION['logged_worker_surname']; ?> </a></li>
-			</ul>
-		</nav>
+		<div class="nav">
+			<nav> 
+				<ul class="navigation">
+					<li> <a href="workers.php" >Workers</a></li>
+					<li> <a href="projects.php" >Projects</a></li>
+					<li> <a href="areas.php" >Areas</a></li>
+					<li> <a href="robots.php" >Robots</a></li>
+					<li> <a href="ecp.php" >ECP</a></li>
+					<li> <a href="old_ecp.php" >OLD ECP</a></li>
+					<li> <a href="logout.php"> Log Out: <?php echo $_SESSION['logged_worker_name']." ".$_SESSION['logged_worker_surname']; ?> </a></li>
+				</ul>
+			</nav>
+		</div>
 		
 		<main>
 			<div id="container">

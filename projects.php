@@ -29,6 +29,8 @@
 <title>ALPHAROB PROJECT PLATFORM</title>
 <link rel="stylesheet" type="text/css" href="mystyle.css">
 <link href="https://fonts.googleapis.com/css?family=Francois+One&amp;subset=latin-ext" rel="stylesheet"> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="scripts.js"></script>
 </head>
 
 <body>
@@ -68,80 +70,98 @@
 				
 				<section>
 					<div id="form">
-						<?php 
-							if($_SESSION['logged_worker_permissions']<2)
-							{
-								echo '<div style="display:none;">';
-							}
-							else
-							{
-								echo '<div style="display:block;">';
-							}
-							
-						?>
-							<form method="post">
-								<div class="form_row">
-								<label> PROJECT NAME <input type="text" class="form_field" name="new_project_name" required> </label>				
-								<label> BRAND <input type="text"  class="form_field" name="new_project_brand"> </label>
+								<?php 
+									if($_SESSION['logged_worker_permissions']<2)
+									{
+										echo '<div style="display:none;">';
+									}
+									else
+									{
+										echo '<div style="display:block;">';
+									}
+									
+								?>
+								
+									<form method="post" id="modul_select_form" >
+										<div class="mode_selector_3">
+											<div class="mode_select" onclick="add_click()" id="worker_add" name="form_action">Add project</div>
+											<div class="mode_select" onclick="update_click()" id="worker_update" name="form_action"> Updadte project </div>
+											<div class="mode_select" onclick="delete_click()" id="worker_delete" name="form_action"> Delete project  </div>
+											<div style="clear:both;"></div>
+										</div>
+									</form>
+									<div class="form_container">
+										<form method="post" id="Add_form">
+											<div class="form_row">
+											<label> PROJECT NAME <input type="text" class="form_field" name="new_project_name" required> </label>				
+											<label> BRAND <input type="text"  class="form_field" name="new_project_brand"> </label>
+											</div>
+											<div class="form_row">
+											<label> SOFTWARE <input type="text" class="form_field" name="new_project_software"> </label>
+											<label> RCS <input type="text" class="form_field" name="new_project_rcs"> </label>
+											<label> ROBOT TYPE<input type="text" class="form_field" name="new_project_robots"> </label>
+											</div>
+											<div class="form_row">
+											<label> TAKT TIME<input type="text" class="form_field" name="new_project_takt"> </label>
+											<label> CUSTOMER<input type="text" class="form_field" name="new_project_customer"> </label>
+											</div>
+											<div class="form_row">
+											<label> MAIN T.<select class="selector" name="new_project_main"> 
+														<option value=0 selected>NO</option>
+														<option value=1>YES</option>
+											</select></label>
+											<label> SERVICE T.<select class="selector" name="new_project_service"> 
+														<option value=0 selected>NO</option>
+														<option value=1>YES</option>
+											</select></label>
+											<label> SIGNALS <select class="selector" name="new_project_signals"> 
+														<option value=0 selected>NO</option>
+														<option value=1>YES</option>
+											</select></label>
+											<label> DOWNLOADS<select class="selector" name="new_project_download"> 
+														<option value=0 selected>NO</option>
+														<option value=1>YES</option>
+											</select></label>
+											<label> MRS/SOP<select class="selector" name="new_project_mrs"> 
+														<option value=0 selected>NO</option>
+														<option value=1>YES</option>
+											</select></label>
+											<label> UPLOAD<select class="selector" name="new_project_upload"> 
+														<option value=0 selected>NO</option>
+														<option value=1>YES</option>
+											</select></label>
+											</div>
+												<?php 
+													if (isset($_SESSION['AddProjectStatusOK'])){
+														echo '<div class="form_success">'.$_SESSION['AddProjectStatusOK'].'</div>';
+														/* sleep(5); */
+														unset($_SESSION['AddProjectStatusOK']);
+														/* header ("Refresh:0"); */
+														}
+													
+													
+													if(isset($_SESSION['AddProjectStatusER'])){
+														echo '<div class="form_error_com">'.$_SESSION['AddProjectStatusER'].'</div>';
+														/* sleep(5); */
+														unset($_SESSION['AddProjectStatusER']);
+														/* header ("Refresh:0"); */
+														}
+												?>
+											<input type="submit" value="ADD PROJECT" class="form_button">
+									
+										</form>
+										<form method="post" id="Update_form">
+											update test
+										</form>
+										<form method="post" id="Delete_form">
+											delete test
+										</form>
+									</div>
 								</div>
-								<div class="form_row">
-								<label> SOFTWARE <input type="text" class="form_field" name="new_project_software"> </label>
-								<label> RCS <input type="text" class="form_field" name="new_project_rcs"> </label>
-								<label> ROBOT TYPE<input type="text" class="form_field" name="new_project_robots"> </label>
-								</div>
-								<div class="form_row">
-								<label> TAKT TIME<input type="text" class="form_field" name="new_project_takt"> </label>
-								<label> CUSTOMER<input type="text" class="form_field" name="new_project_customer"> </label>
-								</div>
-								<div class="form_row">
-								<label> MAIN T.<select class="selector" name="new_project_main"> 
-											<option value=0 selected>NO</option>
-											<option value=1>YES</option>
-								</select></label>
-								<label> SERVICE T.<select class="selector" name="new_project_service"> 
-											<option value=0 selected>NO</option>
-											<option value=1>YES</option>
-								</select></label>
-								<label> SIGNALS <select class="selector" name="new_project_signals"> 
-											<option value=0 selected>NO</option>
-											<option value=1>YES</option>
-								</select></label>
-								<label> DOWNLOADS<select class="selector" name="new_project_download"> 
-											<option value=0 selected>NO</option>
-											<option value=1>YES</option>
-								</select></label>
-								<label> MRS/SOP<select class="selector" name="new_project_mrs"> 
-											<option value=0 selected>NO</option>
-											<option value=1>YES</option>
-								</select></label>
-								<label> UPLOAD<select class="selector" name="new_project_upload"> 
-											<option value=0 selected>NO</option>
-											<option value=1>YES</option>
-								</select></label>
-								</div>
-									<?php 
-										if (isset($_SESSION['AddProjectStatusOK'])){
-											echo '<div class="form_success">'.$_SESSION['AddProjectStatusOK'].'</div>';
-											/* sleep(5); */
-											unset($_SESSION['AddProjectStatusOK']);
-											/* header ("Refresh:0"); */
-											}
-										
-										
-										if(isset($_SESSION['AddProjectStatusER'])){
-											echo '<div class="form_error_com">'.$_SESSION['AddProjectStatusER'].'</div>';
-											/* sleep(5); */
-											unset($_SESSION['AddProjectStatusER']);
-											/* header ("Refresh:0"); */
-											}
-									?>
-								<input type="submit" value="ADD PROJECT" class="form_button">
+							</div>
 						
-							</form>
-						</div>
 					</div>
 				</section>
-			</div>
 		</main>
 		<footer>
 			2018 ALPHAROB SP Z O. O. WSZELKIE PRAWA ZASTRZEŻONE

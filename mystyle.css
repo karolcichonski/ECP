@@ -106,13 +106,14 @@ select:focus{
 	display: inline-block;
 	padding-left:10px;
 	padding-right: 10px;
-	padding-top:5px;
-	padding-bottom:5px;
+/* 	padding-top:5px;
+	padding-bottom:5px; */
 	font-size:18px;
 	font-weight:700;
 	border-left: 2px dotted black;
 	border-right: 2px dotted black;
 	border-radius:5px;
+	line-height:250%;
 }
 
 .navigation> li:first-child
@@ -131,6 +132,8 @@ select:focus{
 {
 	color:#fff;
 	text-decoration:none;
+	display:block;
+	height:45px;
 }
 
 #container
@@ -204,6 +207,7 @@ select:focus{
 	margin-top:5px;
 }
 
+
 .form_success
 {
 	color: #ADFF2F;
@@ -218,6 +222,7 @@ select:focus{
 	padding:5px;
 	width:500px;	
 	margin-top:20px;
+	margin-bottom:20px;
 }
 
 
@@ -257,6 +262,15 @@ width:808px;
 margin-left:auto;
 margin-right:auto;
 border-right: 2px solid white;
+}
+
+.mode_selector_3
+{
+	width:606px;
+	margin-left:auto;
+	margin-right:auto;
+	border-right: 2px solid white;
+	
 }
 
 .mode_select
@@ -333,4 +347,25 @@ border-right: 2px solid white;
 
 .ecp_filter_form{
 	display:inline;
+}
+
+.form_container{
+	/*border: 2px solid white;*/
+	background-color: rgba(0, 0, 0, .25);
+	width:1200px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#form{
+	margin-bottom:50px;
+
+}
+
+.sticky{
+	width:100%;
+	position: fixed;
+	left:0;
+	top:0;
+	z-index:100;
 }

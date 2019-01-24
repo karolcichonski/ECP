@@ -57,29 +57,34 @@
 <title>ALPHAROB PROJECT PLATFORM</title>
 <link rel="stylesheet" type="text/css" href="mystyle.css">
 <link href="https://fonts.googleapis.com/css?family=Francois+One&amp;subset=latin-ext" rel="stylesheet"> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="scripts.js"></script>
+<script src="jquery-3.3.1.min.js"></script>
 </head>
 
 <body>
-		<header>
-			<h1 id="logo"> 
-				<font color="#cc3333" size="7">alpha </font>
-				<font color="lightgray"  size="7">rob  </font> 
-				<font color="white"  size="7"> offline robots programing </font>
-			</h1>
-		</header>
-		
-		<nav> 
-			<ul class="navigation">
-				<li> <a href="workers.php" >Workers</a></li>
-				<li> <a href="projects.php" >Projects</a></li>
-				<li> <a href="areas.php" >Areas</a></li>
-				<li> <a href="robots.php" >Robots</a></li>
-				<li> <a href="ecp.php" >ECP</a></li>
-				<li> <a href="old_ecp.php" >OLD ECP</a></li>
-				<li> <a href="logout.php"> Log Out: <?php echo $_SESSION['logged_worker_name']." ".$_SESSION['logged_worker_surname']; ?> </a></li>
-			</ul>
-		</nav>
-		
+		<div id="header">
+			<header>
+				<h1 id="logo"> 
+					<font color="#cc3333" size="7">alpha </font>
+					<font color="lightgray"  size="7">rob  </font> 
+					<font color="white"  size="7"> offline robots programing </font>
+				</h1>
+			</header>
+		</div>
+		<div id="nav">
+			<nav> 
+				<ul class="navigation">
+					<li> <a href="workers.php" >Workers</a></li>
+					<li> <a href="projects.php" >Projects</a></li>
+					<li> <a href="areas.php" >Areas</a></li>
+					<li> <a href="robots.php" >Robots</a></li>
+					<li> <a href="ecp.php" >ECP</a></li>
+					<li> <a href="old_ecp.php" >OLD ECP</a></li>
+					<li> <a href="logout.php"> Log Out: <?php echo $_SESSION['logged_worker_name']." ".$_SESSION['logged_worker_surname']; ?> </a></li>
+				</ul>
+			</nav>
+		</div>
 		<main>
 			<div id="container">
 						<div id="robots_filter">
@@ -146,8 +151,16 @@
 						}
 						
 					?>	
-						<div id="form" style="height:300px;">
-							<form method="post">
+						<form method="post" id="modul_select_form" >
+							<div class="mode_selector_3">
+								<div class="mode_select" onclick="add_click()" id="worker_add" name="form_action">Add robot</div>
+								<div class="mode_select" onclick="update_click()" id="worker_update" name="form_action"> Update robot </div>
+								<div class="mode_select" onclick="delete_click()" id="worker_delete" name="form_action"> Delete robot  </div>
+								<div style="clear:both;"></div>
+							</div>
+						</form>
+						<div  class="form_container" >
+							<form method="post" id="Add_form">
 								<div class="form_row">
 									<label> ROBOT NAME <input type="text" class="form_field" style="width:120px;" name="add_robot_name" required> </label>	
 									<label> 7yh Axis
@@ -179,6 +192,12 @@
 											}
 									?>
 									<input type="submit" value="ADD ROBOT" class="form_button"> 
+							</form>
+							<form method="post" id="Update_form">
+								update test
+							</form>
+							<form method="post" id="Delete_form">
+								delete test
 							</form>
 						</div>
 					</div>	
