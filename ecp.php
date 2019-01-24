@@ -3,7 +3,6 @@
 	include 'func.php';
 	require_once('connect.php');
 	is_loged_check();
-	unset_worker_mode();
 	$db_table_name="ecp";
 	$workers_table=Workers_Id_Table();
 	
@@ -92,7 +91,7 @@
 	} 
 	
 	$days_in_ecp_range=how_many_day_in_range($_SESSION['ecp_date_filter3'], $_SESSION['ecp_date_filter4']);
-		
+	
 	for($i=0; $i<$num_ecp_records; $i++){
 		
 		$ecp_table[$i]['project_name']=$Project_id_name_atable[$ecp_table[$i]['project_id']];
@@ -245,7 +244,6 @@
 
 
 <body onload='onload_module(3,"ecp_mode_number")'>	
-<?php echo $_SESSION['ecp_date_filter1']." ".$_SESSION['ecp_date_filter2']." ".$_SESSION['ecp_date_filter3']." ".$_SESSION['ecp_date_filter4'];?>
 		<header>
 			<h1 id="logo"> 
 				<font color="#cc3333" size="7">alpha </font>
@@ -362,6 +360,12 @@
 													echo '<option value="'.$Areas_id_name_table[$i][0].'" >'.$Areas_id_name_table[$i][1].'</option>';
 												}
 											}
+											
+											if( isset($_SESSION['ecp_selected_area']) && $_SESSION['ecp_selected_area']==999){
+												echo '<option value=999 selected >ALL</option>';
+											}else{
+												echo '<option value=999>ALL</option>';
+											}
 										?>
 									</select></label>
 								</form > 
@@ -375,6 +379,11 @@
 												}else{
 													echo '<option value="'.$Robots_id_name_table[$i][0].'" >'.$Robots_id_name_table[$i][1].'</option>';
 												}
+											}
+											if( isset($_SESSION['ecp_selected_robot']) && $_SESSION['ecp_selected_robot']==999){
+												echo '<option value=999 selected >ALL</option>';
+											}else{
+												echo '<option value=999>ALL</option>';
 											}
 										?>
 									</select></label>

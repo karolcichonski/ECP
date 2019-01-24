@@ -3,9 +3,10 @@
 	include 'func.php';
 	require_once('connect.php');
 	is_loged_check();
-	unset_worker_mode();
 	$db_table_name="projects";
-	
+	$workers_table=Workers_Id_Table();
+	$project_id_table=Projects_Id_Table();
+			
 	if(isset($_POST['new_project_name']) and $_SESSION['logged_worker_permissions']>1 )
 	{
 		add_project();
@@ -17,6 +18,18 @@
 	}
 	
 	$sql="SELECT*FROM {$db_table_name} ORDER BY id DESC";
+	
+	if (isset($_POST['summary_selected_project'])){
+		$_SESSION['summary_selected_project']=$_POST['summary_selected_project'];
+		$projectName=$_POST['summary_selected_project'];
+		for($i=0;$i<count($project_id_table);$i++){
+			if($project_id_table[$i][1]==$projectName){
+				$projectID=$project_id_table[$i][0];
+				$project_summary_table=project_summary_old_ECP($projectName, $projectID);
+				$sql="SELECT*FROM {$db_table_name} WHERE id=$projectID ORDER BY id DESC";
+			}
+		}
+	}
 	
 	if($result=$db->query($sql))
 	{
@@ -89,7 +102,7 @@
 								<li onclick='module_nav_click(1,4,"project_mode_number")' id="mode_butt_1">Add project</li>
 								<li onclick='module_nav_click(2,4,"project_mode_number")' id="mode_butt_2">Update project</li>
 								<li onclick='module_nav_click(3,4,"project_mode_number")' id="mode_butt_3">Delete project</li>
-								<li onclick='module_nav_click(4,4,"project_mode_number")' id="mode_butt_4">Project summary</li>
+								<li onclick='module_nav_click(4,4,"project_mode_number"), toggle_table()' id="mode_butt_4">Project summary</li>
 							</ul>
 						</div>
 						<div id="form">
@@ -181,24 +194,40 @@
 										<input type="submit" class="form_button" value="REMOVE" style="width:100px;" ></input>
 									</form>
 								</div>
-								<div id="mode4" class="single_mode_container">
-									<label> PROJECT <select name="robot_selected_project" class="selector" onchange="this.form.submit()" style="width:200px;">
-										<?php
+								<div id="mode4" class="single_mode_container" style="min-height:700px;">
+									<form method="post">
+										<label> PROJECT <select name="summary_selected_project" class="selector" style="width:200px; margin-top:20px;">
+											<?php
+												
+												for($i=0; $i<count($project_id_table); $i++)
+												{
+													if($_SESSION['summary_selected_project']==$project_id_table[$i][1]){
+														echo '<option value="'.$project_id_table[$i][1].'" selected>'.$project_id_table[$i][1].'</option>';
+													}else{
+														echo '<option value="'.$project_id_table[$i][1].'">'.$project_id_table[$i][1].'</option>';	
+													}
+												}
 											
-											for($i=0; $i<$num_projects; $i++)
-											{
-												echo '<option value="'.$projects_table[$i]['id'].'">'.$projects_table[$i]['project_name'].'</option>';
-												/*if( isset($_SESSION['Project_selected_project']) && $_SESSION['Project_selected_project']==$projects_table[$i]['project_name']){
-													echo '<option value="'.$project_id_name_table[$i][0].'" selected>'.$project_id_name_table[$i][1].'</option>';
-												}elseif (!isset($_SESSION['robot_selected_project']) && $i==0){
-													echo '<option value="'.$project_id_name_table[$i][0].'" selected>'.$project_id_name_table[$i][1].'</option>';
-												}else{
-													echo '<option value="'.$projects_table[$i]['project_name'].'">'.$projects_table[$i]['project_name'].'</option>';
-												} */
+											?>
+										</select></label>
+																
+										<input type="submit" value="Generate Summary" class="form_button" style="width:200px;"></input>
+									</form>
+									<?php 
+										if(isset($project_summary_table)){
+												echo "How many days worked on project: </br>";
+											for ($i=0;$i<count($project_summary_table); $i++){
+												echo $project_summary_table[$i][0]."-> ".$project_summary_table[$i][1]." </br>";
+											}
+											for ($i=0;$i<count($project_summary_table); $i++){
+												echo '<div class="horizontal_chart" style="width:'.$project_summary_table[$i][1].'px;"></div>';
 											}
 										
-										?>
-									</select></label>
+										
+											unset($_SESSION['summary_selected_project']);
+										}
+									?>
+									
 								</div>
 							</div>
 						</div>

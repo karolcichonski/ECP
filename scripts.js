@@ -46,67 +46,26 @@ function module_nav_hide(number_of_modes){
 	}	
 } 
 
-function ecp_formfield_hide(){
-	var AddForm=document.getElementById("ecp_formfield");
-	AddForm.style.display="none";
-}
-
-function add_click()
-{
-	var AddForm=document.getElementById("Add_form");
-	var UpdateForm=document.getElementById("Update_form");
-	var DeleteForm=document.getElementById("Delete_form");
-		$(document).ready(function(){$("#Update_form").slideUp(200);});
-		$(document).ready(function(){$("#Delete_form").slideUp(200);});
-		$(document).ready(function(){$("#Add_form").slideDown(200);});
-}
-
-function update_click(){
-	var AddForm=document.getElementById("Add_form");
-	var UpdateForm=document.getElementById("Update_form");
-	var DeleteForm=document.getElementById("Delete_form");
-		$(document).ready(function(){$("#Add_form").slideUp(200);});
-		$(document).ready(function(){$("#Delete_form").slideUp(200);});
-		$(document).ready(function(){$("#Update_form").slideDown(200);});
-}
-
-function delete_click()
-{
-	var AddForm=document.getElementById("Add_form");
-	var UpdateForm=document.getElementById("Update_form");
-	var DeleteForm=document.getElementById("Delete_form");
-		$(document).ready(function(){$("#Add_form").slideUp(200);});
-		$(document).ready(function(){$("#Update_form").slideUp(200);});
-		$(document).ready(function(){$("#Delete_form").slideDown(200);});
-}
-
-function hide_click()
-{
-	var AddForm=document.getElementById("Add_form");
-	var UpdateForm=document.getElementById("Update_form");
-	var DeleteForm=document.getElementById("Delete_form");
-		$(document).ready(function(){$("#Add_form").slideUp(200);});
-		$(document).ready(function(){$("#Update_form").slideUp(200);});
-		$(document).ready(function(){$("#Delete_form").slideUp(200);});
-}
-
-function show_add_form()
-{
-	var AddForm=document.getElementById("Add_form");
-	var UpdateForm=document.getElementById("Update_form");
-	var DeleteForm=document.getElementById("Delete_form");
+function toggle_table(){
+	var table=document.getElementById("table_container");
+	var form=document.getElementById("mode4")
+	if (sessionStorage.getItem("project_mode_number")==4){
+		$(document).ready(function(){$("#table_container").slideUp(200);});
+		$(document).ready(function(){$("#mode4").slideDown(200);});
 		
-		AddForm.style.display="block";
-		UpdateForm.style.display="none";
-		DeleteForm.style.display="none";
+	}else{
+		$(document).ready(function(){$("#table_container").slideDown(200);});
+		$(document).ready(function(){$("#mode4").slideUp(200);});
+	}
 }
 
-function active_module()
-{
-	var AddSelector=document.getElementById("add_module");
-	var UpdateSelector=document.getElementById("update_module");
-	var DeleteSelector=document.getElementById("delete_module");
-	
+function hide_table(){
+	var table=document.getElementById("table_container");
+	if (sessionStorage.getItem("project_mode_number")==4){
+		table.style.display="none";
+	}else{
+		table.style.display="block";
+	}
 }
 
 function StickyNavigation()

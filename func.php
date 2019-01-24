@@ -924,7 +924,7 @@ function remove_record_in_db($record_ID, $TableName){
 		$_SESSION['RemoveRecordErr']=$error->getMessage();
 	}
 	if ($db->errorCode()==0){
-		$_SESSION['RemoveRecordOK']="ECP record deleted successfully";
+		$_SESSION['RemoveRecordOK']="Record deleted successfully";
 	}
 }
 
@@ -932,7 +932,7 @@ function import_csv(){
 require('connect.php');
 $row = 0;
 $dummy_ecp_table=array();
-$uchwyt = fopen ("bazy/ECP_BUGDOL.csv","r");
+$uchwyt = fopen ("bazy/ECP_GLEN.csv","r");
 while (($data=fgetcsv($uchwyt, 5000, ";"))!==false)
 {
 	$num = count($data);
@@ -943,7 +943,7 @@ fclose ($uchwyt);
 
 for($i=1; $i<=count($dummy_ecp_table); $i++){
 	if($dummy_ecp_table[$i][6]!=""){
-		$worker= 4;
+		$worker= 5;
 		$starttime= $dummy_ecp_table[$i][0]." ".$dummy_ecp_table[$i][7];
 		$endtime= $dummy_ecp_table[$i][0]." ".$dummy_ecp_table[$i][8];
 		$TS_Start= new DateTime($starttime);
@@ -1001,7 +1001,7 @@ function how_many_day_in_range($first_date, $second_date)
 	$first_date= new DateTime ($first_date);
 	$second_date= new DateTime ($second_date);
 	if ($first_date<=$second_date){
-		return (($second_date->format('U')-$first_date->format('U'))/86400)+1; 
+		return (floor(($second_date->format('U')-$first_date->format('U'))/86400))+1; 
 	}
 	else return 0;
 }
@@ -1030,7 +1030,7 @@ $holidays=array(
 	"2019-08-15"=>"Święto Wojska Polskiego",
 	"2019-11-01"=>"Wszystkich Świętych",
 	"2019-11-11"=>"Święto Niepodległości",
-	"2019-11-25"=>"Boże Narodzenie",
+	"2019-12-25"=>"Boże Narodzenie",
 	"2019-12-26"=>"Boże Narodzenie",
 	
 	"2020-01-01"=>"Nowy Rok", 
@@ -1044,7 +1044,7 @@ $holidays=array(
 	"2020-08-15"=>"Święto Wojska Polskiego",
 	"2020-11-01"=>"Wszystkich Świętych",
 	"2020-11-11"=>"Święto Niepodległości",
-	"2020-11-25"=>"Boże Narodzenie",
+	"2020-12-25"=>"Boże Narodzenie",
 	"2020-12-26"=>"Boże Narodzenie"
 	);
 	
@@ -1063,4 +1063,58 @@ function get_overtime_num($sumTime, $date){
 	}else{
 		return ($sumTime-480)*1.5;
 	}
+}
+
+function project_summary_old_ECP($projectName, $id){
+	$workers_table=Workers_Id_Table();
+	$output_array=array();
+	$row_number=0;
+	for ($i=0; $i<count($workers_table); $i++){
+		$sql="SELECT * FROM old_ecp WHERE project LIKE '%".$projectName."%' and worker=".$workers_table[$i][0]."";
+		$NOR=how_many_in_db1($sql);
+		if($NOR>0){
+				$output_array[$row_number][0]=$workers_table[$i][1];
+				$output_array[$row_number][1]=$NOR;
+				$row_number++;
+		}		
+	}
+	$sql="SELECT * FROM old_ecp WHERE project LIKE '%".$projectName."%'";
+	$NOR=how_many_in_db1($sql);
+		if($NOR>0){
+				$output_array[$row_number][0]="SUMARY";
+				$output_array[$row_number][1]=$NOR;
+				$row_number++;
+		}
+	
+	$sql="SELECT * FROM areas WHERE project_id=$id";
+	$NOR=how_many_in_db1($sql);
+		$output_array[$row_number][0]="AREAS";
+		$output_array[$row_number][1]=$NOR;
+		$row_number++;
+	
+		$sql="SELECT * FROM robots WHERE project_id=$id";
+	$NOR=how_many_in_db1($sql);
+		$output_array[$row_number][0]="ROBOTS";
+		$output_array[$row_number][1]=$NOR;
+		$row_number++;
+		
+	return $output_array;
+}
+
+function how_many_in_db1($sql){
+	require('connect.php');
+
+		try{
+		$result=$db->query($sql);
+		}catch(PDOException $error){	
+			$_SESSION['HowManyStatusER']=$error->getMessage();
+		}
+		if ($db->errorCode()==0){
+			$_SESSION['HowManyStatusOK']="Worker added successfully";
+			$how_many=$result->rowCount();
+			return $how_many;
+		}else{
+			$how_many=0;
+			return $how_many;
+		}
 }

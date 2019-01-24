@@ -3,7 +3,6 @@
 	include 'func.php';
 	require_once('connect.php');
 	is_loged_check();
-	unset_worker_mode();
 	$db_table_name="areas";
 	
 	if (!isset($_SESSION['area_selected_project'])){

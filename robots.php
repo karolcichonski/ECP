@@ -3,7 +3,6 @@
 	include 'func.php';
 	require_once('connect.php');
 	is_loged_check();
-	unset_worker_mode();
 	$db_table_name="robots";
 	
 	if (isset($_POST['add_robot_name'])&& $_SESSION['logged_worker_permissions']>1){

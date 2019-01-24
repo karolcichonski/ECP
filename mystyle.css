@@ -207,7 +207,6 @@ select:focus{
 	padding-right:10px;
 	max-width:250px;
 	user-select: none;
-
 }
 .table_column:hover
 {
@@ -278,6 +277,7 @@ select:focus{
 	width:500px;	
 	margin-top:20px;
 	margin-bottom:20px;
+	min-height:20px;
 }
 
 
@@ -431,4 +431,13 @@ select:focus{
 	left:0;
 	top:0;
 	z-index:100;
+}
+
+.horizontal_chart{
+	padding:10px;
+	margin:10px;
+	background-color:red;
+	border:2px solid white;
+	height:10px;
+	display:block;
 }
