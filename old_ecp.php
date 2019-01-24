@@ -12,6 +12,8 @@
 		$_SESSION['old_ecp_date_filter2']=date("Y-m-d")." 00:00:00";
 		$_SESSION['old_ecp_date_filter3']=date("Y-m")."-01";
 		$_SESSION['old_ecp_date_filter4']=date("Y-m-d");
+		$_SESSION['old_ecp_worker']=$_SESSION['logged_worker_id'];
+		
 	}
 	
 	if(isset($_POST['old_ecp_date_filter1'])){
@@ -19,10 +21,11 @@
 		$_SESSION['old_ecp_date_filter2']=$_POST['old_ecp_date_filter2']." 23:59:59";
 		$_SESSION['old_ecp_date_filter3']=$_POST['old_ecp_date_filter1'];
 		$_SESSION['old_ecp_date_filter4']=$_POST['old_ecp_date_filter2'];
+		$_SESSION['old_ecp_worker']=$_POST['old_ecp_worker'];
 	}
 		
 	$sql="SELECT*FROM {$db_table_name} WHERE start_time>='{$_SESSION['old_ecp_date_filter1']}' 
-				and start_time<='{$_SESSION['old_ecp_date_filter2']}'  ORDER BY start_time DESC";
+				and start_time<='{$_SESSION['old_ecp_date_filter2']}' and worker='{$_SESSION['old_ecp_worker']}'  ORDER BY start_time DESC";
 	
 	if($result=$db->query($sql))
 	{
@@ -78,20 +81,24 @@
 							 <label><select class="selector" name="old_ecp_worker">
 								<?php
 								for ($i=0;$i<count($workers_table); $i++){
-									echo '<option value="'.$workers_table[$i][0].'">'.$workers_table[$i][1]." ".$workers_table[$i][2].'</option>';
+									if ($_SESSION['old_ecp_worker']==$workers_table[$i][0]){
+										echo '<option value="'.$workers_table[$i][0].'" selected>'.$workers_table[$i][1]." ".$workers_table[$i][2].'</option>';
+									}else{
+										echo '<option value="'.$workers_table[$i][0].'">'.$workers_table[$i][1]." ".$workers_table[$i][2].'</option>';
+									}
 								}
 								?>
 							</select></label>
-							<label><input type="date" class="form_field" name="old_ecp_date_filter1"  value="<?php echo $_SESSION['old_ecp_date_filter3']?>"></label>
-							<label><input type="date" class="form_field" name="old_ecp_date_filter2"  value="<?php echo $_SESSION['old_ecp_date_filter4']?>"></label>
-							<input type="submit" class="form_button" value="ADD TO EPC" id="add_button">
+								<label><input type="date" class="form_field" name="old_ecp_date_filter1"  value="<?php echo $_SESSION['old_ecp_date_filter3']?>"></label>
+								<label><input type="date" class="form_field" name="old_ecp_date_filter2"  value="<?php echo $_SESSION['old_ecp_date_filter4']?>"></label>
+							<input type="submit" class="form_button" value="FILTER" id="add_button" style="width:60px;">
 						</form>
 					</div>
 				</section>
 				<section>
 					<?php
-						$db_name=array('worker','start_time','end_time','sum_time','place','project','cell','description');
-						$table_headers=array('worker','start_time','end_time','sum_time','place','project','cell','description');
+						$db_name=array('worker','date','start_time1','end_time1','sum_time','place','project','cell','description');
+						$table_headers=array('WORKER','DATE','START','END','SUM','PLACE','PROJECT','CELL','DESCRIPTION');
 						$row_number=$num_ecp_records;
 						$table_title="ECP";
 

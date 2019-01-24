@@ -47,6 +47,7 @@
 <meta charset="UTF-8">
 <title>ALPHAROB PROJECT PLATFORM</title>
 <link rel="stylesheet" type="text/css" href="mystyle.css">
+<link href="https://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Francois+One&amp;subset=latin-ext" rel="stylesheet"> 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="scripts.js"></script>
@@ -77,7 +78,6 @@ if(isset($_SESSION['worker_mode']))
 	echo '<body onload="add_worker_selected()">';
 } */
 ?>	
-
 		<header>
 			<h1 id="logo"> 
 				<font color="#cc3333" size="7">alpha </font>
@@ -85,30 +85,31 @@ if(isset($_SESSION['worker_mode']))
 				<font color="white"  size="7"> offline robots programing </font>
 			</h1>
 		</header>
-		
-		<nav> 
-			<ul class="navigation">
-				<li> <a href="workers.php" >Workers</a></li>
-				<li> <a href="projects.php" >Projects</a></li>
-				<li> <a href="areas.php" >Areas</a></li>
-				<li> <a href="robots.php" >Robots</a></li>
-				<li> <a href="ecp.php" >ECP</a></li>
-				<li> <a href="logout.php"> Log Out: <?php echo $_SESSION['logged_worker_name']." ".$_SESSION['logged_worker_surname']; ?> </a></li>
-			</ul>
-		</nav>
-		
+		<div>
+			<nav> 
+				<ul class="navigation">
+					<li> <a href="workers.php" >Workers</a></li>
+					<li> <a href="projects.php" >Projects</a></li>
+					<li> <a href="areas.php" >Areas</a></li>
+					<li> <a href="robots.php" >Robots</a></li>
+					<li> <a href="ecp.php" >ECP</a></li>
+					<li> <a href="old_ecp.php" >OLD ECP</a></li>
+					<li> <a href="logout.php"> Log Out: <?php echo $_SESSION['logged_worker_name']." ".$_SESSION['logged_worker_surname']; ?> </a></li>
+				</ul>
+			</nav>
+		</div>
 		<main>
 		<div id="container">
 				<section>
-				<?php
-				$db_name=array('name','surname','email','login','phone','computer_num','birthday','permissions');
-				$table_headers=array('Name','Surname','Email','Login','Phone','Computer number','Birthday','Permissions');
-				$row_number=$num_workers;
-				$table_title="WORKERS LIST";
+					<?php
+					$db_name=array('name','surname','email','login','phone','computer_num','birthday','permissions');
+					$table_headers=array('Name','Surname','Email','Login','Phone','Computer number','Birthday','Permissions');
+					$row_number=$num_workers;
+					$table_title="WORKERS LIST";
 
-				$table_array=create_table($workers_table, $table_title, $db_name, $table_headers, $row_number);
-				
-				?>
+					$table_array=create_table($workers_table, $table_title, $db_name, $table_headers, $row_number);
+					
+					?>
 
 				</section>
 
@@ -126,12 +127,12 @@ if(isset($_SESSION['worker_mode']))
 						
 					?>
 					
-					<form method="post" id="modul_select_form">
+					<form method="post" id="modul_select_form" >
 						<div id="mode_selector_cont">
-							<div class="mode_select"><label><input type="radio"  onclick="add_worker_click()" id="worker_add" name="form_action"> Add new worker </label></div>
-							<div class="mode_select"><label><input type="radio"  onclick="update_worker_click()" id="worker_update" name="form_action"> Updadte worker  </label></div>
-							<div class="mode_select"><label><input type="radio"  onclick="delete_worker_click()" id="worker_delete" name="form_action"> Delete worker  </label></div>
-							<div class="mode_select"><label><input type="radio"  onclick="change_password_click()" id="change_password" name="form_action"> Change password  </label></div>
+							<div class="mode_select" onclick="add_worker_click()" id="worker_add" name="form_action">Add new worker</div>
+							<div class="mode_select" onclick="update_worker_click()" id="worker_update" name="form_action"> Updadte worker </div>
+							<div class="mode_select" onclick="delete_worker_click()" id="worker_delete" name="form_action"> Delete worker  </div>
+							<div class="mode_select" onclick="change_password_click()" id="change_password" name="form_action"> Change password </div>
 							<div style="clear:both;"></div>
 						</div>
 					</form>

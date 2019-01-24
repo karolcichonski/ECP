@@ -27,7 +27,7 @@ function update_worker_click()
 	/* UpdateForm.style.display="block"; */
 	DeleteForm.style.display="none";
 	PasswordForm.style.display="none";
-	UpdateSelector.checked=true;
+	UpdateSelector.style.borderBottomLeftRadius="15px";
 	
 	$(document).ready(function(){
 		$("#Update_form").slideToggle(200);

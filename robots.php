@@ -75,6 +75,7 @@
 				<li> <a href="areas.php" >Areas</a></li>
 				<li> <a href="robots.php" >Robots</a></li>
 				<li> <a href="ecp.php" >ECP</a></li>
+				<li> <a href="old_ecp.php" >OLD ECP</a></li>
 				<li> <a href="logout.php"> Log Out: <?php echo $_SESSION['logged_worker_name']." ".$_SESSION['logged_worker_surname']; ?> </a></li>
 			</ul>
 		</nav>

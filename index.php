@@ -33,15 +33,17 @@
 			<div id="container">
 
 				<section>
-					<div id="form">
+					<div id="form_login">
 					
 						<form action="login.php" method="post">
 							<div>
-							<label> LOGIN <input type="text" class="form_field" name="login" autofocus> </label>				
-							<label> PASSWORD <input type="password"  class="form_field" name="password" > </label>
+								<input type="text" class="form_field" name="login" style="width:200px;" placeholder="LOGIN" autofocus >		
+							</div>
+							<div>
+								<input type="password"  class="form_field" name="password" style="width:200px;" placeholder="PASSWORD">
 							</div>
 							
-							<input type="submit" value="LOGIN" id="add_button" class="form_button">
+							<input type="submit" value="LOGIN" id="add_button" class="form_button" style="width:200px;">
 					
 						</form>
 						<br/>
