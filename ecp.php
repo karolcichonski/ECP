@@ -292,7 +292,7 @@
 							
 						</form>
 						<div style="margin:20px;">
-							<table id="table">
+							<table class="table">
 								<tr bgcolor="#555555">
 									<td class="table_column"> Sum of hours </td>
 									<td class="table_column"> Overtime </td>

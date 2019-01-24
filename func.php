@@ -215,7 +215,7 @@ $colspan_num=$column_number+1;
 //$project_id=$_SESSION['$Project_Id_table'];
 
 echo<<<END
-<table id="table">
+<table class="table">
 <tr bgcolor="#555555">
 <th colspan="$colspan_num"> $table_title</th>
 </tr>
@@ -1143,7 +1143,7 @@ echo "<h3>Project $project_name overview</h3>";
 echo "</div>";
 echo '<div id="summary_module1" style:"display:none;" class="summary_module">';
 echo<<<END
-<table id="table">
+<table class="table">
 <tr bgcolor="#666666">
 END;
 for ($i=0;$i<$column_number; $i++)
@@ -1180,16 +1180,31 @@ echo '<tr class="table_row" bgcolor="#BBBBBB">';
 	for ($i=0;$i<$column_number; $i++)
 	{
 		$table_val=$table[0][$db_name[$i]];
-		echo '<td class="table_column">'.$table_val.'</td>';
+		if($table_val==1){
+			echo '<td class="table_column">YES</td>';
+		}else{
+			echo '<td class="table_column">NO</td>';	
+		}
 		
 	}
-echo<<<END
-</tr>
-<tr></tr>
-<tr bgcolor="#666666">
-<th colspan=3>Areas ($num_of_areas)</th>
-<th colspan=3>Robots ($num_of_robots)</th>
-END;
+
+echo '</tr>';
+echo '<tr></tr>';
+echo '</table><br/></br>';
+echo '</div>';
+echo '</div>';
+
+echo '<div class="summary_graph" >';
+$module_jq_name="summary_module2";
+echo "<div class='graph_header' onclick='toggle_summary($module_jq_name)'>";
+echo "<h3>Areas/Robots table</h3>";
+echo "</div>";
+echo '<div id="summary_module2" style:"display:none;" class="summary_module">';
+echo '<table class="table">';
+echo "<tr bgcolor='#666666'>";
+echo "<th colspan=3>Areas ($num_of_areas)</th>";
+echo "<th colspan=3>Robots ($num_of_robots)</th>";
+
 	$Areas_id_name_table=Areas_Id_Table($projectID);	
 	
 	for($i=0;$i<count($Areas_id_name_table);$i++){
@@ -1202,36 +1217,38 @@ END;
 					echo "<td class='table_row' colspan=3 bgcolor='#BBBBBB'>".$Robots_id_name_table[$j][1]."</td>";
 				echo '</tr>'; 
 				}
-		}else{
-
-echo "<tr class='table_row' bgcolor='#BBBBBB'>";
-echo "<td colspan=3>".$Areas_id_name_table[$i][1]."</td>";
-echo "<td colspan=3></td>";
-echo "</tr>";
-
-		}
+		}else{		}
 		echo '<tr></tr>'; 
 	}
-	
-echo '<tr bgcolor="#555555">';
-echo '<td colspan=6>Sum of days on project</td>';
-echo '</tr>';
-echo '<tr bgcolor="#555555">';
-echo '<td colspan=3>Worker name</td>';
-echo '<td colspan=3>Sum of day</td>';
+echo "</tr>";
+echo '</table>';
+echo "</div>";
+echo "</div>";
+
+
+echo '<div class="summary_graph">';
+$module_jq_name="summary_module3";
+echo "<div class='graph_header' onclick='toggle_summary($module_jq_name)'>";
+echo "<h3>Sum of days on project</h3>";
+echo '</div>';
+echo '<div id="summary_module3" style:"display:none;" class="summary_module">';
+echo '<table class="no_border_table">';
+echo '<tr style="background-color:rgba(155, 155, 155,0.2);"">';
+echo '<td colspan=3 style="padding:5px;">Worker name</td>';
+echo '<td colspan=3 style="padding:5px;">Sum of day</td>';
 echo '</tr>';
 echo '<tr></tr>';
 for ($i=0; $i<count($sum_day_array);$i++){
-	echo '<tr class="table_row" bgcolor="#BBBBBB">';
-	echo '<td colspan=3>'.$sum_day_array[$i][0].'</td>';
-	echo '<td colspan=3>'.$sum_day_array[$i][1].'</td>';
+	echo '<tr>';
+	echo '<td colspan=3 style="padding:5px;">'.$sum_day_array[$i][0].'</td>';
+	echo '<td colspan=3 style="padding:5px;">'.$sum_day_array[$i][1].'</td>';
 	echo '</tr>';	
 }
 echo '<tr></tr>';
 echo '<tr bgcolor="#555555">';
 echo '<td colspan=6>Days/robots</td>';
 echo '</tr>';
-echo '<tr class="table_row" bgcolor="#BBBBBB">';
+echo '<tr>';
 if ($num_of_robots!=0 && $sum_day_array[0][1]!=0){
 	echo '<td colspan=6>'.($sum_day_array[0][1]/$num_of_robots).'</td>';
 }else{
@@ -1241,6 +1258,7 @@ echo '</tr>';
 echo '</table><br/></br>';
 echo '</div>';
 echo '</div>';
+
 
 workers_time_tasks_array($projectID);
 }
@@ -1292,9 +1310,9 @@ function workers_time_tasks_array($projectID){
 			}
 		}
 		echo '<div class="summary_graph">';
-		$module_jq_name="summary_module2";
+		$module_jq_name="summary_module4";
 		echo '<div class="graph_header" onclick="toggle_summary('.$module_jq_name.')"><h3>Hours per tasks</h3></div>';
-		echo '<div id="summary_module2" class="summary_module">';
+		echo '<div id="summary_module4" class="summary_module">';
 		echo '<table class="no_border_table" >';
 		echo '<tr></tr>';
 			for($j=0; $j<=$num_of_work_type;$j++){
@@ -1340,11 +1358,11 @@ function workers_time_tasks_array($projectID){
 
 function create_graph($table_name, $table_percentage){
 echo "<div class='summary_graph'>";
-$module_jq_name="summary_module3";
+$module_jq_name="summary_module5";
 echo "<div class='graph_header' onclick='toggle_summary($module_jq_name)'>";
 echo "<h3>Summary graph</h3>";
 echo "</div>";
-echo "<div id='summary_module3' class='summary_module graph_container '>";
+echo "<div id='summary_module5' class='summary_module graph_container '>";
 echo "100%";
  for($i=0; $i<count($table_name);$i++){
 	echo "<div class='single_graph_comment'>".$table_name[$i].": ".$table_percentage[$i]."% </div>";

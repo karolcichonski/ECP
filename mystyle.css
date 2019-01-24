@@ -190,13 +190,14 @@ select:focus{
 	padding:30px;
 }
 
-#table
+.table
 {
 	border: 1px solid black;
 	border-collapse:0px;
 	align:center;
 	margin-left:auto;
 	margin-right:auto;
+	margin-top:20px;
 	-webkit-box-shadow: 0px 0px 61px -9px rgba(0,0,0,1);
 	-moz-box-shadow: 0px 0px 61px -9px rgba(0,0,0,1);
 	box-shadow: 0px 0px 61px -9px rgba(0,0,0,1);
@@ -503,6 +504,7 @@ h3{
 }
 
 .no_border_table{
+	margin-top:20px;
 	margin-left:auto; 
 	margin-right:auto; 
 	border: 0px solid black;
