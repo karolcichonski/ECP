@@ -56,10 +56,22 @@ function how_many_in_db($table_name, $atribut_name, $variable_name)
 function delete_worker_via_ID($id)
 {
 	$db_connecting=connect_to_db();
-	$sql="DELETE FROM `workers` WHERE ID=$id";
-	$db_connecting->query($sql);
+	$sql_check_per="SELECT permissions FROM workers WHERE ID=$id";
+	$actual_permissions=$db_connecting->query($sql_check_per);
+	$db_record=$actual_permissions->fetch_assoc();
+	
+	if ($db_record['permissions']!=3)
+	{
+		$sql="DELETE FROM `workers` WHERE ID=$id";
+		$db_connecting->query($sql);
+		header ("Refresh:0");
+	}
+	Else
+	{
+		$_SESSION['DelError']="You can't delete this user!";
+	}
+	
 	$db_connecting->close();
-	header ("Refresh:0");
 }
 
 function update_worker()
@@ -98,10 +110,14 @@ function update_worker()
 		$update_worker->set_birthday($_POST['update_worker_birthday']); 
 	}
 	
+	$update_worker->set_permissions($_POST['update_worker_permissions']); 
+
+	
 	if ($update_worker->correct_data_flag==true)
 	{
 		$update_worker->update_worker_in_db($_POST['worker_id_to_update']);
 	}
+	
 }
 
 function add_worker()
@@ -123,7 +139,58 @@ function add_worker()
 		{
 			$new_worker->insert_worker_to_db();
 		}
+		if ($new_worker->correct_data_flag==false)
+		{
+			$_SESSION['AddError']=$new_worker->errors_descriptions;
+		}
 	}
+	
+function change_password($id, $old_password, $new_password1, $new_password2) 
+{
+	$worker= new Worker;
+	$worker->correct_data_flag=true;
+	$worker->errors_drscriptions="";
+	$db_connecting=connect_to_db();	
+	$sql_check_per="SELECT * FROM workers WHERE ID=$id";
+	$actual_permissions=$db_connecting->query($sql_check_per);
+	$db_record=$actual_permissions->fetch_assoc();
+	
+	if ($db_record['permissions']==3 and $_SESSION['logged_worker_permissions']!=3)
+		{
+			$worker->correct_data_flag=false;
+			$worker->errors_descriptions="You have no permissions to change password for this user";
+		}
+	elseif ($db_record['permissions']<3 and $_SESSION['logged_worker_permissions']<2)
+		{
+			$worker->correct_data_flag=false;
+			$worker->errors_descriptions="You have no permissions to change password for this user";
+		}
+	else
+		{
+			if (password_verify($old_password,$db_record['password'])==True)
+			{
+				$worker->set_password($new_password1,$new_password2);
+				if($worker->correct_data_flag==TRUE)
+				{	
+					$password=$worker->get_password();
+					$sql="UPDATE workers SET password='$password' WHERE ID=$id";
+					$db_connecting->query($sql);
+				}
+			}
+			else
+			{
+				$worker->correct_data_flag=false;
+				$worker->errors_descriptions="Old password is incorrect";
+			}
+		}
+	
+	if ($worker->correct_data_flag==false)
+	{
+		$_SESSION['PassError']=$worker->errors_descriptions;
+	}
+	$db_connecting->close();	
+}
+	
 
 class Worker
 {
@@ -264,6 +331,11 @@ class Worker
 		header ("Refresh:0");
 	}
 	
+	public function get_password()
+	{
+		return $this->password;
+	}
+	
 	public function update_worker_in_db($id)
 	{
 /* 		$sql="UPDATE `workers` SET ";
@@ -305,6 +377,26 @@ class Worker
 		{
 		$sql=$sql." ,birthday='$this->birthday'";
 		}
+		
+		if (isset($this->permissions))
+		{
+			$sql_check_per="SELECT permissions FROM workers WHERE ID=$id";
+			$actual_permissions=$db_connecting->query($sql_check_per);
+			$db_record=$actual_permissions->fetch_assoc();
+			if ($db_record['permissions']!=3 and $_SESSION['logged_worker_permissions']>1)
+			{
+				$sql=$sql." ,permissions='$this->permissions'";
+			}
+			elseif($db_record['permissions']==3 and $_SESSION['logged_worker_permissions']==3)
+			{
+				$sql=$sql." ,permissions='$this->permissions'";
+			}
+			else
+			{
+				$_SESSION['UpdateError']="You can't change permissions fo this user!";
+			}
+
+		}
 
 		$sql=$sql." WHERE ID=$id";
 		$db_connecting->query($sql);
@@ -312,5 +404,6 @@ class Worker
 		header ("Refresh:0");
 	}
 	
+
 }
 ?>

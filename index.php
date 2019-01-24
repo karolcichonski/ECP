@@ -41,7 +41,7 @@
 							<label> PASSWORD <input type="password"  class="form_field" name="password" > </label>
 							</div>
 							
-							<input type="submit" value="LOGIN" id="add_button">
+							<input type="submit" value="LOGIN" id="add_button" class="form_button">
 					
 						</form>
 						<br/>

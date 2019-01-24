@@ -20,46 +20,37 @@ header
 {
 	text-align:center;
 }
-#heading
-{
-	marin:auto;
-	width:1180px;
-	border: 1px solid black; 
-}
-
-#logo
-{
-	border: 1px solid black; 
-	/* background-color:rgba(126,126,126,0.5); */
-/* 	text-align:right; */
-/* 	text-transform:uppercase; */
-	/* width:580px; */
-	/* margin:auto; */
-	padding:10px;
-	font-family:Reckoner;
-	/* float:left; */
-	/* position:fixed; */
-}
-
-#motto
-{
-	border: 1px solid black;
-	/* background-color:rgba(126,126,126,0.5); */
-	text-align:left;
-/* 	text-transform:uppercase; */
-	width:580px;
-	margin:auto;
-	padding:10px;
-	float:left;
-	/* position:fixed; */
-}
-
 
 nav
 {
 	background-color: #313131;
 	text-align: center;
-	
+}
+
+main
+{
+	text-align:center;
+	margin:auto;
+}
+
+footer
+{
+	text-align:center;
+	text-transform:uppercase;
+	background-color: #313131;
+	width:100%;
+	height:20px;
+	padding:20px;
+	position:fixed;
+	bottom:0;
+}
+
+
+#logo
+{
+	border: 1px solid black; 
+	padding:10px;
+	font-family:Reckoner;
 }
 
 .navigation
@@ -97,26 +88,13 @@ nav
 	text-decoration:none;
 }
 
-main
-{
-	text-align:center;
-	margin:auto;
-}
-
 #container
 {
-	/* border: 1px solid black; */
-	/* width:1500px; */
-	height:100%; */
+	height:100%; 
 	align:center;
 	margin:auto;
 	font-size:20px;
 	padding:30px;
-	/*background-image: url(img/robots5_1.jpg);
-	background-repeat: no-repeat;
-	background-size:cover;
-	background-color:black;*/
-
 }
 
 #table
@@ -125,7 +103,6 @@ main
 	border-collapse:0px;
 	align:center;
 	margin:auto;
-/* 	text-transform:uppercase; */
 }
 
 .table_column
@@ -140,22 +117,13 @@ main
 	color:black;
 }
 
-form
-{
-	text-align:center;
-}
 #form
 {
-	/* border: 1px solid white; */
-	/* width:1200px; */
 	height:250px;
 	padding:20px;
-	/* position:fixed; */
 	bottom:60px;	
-	/* background-color:#414141; */
 	align:center;
 	margin:auto;
-
 }
 
 .form_field
@@ -180,20 +148,8 @@ form
 
 .form_error_com
 {
-	color: #DC143C;
-}
-
-#mail_error
-{
-	color:red;
-}
-
-#ax_select
-{
-	height:100%;
-	padding:5px;
-	background-color:#dddddd;
-	font-weight:700;
+	color: #FF6347;
+	margin-top:5px;
 }
 
 .form_button
@@ -219,7 +175,22 @@ form
 
 #worker_select
 {
-	display: none;
+	display: block;
+}
+
+.selector
+{
+	height:1;
+	padding:5px;
+	font-weight:700;
+	margin-left:10px;
+	margin-right:10px;
+	background-color:#dddddd;
+}
+
+.form_row
+{
+	padding:5px;
 }
 
 .mode_select
@@ -227,7 +198,13 @@ form
 	display: inline-block;
 }
 
-#Update_form
+#errors_panel
+{
+	padding:10px;
+	margin-top:10px;
+}
+
+/* #Update_form
 {
 	display: none;
 }
@@ -237,21 +214,12 @@ form
 	display: none;
 }
 
+#Password_form
+{
+	display: none;
+} */
+
 #modul_select_form
 {
 	padding:20px;
 }
-
-footer
-{
-	/* border: 1px solid black; */
-	text-align:center;
-	text-transform:uppercase;
-	background-color: #313131;
-	width:100%;
-	height:20px;
-	padding:20px;
-	position:fixed;
-	bottom:0;
-}
-

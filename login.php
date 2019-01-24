@@ -28,13 +28,14 @@
 			if($users_num>0)
 			{
 				$db_record=$result->fetch_assoc();
-				if(password_verify($password,$db_record['password'])==True)
+				if(password_verify($password,$db_record['password'])==True and $db_record['permissions']>0)
 				{
 					$_SESSION['is_logged'] = true;
 					
 					$_SESSION['logged_worker_id']=$db_record['ID'];
 					$_SESSION['logged_worker_name']=$db_record['name'];
 					$_SESSION['logged_worker_surname']=$db_record['surname'];
+					$_SESSION['logged_worker_permissions']=$db_record['permissions'];
 					
 					unset($_SESSION['login_error']);
 					
