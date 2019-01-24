@@ -446,3 +446,54 @@ select:focus{
 .summary_table{
 	margin-bottom:30px;
 }
+
+.summary_graph{
+	width:700px; 
+	height:100%; 
+	border:2px solid black; 
+	border-radius:10px;
+	margin-left:auto; 
+	margin-right:auto;
+	/* background-color:rgba(255, 255, 255, 0.2); */
+	background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0.1) 100%);
+}
+
+.single_graph_bar{
+	margin:5px 0px; 
+	height:25px;
+	/* float:left;  */
+	background: linear-gradient(to right, 	#FFA500, 	#FF7F50, 	#FF4500);
+	color:black;
+	border-top-right-radius:5px;
+	border-bottom-right-radius:5px;
+	-webkit-box-shadow: 4px 4px 33px -4px rgba(0,0,0,0.75);
+	-moz-box-shadow: 4px 4px 33px -4px rgba(0,0,0,0.75);
+	box-shadow: 4px 4px 33px -4px rgba(0,0,0,0.75);
+}
+
+.single_graph_comment{
+	margin:5px 10px; 
+	text-align:left;
+	height:15px;
+	/* float:left;  */
+	font-size:15px;
+	color:white;
+}
+
+h3{
+	margin:0px;
+}
+.graph_header{
+	background-color:rgba(255, 255, 255, 0.2);
+	border-top-left-radius:10px;
+	border-top-right-radius:10px;
+	padding:10px;
+}
+
+.graph_container{
+	border-left:2px solid white;
+	border-top:2px solid white;
+	margin:20px;
+	width:650px;
+	text-align:right;
+}

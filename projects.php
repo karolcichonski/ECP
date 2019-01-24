@@ -24,7 +24,6 @@
 		for($i=0;$i<count($project_id_table);$i++){
 			if($project_id_table[$i][1]==$projectName){
 				$projectID=$project_id_table[$i][0];
-				$project_summary_table=project_summary_old_ECP($projectName, $projectID);
 				$sql="SELECT*FROM $db_table_name WHERE id=$projectID ORDER BY id DESC";
 					if($result=$db->query($sql))
 					{

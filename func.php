@@ -439,6 +439,26 @@ function Workers_Id_Table()
 	}
 }
 
+function Workers_Id_aTable()
+{
+	require('connect.php');
+	$sql="SELECT * FROM workers ORDER BY id ASC";
+	$result=$db->query($sql);
+	$WorkersID=$result->fetchAll();
+	
+	for ($i=0; $i<count($WorkersID); $i++ )
+	{
+	$worker_full_name=$WorkersID[$i]['name']." ".$WorkersID[$i]['surname'];
+	$Workers_Id_table[$WorkersID[$i]['ID']]=$worker_full_name;
+	}
+	
+	if (isset($Workers_Id_table)){
+		return $Workers_Id_table;
+	}else{
+		$Workers_Id_table=array();
+		return $Workers_Id_table;
+	}
+}
 class Worker
 {
 	private $id;
@@ -933,7 +953,7 @@ function import_csv(){
 require('connect.php');
 $row = 0;
 $dummy_ecp_table=array();
-$uchwyt = fopen ("bazy/ECP_GLEN.csv","r");
+$uchwyt = fopen ("bazy/ECP_DOLINSKI.csv","r");
 while (($data=fgetcsv($uchwyt, 5000, ";"))!==false)
 {
 	$num = count($data);
@@ -944,7 +964,7 @@ fclose ($uchwyt);
 
 for($i=1; $i<=count($dummy_ecp_table); $i++){
 	if($dummy_ecp_table[$i][6]!=""){
-		$worker= 5;
+		$worker= 7;
 		$starttime= $dummy_ecp_table[$i][0]." ".$dummy_ecp_table[$i][7];
 		$endtime= $dummy_ecp_table[$i][0]." ".$dummy_ecp_table[$i][8];
 		$TS_Start= new DateTime($starttime);
@@ -1071,37 +1091,6 @@ function get_type_of_work_table(){
 	"Clash","Sygnały/actiony","Standard w programach","Download","Przygotowanie celek do wysłania","Dokumentacja",
 	"MRS/SOP","Zmiany symulacyjne","URLOP","Wolne","L4","Święto","Wgrywanie na fabryce","Inne");
 	return $table;
-}
-
-function project_summary_old_ECP($projectName, $id){
-	$workers_table=Workers_Id_Table();
-	$sum_day_array=array();
-	$row_number=0;
-	
-	$sql_old_ecp="SELECT * FROM old_ecp WHERE project LIKE '%".$projectName."%'";
-	$sql_new_ecp="SELECT * FROM ecp WHERE project_id=".$id;
-	$NOR_old=how_many_in_db1($sql_old_ecp);
-	$NOR_new=how_many_in_db1($sql_new_ecp);
-	$NOR_sum=$NOR_old+$NOR_new;
-	
-		if($NOR_sum>0){
-				$sum_day_array[$row_number][0]="SUMARY";
-				$sum_day_array[$row_number][1]=$NOR_sum;
-				$row_number++;
-		}
-		
-	for ($i=0; $i<count($workers_table); $i++){
-		$sql_old_ecp="SELECT * FROM old_ecp WHERE project LIKE '%".$projectName."%' and worker=".$workers_table[$i][0]."";
-		$sql_new_ecp="SELECT * FROM ecp WHERE project_id=".$id." and worker_id=".$workers_table[$i][0]."";
-		$NOR_sum=$NOR_old+$NOR_new;
-		if($NOR_sum>0){
-				$sum_day_array[$row_number][0]=$workers_table[$i][1];
-				$sum_day_array[$row_number][1]=$NOR_sum;
-				$row_number++;
-		}		
-	}
-		
-	//return $output_array;
 }
 
 
@@ -1245,10 +1234,120 @@ if ($num_of_robots!=0 && $sum_day_array[0][1]!=0){
 	echo '<td colspan=6>No data</td>';	
 }
 echo '</tr>';	
+workers_time_tasks_array($projectID);
 echo '</table><br/></br>';
 
 }
 
+function workers_time_tasks_array($projectID){
+	
+	require('connect.php');
+	$sql="SELECT DISTINCT worker_id FROM ecp WHERE project_id=$projectID";
+	$work_type=get_type_of_work_table();
+	$work_sum_table=array();
+	$workers_array=Workers_Id_aTable();
+	$num_of_work_type=12;
+	$sum_time_on_project=0;
+	if($result=$db->query($sql))
+	{
+		$num_workers=$result->rowCount();
+		$workers_table=$result->fetchAll();
+		$work_sum_table[0][0]="";
+		$work_sum_table[$num_workers+1][0]="SUM";
+		$work_sum_table[$num_workers+2][0]="%";
+		for ($i=0;$i<$num_workers;$i++){
+			//echo $workers_table[$i][0]."</br>";
+				$work_sum_table[$i+1][0]=$workers_array[$workers_table[$i][0]];
+			for($j=0; $j<$num_of_work_type;$j++){
+				$sql="SELECT SUM(operation_time) FROM ecp WHERE project_id=$projectID AND worker_id=".$workers_table[$i][0]." AND type_of_work='".$work_type[$j]."'";
+				if($result=$db->query($sql)){
+					$work_sum_table[0][$j+1]=$work_type[$j];
+					$sum_time_for_task=$result->fetchAll();
+					$work_sum_table[$i+1][$j+1]=$sum_time_for_task[0][0];
+					$sum_time_on_project=$sum_time_on_project+$sum_time_for_task[0][0];
+					if(isset($work_sum_table[$num_workers+1][$j+1])){
+					$work_sum_table[$num_workers+1][$j+1]=$work_sum_table[$num_workers+1][$j+1]+$sum_time_for_task[0][0];
+					}else{
+						$work_sum_table[$num_workers+1][$j+1]=$sum_time_for_task[0][0];
+					}
+					if($sum_time_on_project!=0){
+					$work_sum_table[$num_workers+2][$j+1]=round(($work_sum_table[$num_workers+1][$j+1]/$sum_time_on_project)*100,1);
+					}
+				}
+			}
+		}
+	}
+	
+	if ($num_workers>0){
+		$tempsum=0;
+		for($i=1; $i<=$num_of_work_type; $i++ ){
+			if ($sum_time_on_project!=0){
+				$work_sum_table[$num_workers+2][$i]=round(($work_sum_table[$num_workers+1][$i]/$sum_time_on_project)*100,1);
+				$tempsum=$tempsum+$work_sum_table[$num_workers+2][$i];
+			}else{
+				$work_sum_table[$num_workers+2][$i]=0;
+			}
+		}
+		echo $tempsum;
+		
+		echo '<br/></br>';
+		echo '<table id="table">';
+		echo '<tr bgcolor="#555555">';
+		echo '<th colspan='.($num_workers+3).'>Hours per tasks</th>';
+		echo '</tr>';
+		echo '<tr></tr>';
+			for($j=0; $j<=$num_of_work_type;$j++){
+				echo '<tr class="table_row" bgcolor="#BBBBBB">';
+				for ($i=0;$i<=$num_workers+2;$i++){	
+						echo "<td>";
+						echo $work_sum_table[$i][$j];
+						echo "</td>";
+						
+			}
+			echo "</tr>";
+		}
+		echo '<tr bgcolor="#555555">';
+		echo '<th colspan='.($num_workers+3).'>Sum time on project [h]</th>';
+		echo '</tr>';
+		echo '<tr class="table_row" bgcolor=#BBBBBB>';
+		echo '<th colspan='.($num_workers+3).'>'.$sum_time_on_project.'</th>';
+		echo '</tr>';
+		echo '</table><br/></br>';
+	}
+	$row_num=0;
+	for($i=1; $i<=$num_of_work_type;$i++){
+		if(isset($work_sum_table[0][$i]) &&  $work_sum_table[$num_workers+2][$i]>0){
+			$percentage_table0[$row_num]=$work_sum_table[0][$i];
+			$percentage_table1[$row_num]=$work_sum_table[$num_workers+2][$i];
+			$row_num++;
+		}
+	}
+
+	array_multisort($percentage_table1,SORT_DESC,  $percentage_table0);
+
+	if(isset($percentage_table1))create_graph($percentage_table0,$percentage_table1 );
+	
+	
+	//$workers_table=Workers_Id_Table();
+	//for ($i=0; $i)
+	//$sql_old_ecp="SELECT * FROM old_ecp WHERE project LIKE '%".$project_name."%' and worker=".$workers_table[$i][0]."";
+}
+
+function create_graph($table_name, $table_percentage){
+echo "<div class='summary_graph'>";
+echo "<div class='graph_header' >";
+echo "<h3>Summary graph</h3>";
+echo "</div>";
+echo "<div class='graph_container'>";
+echo "100%";
+ for($i=0; $i<count($table_name);$i++){
+	echo "<div class='single_graph_comment'>".$table_name[$i].": ".$table_percentage[$i]."% </div>";
+	echo "<div class='single_graph_bar' style='width:".(6.5*$table_percentage[$i])."px;'></div>";
+	/* echo "<div style='clear:both'></div>"; */
+ }
+echo "</div>";
+echo "</div>";
+}
 
 function how_many_in_db1($sql){
 	require('connect.php');
