@@ -399,24 +399,10 @@
 							<div class="form_row">
 								<label> TIME <input type="number" class="form_field" name="ecp_time" required> </label>
 								<label> WORK <select name="ecp_type_of_work" class="selector">
-									<option value="Sprawdzanie symulacji">Sprawdzanie symulacji</option>
-									<option value="Przygotowanie robota do OLP">Przygotowanie robota do OLP</option>
-									<option value="Przejazdy- główne programy">Przejazdy- główne programy</option>
-									<option value="Przejazdy- serwisowe programy">Przejazdy- serwisowe programy</option>
-									<option value="Clash">Clash</option>
-									<option value="Sygnały/actiony">Sygnały/actiony</option>
-									<option value="Standard w programach">Standard w programach</option>
-									<option value="Download">Download</option>
-									<option value="Przygotowanie celek do wysłania">Przygotowanie celek do wysłania</option>
-									<option value="Dokumentacja">Dokumentacja</option>
-									<option value="MRS/SOP">MRS/SOP</option>
-									<option value="Zmiany symulacyjne">Zmiany symulacyjne</option>
-									<option value="URLOP">URLOP</option>
-									<option value="Wolne">Wolne</option>
-									<option value="L4">L4</option>
-									<option value="Święto">Święto</option>
-									<option value="Wgrywanie na fabryce">Wgrywanie na fabryce</option>
-									<option value="Inne">Inne</option>
+									<?php $type_of_work_table=get_type_of_work_table();
+									for($i=0; $i<count($type_of_work_table); $i++){
+										echo "<option value='$type_of_work_table[$i]'>$type_of_work_table[$i]</option>";
+									}?>
 								</select></label>
 								<label> AH <input type="checkbox" class="form_field" name="ecp_additionalhours" value=1 > </label>	
 							</div>

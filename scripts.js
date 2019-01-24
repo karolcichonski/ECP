@@ -18,6 +18,9 @@ function module_nav_click(mode_number, number_of_modes, session_var_name){
 			document.getElementById("mode_butt_"+i).style="";
 		}
 	}
+	
+	var table=document.getElementById("table_container");
+	if (table.style.display=="none" && sessionStorage.getItem("project_mode_number")!=4)$(document).ready(function(){$("#table_container").slideDown(200);});
 }
 
 function module_nav_hide(number_of_modes){
@@ -56,6 +59,7 @@ function toggle_table(){
 	}else{
 		$(document).ready(function(){$("#table_container").slideDown(200);});
 		$(document).ready(function(){$("#mode4").slideUp(200);});
+		/* sessionStorage.setItem("project_mode_number",0); */
 	}
 }
 

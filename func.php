@@ -253,6 +253,7 @@ echo '</table>';
 }
 
 
+
 function Projects_Id_aTable()
 {
 	require('connect.php');
@@ -1065,41 +1066,189 @@ function get_overtime_num($sumTime, $date){
 	}
 }
 
+function get_type_of_work_table(){
+	$table=array("Sprawdzanie symulacji","Przygotowanie robota do OLP","Przejazdy- główne programy","Przejazdy- serwisowe programy",
+	"Clash","Sygnały/actiony","Standard w programach","Download","Przygotowanie celek do wysłania","Dokumentacja",
+	"MRS/SOP","Zmiany symulacyjne","URLOP","Wolne","L4","Święto","Wgrywanie na fabryce","Inne");
+	return $table;
+}
+
 function project_summary_old_ECP($projectName, $id){
 	$workers_table=Workers_Id_Table();
-	$output_array=array();
+	$sum_day_array=array();
 	$row_number=0;
+	
+	$sql_old_ecp="SELECT * FROM old_ecp WHERE project LIKE '%".$projectName."%'";
+	$sql_new_ecp="SELECT * FROM ecp WHERE project_id=".$id;
+	$NOR_old=how_many_in_db1($sql_old_ecp);
+	$NOR_new=how_many_in_db1($sql_new_ecp);
+	$NOR_sum=$NOR_old+$NOR_new;
+	
+		if($NOR_sum>0){
+				$sum_day_array[$row_number][0]="SUMARY";
+				$sum_day_array[$row_number][1]=$NOR_sum;
+				$row_number++;
+		}
+		
 	for ($i=0; $i<count($workers_table); $i++){
-		$sql="SELECT * FROM old_ecp WHERE project LIKE '%".$projectName."%' and worker=".$workers_table[$i][0]."";
-		$NOR=how_many_in_db1($sql);
-		if($NOR>0){
-				$output_array[$row_number][0]=$workers_table[$i][1];
-				$output_array[$row_number][1]=$NOR;
+		$sql_old_ecp="SELECT * FROM old_ecp WHERE project LIKE '%".$projectName."%' and worker=".$workers_table[$i][0]."";
+		$sql_new_ecp="SELECT * FROM ecp WHERE project_id=".$id." and worker_id=".$workers_table[$i][0]."";
+		$NOR_sum=$NOR_old+$NOR_new;
+		if($NOR_sum>0){
+				$sum_day_array[$row_number][0]=$workers_table[$i][1];
+				$sum_day_array[$row_number][1]=$NOR_sum;
 				$row_number++;
 		}		
 	}
-	$sql="SELECT * FROM old_ecp WHERE project LIKE '%".$projectName."%'";
-	$NOR=how_many_in_db1($sql);
-		if($NOR>0){
-				$output_array[$row_number][0]="SUMARY";
-				$output_array[$row_number][1]=$NOR;
-				$row_number++;
-		}
-	
-	$sql="SELECT * FROM areas WHERE project_id=$id";
-	$NOR=how_many_in_db1($sql);
-		$output_array[$row_number][0]="AREAS";
-		$output_array[$row_number][1]=$NOR;
-		$row_number++;
-	
-		$sql="SELECT * FROM robots WHERE project_id=$id";
-	$NOR=how_many_in_db1($sql);
-		$output_array[$row_number][0]="ROBOTS";
-		$output_array[$row_number][1]=$NOR;
-		$row_number++;
 		
-	return $output_array;
+	//return $output_array;
 }
+
+
+function create_summary_table($table, $projectID)
+{
+$column_number=6;
+$colspan_num=6;
+$project_name=$table[0]['project_name'];
+$db_name=array('project_name','brand','software','rcs','robots_type','takt_time');
+$table_headers=array('Project name','Brand','Software','RCS','Robots type','Takt time');
+$sum_day_array=array();
+$row_number=0;
+$workers_table=Workers_Id_Table();
+
+$sql="SELECT * FROM areas WHERE project_id=".$projectID;
+$num_of_areas=how_many_in_db1($sql);
+$sql="SELECT * FROM robots WHERE project_id=".$projectID;
+$num_of_robots=how_many_in_db1($sql);
+
+$sql_old_ecp="SELECT * FROM old_ecp WHERE project LIKE '%".$project_name."%'";
+$sql_new_ecp="SELECT * FROM ecp WHERE project_id=".$projectID;
+$NOR_old=how_many_in_db1($sql_old_ecp);
+$NOR_new=how_many_in_db1($sql_new_ecp);
+$NOR_sum=$NOR_old+$NOR_new;
+
+	if($NOR_sum>0){
+			$sum_day_array[$row_number][0]="SUMARY";
+			$sum_day_array[$row_number][1]=$NOR_sum;
+			$row_number++;
+	}
+	
+for ($i=0; $i<count($workers_table); $i++){
+	$sql_old_ecp="SELECT * FROM old_ecp WHERE project LIKE '%".$project_name."%' and worker=".$workers_table[$i][0]."";
+	$sql_new_ecp="SELECT * FROM ecp WHERE project_id=".$projectID." and worker_id=".$workers_table[$i][0]."";
+	$NOR_old=how_many_in_db1($sql_old_ecp);
+	$NOR_new=how_many_in_db1($sql_new_ecp);
+	$NOR_sum=$NOR_old+$NOR_new;
+	if($NOR_sum>0){
+			$sum_day_array[$row_number][0]=$workers_table[$i][1];
+			$sum_day_array[$row_number][1]=$NOR_sum;
+			$row_number++;
+	}		
+}
+
+echo<<<END
+<table id="table">
+<tr bgcolor="#555555">
+<th colspan="$colspan_num">$project_name</th>
+</tr>
+<tr bgcolor="#666666">
+END;
+for ($i=0;$i<$column_number; $i++)
+{
+	echo "<td>$table_headers[$i]</td>";
+}
+
+echo '</tr>';
+echo '<tr class="table_row" bgcolor="#BBBBBB">';
+	for ($i=0;$i<$column_number; $i++)
+	{
+		$table_val=$table[0][$db_name[$i]];
+		echo '<td class="table_column">'.$table_val.'</td>';
+		
+	}
+echo '</tr>';
+echo<<<END
+<tr></tr>
+<tr bgcolor="#555555">
+<th colspan="$colspan_num">Project range</th>
+</tr>
+<tr bgcolor="#666666">
+END;
+$db_name=array('main_tasks','service_tasks','signals','downloads','mrs','upload_on_plant');
+$table_headers=array('Main Tasks','Service Tasks','Signals','Download','MRS','Upload');
+$table_title="Project range";
+for ($i=0;$i<$column_number; $i++)
+{
+	echo "<td>$table_headers[$i]</td>";
+}
+
+echo '</tr>';
+echo '<tr class="table_row" bgcolor="#BBBBBB">';
+	for ($i=0;$i<$column_number; $i++)
+	{
+		$table_val=$table[0][$db_name[$i]];
+		echo '<td class="table_column">'.$table_val.'</td>';
+		
+	}
+echo<<<END
+</tr>
+<tr></tr>
+<tr bgcolor="#666666">
+<th colspan=3>Areas ($num_of_areas)</th>
+<th colspan=3>Robots ($num_of_robots)</th>
+END;
+	$Areas_id_name_table=Areas_Id_Table($projectID);	
+	
+	for($i=0;$i<count($Areas_id_name_table);$i++){
+		$Robots_id_name_table=Robots_Id_Table($Areas_id_name_table[$i][0]);
+		$robots_count=count($Robots_id_name_table);
+		if($robots_count>0){
+			echo '<tr class="table_row" bgcolor="#BBBBBB"> ';
+			echo "<td rowspan=$robots_count colspan=3>".$Areas_id_name_table[$i][1]."</td>";
+				for($j=0;$j<$robots_count;$j++){
+					echo "<td class='table_row' colspan=3 bgcolor='#BBBBBB'>".$Robots_id_name_table[$j][1]."</td>";
+				echo '</tr>'; 
+				}
+		}else{
+
+echo "<tr class='table_row' bgcolor='#BBBBBB'>";
+echo "<td colspan=3>".$Areas_id_name_table[$i][1]."</td>";
+echo "<td colspan=3></td>";
+echo "</tr>";
+
+		}
+		echo '<tr></tr>'; 
+	}
+	
+echo '<tr bgcolor="#555555">';
+echo '<td colspan=6>Sum of days on project</td>';
+echo '</tr>';
+echo '<tr bgcolor="#555555">';
+echo '<td colspan=3>Worker name</td>';
+echo '<td colspan=3>Sum of day</td>';
+echo '</tr>';
+echo '<tr></tr>';
+for ($i=0; $i<count($sum_day_array);$i++){
+	echo '<tr class="table_row" bgcolor="#BBBBBB">';
+	echo '<td colspan=3>'.$sum_day_array[$i][0].'</td>';
+	echo '<td colspan=3>'.$sum_day_array[$i][1].'</td>';
+	echo '</tr>';	
+}
+echo '<tr></tr>';
+echo '<tr bgcolor="#555555">';
+echo '<td colspan=6>Days/robots</td>';
+echo '</tr>';
+echo '<tr class="table_row" bgcolor="#BBBBBB">';
+if ($num_of_robots!=0 && $sum_day_array[0][1]!=0){
+	echo '<td colspan=6>'.($sum_day_array[0][1]/$num_of_robots).'</td>';
+}else{
+	echo '<td colspan=6>No data</td>';	
+}
+echo '</tr>';	
+echo '</table><br/></br>';
+
+}
+
 
 function how_many_in_db1($sql){
 	require('connect.php');

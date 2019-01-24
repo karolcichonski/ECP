@@ -176,6 +176,7 @@ select:focus{
 
 .single_mode_container{
 	display:none;
+	margin-bottom:100px;
 }
 
 #container
@@ -440,4 +441,8 @@ select:focus{
 	border:2px solid white;
 	height:10px;
 	display:block;
+}
+
+.summary_table{
+	margin-bottom:30px;
 }

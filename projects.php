@@ -17,7 +17,6 @@
 		unset($_POST['record_to_remove']);
 	}
 	
-	$sql="SELECT*FROM {$db_table_name} ORDER BY id DESC";
 	
 	if (isset($_POST['summary_selected_project'])){
 		$_SESSION['summary_selected_project']=$_POST['summary_selected_project'];
@@ -26,10 +25,17 @@
 			if($project_id_table[$i][1]==$projectName){
 				$projectID=$project_id_table[$i][0];
 				$project_summary_table=project_summary_old_ECP($projectName, $projectID);
-				$sql="SELECT*FROM {$db_table_name} WHERE id=$projectID ORDER BY id DESC";
+				$sql="SELECT*FROM $db_table_name WHERE id=$projectID ORDER BY id DESC";
+					if($result=$db->query($sql))
+					{
+						$num_projects=$result->rowCount();
+						$summary_table=$result->fetchAll();
+					} 
 			}
 		}
 	}
+	
+	$sql="SELECT*FROM {$db_table_name} ORDER BY id DESC";
 	
 	if($result=$db->query($sql))
 	{
@@ -51,7 +57,7 @@
 <script src="scripts.js"></script>
 </head>
 
-<body onload='onload_module(4,"project_mode_number")'>
+<body onload='onload_module(4,"project_mode_number"), hide_table()'>
 		<header>
 			<h1 id="logo"> 
 				<font color="#cc3333" size="7">alpha </font>
@@ -214,16 +220,8 @@
 										<input type="submit" value="Generate Summary" class="form_button" style="width:200px;"></input>
 									</form>
 									<?php 
-										if(isset($project_summary_table)){
-												echo "How many days worked on project: </br>";
-											for ($i=0;$i<count($project_summary_table); $i++){
-												echo $project_summary_table[$i][0]."-> ".$project_summary_table[$i][1]." </br>";
-											}
-											for ($i=0;$i<count($project_summary_table); $i++){
-												echo '<div class="horizontal_chart" style="width:'.$project_summary_table[$i][1].'px;"></div>';
-											}
-										
-										
+										if(isset($_SESSION['summary_selected_project'])){
+											create_summary_table($summary_table, $projectID);
 											unset($_SESSION['summary_selected_project']);
 										}
 									?>
