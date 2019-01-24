@@ -1,0 +1,227 @@
+@font-face
+{
+
+font-family: Reckoner;
+
+src:url(fonts/Reckoner.ttf);
+
+}
+
+
+Body
+{
+	background-color:#424242;	
+	font-family: 'Francois One', sans-serif;
+	color:white;
+	margin:0;
+}
+
+header
+{
+	text-align:center;
+}
+#heading
+{
+	marin:auto;
+	width:1180px;
+	border: 1px solid black; 
+}
+
+#logo
+{
+	border: 1px solid black; 
+	/* background-color:rgba(126,126,126,0.5); */
+/* 	text-align:right; */
+/* 	text-transform:uppercase; */
+	/* width:580px; */
+	/* margin:auto; */
+	padding:10px;
+	font-family:Reckoner;
+	/* float:left; */
+	/* position:fixed; */
+}
+
+#motto
+{
+	border: 1px solid black;
+	/* background-color:rgba(126,126,126,0.5); */
+	text-align:left;
+/* 	text-transform:uppercase; */
+	width:580px;
+	margin:auto;
+	padding:10px;
+	float:left;
+	/* position:fixed; */
+}
+
+
+nav
+{
+	background-color: #313131;
+	text-align: center;
+	
+}
+
+.navigation
+{
+	list-style-type:none;
+	margin:0;
+	padding: 10px;
+	font-size:18px;
+	text-transform:uppercase;
+	min-height: 40px;
+	line-height:200%;
+}
+
+.navigation>li
+{
+	display: inline-block;
+	padding-left:20px;
+	padding-right: 20px;
+	border-right: 1px dashed lightgray;
+}
+
+.navigation> li:first-child
+{
+		border-left: 1px dashed lightgray;
+}
+
+.navigation>li:hover
+{
+	background-color: #888888;
+}
+
+.navigation a
+{
+	color:#fff;
+	text-decoration:none;
+}
+
+main
+{
+	text-align:center;
+	margin:auto;
+}
+
+#container
+{
+	/* border: 1px solid black; */
+	/* width:1500px; */
+	height:100%; */
+	align:center;
+	margin:auto;
+	font-size:20px;
+	padding:30px;
+	/*background-image: url(img/robots5_1.jpg);
+	background-repeat: no-repeat;
+	background-size:cover;
+	background-color:black;*/
+
+}
+
+#table
+{
+	border: 1px solid black;
+	border-collapse:0px;
+	align:center;
+	margin:auto;
+/* 	text-transform:uppercase; */
+}
+
+.table_column
+{
+	padding:3px;
+}
+
+.table_row
+{
+	text-align:center;
+	font-size:14px;
+	color:black;
+}
+
+form
+{
+	text-align:center;
+}
+#form
+{
+	/* border: 1px solid white; */
+	/* width:1200px; */
+	height:250px;
+	padding:20px;
+	/* position:fixed; */
+	bottom:60px;	
+	/* background-color:#414141; */
+	align:center;
+	margin:auto;
+}
+
+.form_field
+{
+	text-align:left;
+	height:15px;
+	padding:5px;
+	background-color:#dddddd;
+	margin: 5px 10px;
+	font-weight:700;
+}
+
+.form_field_disabled
+{
+	text-align:left;
+	height:15px;
+	padding:5px;
+	background-color:#aaaaaa;
+	margin: 5px 10px;
+	font-weight:700;
+}
+
+.form_error_com
+{
+	color: #DC143C;
+}
+
+#mail_error
+{
+	color:red;
+}
+
+#ax_select
+{
+	height:100%;
+	padding:5px;
+	background-color:#dddddd;
+	font-weight:700;
+}
+
+#add_button
+{
+	border: 2px solid white;
+	background-color:gray;
+	font-weight:700;
+	padding:5px;
+	width:500px;	
+	margin-top:20px;
+}
+
+#add_button:hover
+{
+	background-color:lightgray;
+}
+
+
+
+footer
+{
+	/* border: 1px solid black; */
+	text-align:center;
+	text-transform:uppercase;
+	background-color: #313131;
+	width:100%;
+	height:20px;
+	padding:20px;
+	position:fixed;
+	bottom:0;
+}
+
