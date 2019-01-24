@@ -231,7 +231,7 @@ echo"</tr>";
 						
 for ($j = 0; $j < $row_number; $j++) 
 {
-echo '<tr class="table_row" bgcolor="#999999">';
+echo '<tr class="table_row" bgcolor="#BBBBBB">';
 	
 	$id=$j+1;
 	echo '<td class="table_column">'.$id.'</td>';
@@ -239,7 +239,11 @@ echo '<tr class="table_row" bgcolor="#999999">';
 	for ($i=0;$i<$column_number; $i++)
 	{
 		$table_val=$workers_table[$j][$db_name[$i]];
-		echo '<td class="table_column">'.$table_val.'</td>';
+		if(isset($workers_table[$j]['color'])){
+			echo '<td class="table_column" style="background-color:'.$workers_table[$j]['color'].';">'.$table_val.'</td>';
+		}else{
+			echo '<td class="table_column">'.$table_val.'</td>';
+		}
 		
 	}
 echo '</tr>';
@@ -247,6 +251,7 @@ echo '</tr>';
 echo '</table>';
 
 }
+
 
 function Projects_Id_aTable()
 {
@@ -950,4 +955,99 @@ for($i=1; $i<=count($dummy_ecp_table); $i++){
 function unset_worker_mode()
 {
 if (isset($_SESSION['worker_mode'])) unset($_SESSION['worker_mode']);	
+}
+
+function day_eng_to_pl_conv($eng_day)
+{
+	switch($eng_day){
+	case "Monday":
+		return "PN";
+		break;
+	case "Tuesday":
+		return "WT";
+		break;
+	case "Wednesday":
+		return "ŚR";
+		break;
+	case "Thursday":
+		return "CZ";
+		break;
+	case "Friday":
+		return "PT";
+		break;
+	case "Saturday":
+		return "SO";
+		break;
+	case "Sunday":
+		return "ND";
+	break;}
+}
+
+function how_many_day_in_range($first_date, $second_date)
+{
+	$first_date= new DateTime ($first_date);
+	$second_date= new DateTime ($second_date);
+	if ($first_date<=$second_date){
+		return (($second_date->format('U')-$first_date->format('U'))/86400)+1; 
+	}
+	else return 0;
+}
+
+function min_to_hour_conv($min){
+	if($min%60!=0)
+	{
+		$hour=floor($min/60)."h".($min%60)."min";
+	}else{
+		$hour=floor($min/60)."h";
+	}
+	
+	return $hour;
+}
+
+function check_holiday($date){
+$holidays=array(
+	"2019-01-01"=>"Nowy Rok", 
+	"2019-01-06"=>"Święto Trzech Króli", 
+	"2019-04-21"=>"Niedziela Wielkanocna",
+	"2019-04-22"=>"Poniedziałek Wielkanocny",
+	"2019-05-01"=>"Święto Pracy",
+	"2019-05-03"=>"Święto Konstytucji 3 maja",
+	"2019-06-09"=>"Zesłanie Ducha Świętego",
+	"2019-06-20"=>"Boże Ciało",
+	"2019-08-15"=>"Święto Wojska Polskiego",
+	"2019-11-01"=>"Wszystkich Świętych",
+	"2019-11-11"=>"Święto Niepodległości",
+	"2019-11-25"=>"Boże Narodzenie",
+	"2019-12-26"=>"Boże Narodzenie",
+	
+	"2020-01-01"=>"Nowy Rok", 
+	"2020-01-06"=>"Święto Trzech Króli", 
+	"2020-04-12"=>"Niedziela Wielkanocna",
+	"2020-04-13"=>"Poniedziałek Wielkanocny",
+	"2020-05-01"=>"Święto Pracy",
+	"2020-05-03"=>"Święto Konstytucji 3 maja",
+	"2020-05-31"=>"Zesłanie Ducha Świętego",
+	"2020-06-11"=>"Boże Ciało",
+	"2020-08-15"=>"Święto Wojska Polskiego",
+	"2020-11-01"=>"Wszystkich Świętych",
+	"2020-11-11"=>"Święto Niepodległości",
+	"2020-11-25"=>"Boże Narodzenie",
+	"2020-12-26"=>"Boże Narodzenie"
+	);
+	
+	if (isset($holidays[$date])){
+		return $holidays[$date];
+	}else{
+		return false;
+	}
+}
+
+function get_overtime_num($sumTime, $date){
+	$newDate= new DateTime($date);
+	$day=$newDate->format('l');
+	if ($day=="Saturday" or $day=="Sunday" or check_holiday($date)!=false){
+		return $sumTime*2;
+	}else{
+		return ($sumTime-480)*1.5;
+	}
 }

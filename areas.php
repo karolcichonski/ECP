@@ -118,11 +118,10 @@
 						
 					?>
 						<form method="post" id="modul_select_form" >
-							<div class="mode_selector_3">
+							<div class="mode_selector_container">
 								<div class="mode_select" onclick="add_click()" id="add_module" name="form_action">Add area</div>
 								<div class="mode_select" onclick="update_click()" id="update_module" name="form_action"> Update area </div>
-								<div class="mode_select" onclick="delete_click()" id="delete_module" name="form_action"> Delete area  </div>
-								<div style="clear:both;"></div>
+								<div class="mode_select mode_select_last" onclick="delete_click()" id="delete_module" name="form_action"> Delete area  </div>
 							</div>
 						</form>
 							

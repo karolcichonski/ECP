@@ -72,6 +72,8 @@ if(isset($_SESSION['worker_mode']))
 			break;
 	}
 	
+}else{
+	echo '<body>';
 }
 /* elseif(!isset($_SESSION['worker_mode']))
 {
@@ -128,12 +130,11 @@ if(isset($_SESSION['worker_mode']))
 					?>
 					
 					<form method="post" id="modul_select_form" >
-						<div id="mode_selector_cont">
+						<div class="mode_selector_container">
 							<div class="mode_select" onclick="add_worker_click()" id="worker_add" name="form_action">Add new worker</div>
 							<div class="mode_select" onclick="update_worker_click()" id="worker_update" name="form_action"> Updadte worker </div>
 							<div class="mode_select" onclick="delete_worker_click()" id="worker_delete" name="form_action"> Delete worker  </div>
-							<div class="mode_select" onclick="change_password_click()" id="change_password" name="form_action"> Change password </div>
-							<div style="clear:both;"></div>
+							<div class="mode_select mode_select_last" onclick="change_password_click()" id="change_password" name="form_action"> Change password </div>
 						</div>
 					</form>
 						<div class="form_container">

@@ -159,7 +159,8 @@ select:focus{
 
 .table_column
 {
-	padding:3px;
+	padding-left:10px;
+	padding-right:10px;
 	max-width:250px;
 }
 
@@ -256,18 +257,21 @@ select:focus{
 
 #mode_selector_cont
 {
-width:808px;
+/* width:808px; */
 margin-left:auto;
 margin-right:auto;
-border-right: 2px solid black;
+font-size:0;
+/* border-right: 2px solid black; */
 }
 
-.mode_selector_3
+.mode_selector_container
 {
-	width:606px;
+	/* width:606px; */
 	margin-left:auto;
 	margin-right:auto;
-	border-right: 2px solid black;
+	margin-bottom:10px;
+	font-size:0;
+	/* border-right: 2px solid black; */
 	
 }
 
@@ -277,11 +281,19 @@ border-right: 2px solid black;
 	background-color:#595959;
 	color:white;
 	border-left: 2px solid black;
+	border-right: none;
 	border-top: 2px solid black;
 	border-bottom: 2px solid black;
+	font-size:20px;
 	width:200px;
-	float:left;
 	padding:5px 0px;
+	display:inline-block;
+	margin-left:0px;
+	margin-right:0px;
+}
+
+.mode_select_last{
+	border-right: 2px solid black;
 }
 
 .mode_select:hover

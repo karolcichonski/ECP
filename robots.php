@@ -154,11 +154,10 @@
 						
 					?>	
 						<form method="post" id="modul_select_form" >
-							<div class="mode_selector_3">
+							<div class="mode_selector_container">
 								<div class="mode_select" onclick="add_click()" id="worker_add" name="form_action">Add robot</div>
 								<div class="mode_select" onclick="update_click()" id="worker_update" name="form_action"> Update robot </div>
-								<div class="mode_select" onclick="delete_click()" id="worker_delete" name="form_action"> Delete robot  </div>
-								<div style="clear:both;"></div>
+								<div class="mode_select mode_select_last" onclick="delete_click()" id="worker_delete" name="form_action"> Delete robot  </div>
 							</div>
 						</form>
 						<div  class="form_container" >

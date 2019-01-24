@@ -9,10 +9,10 @@
 	$workers_table=Workers_Id_Table();
 	
 	if(!isset($_SESSION['old_ecp_date_filter1'])){
-		$_SESSION['old_ecp_date_filter1']=date("Y-m")."-01 00:00:00";
-		$_SESSION['old_ecp_date_filter2']=date("Y-m-d")." 00:00:00";
-		$_SESSION['old_ecp_date_filter3']=date("Y-m")."-01";
-		$_SESSION['old_ecp_date_filter4']=date("Y-m-d");
+		$_SESSION['old_ecp_date_filter1']="2018-12-01 00:00:00";
+		$_SESSION['old_ecp_date_filter2']="2018-12-31 00:00:00";
+		$_SESSION['old_ecp_date_filter3']="2018-12-01";
+		$_SESSION['old_ecp_date_filter4']="2018-12-31";
 		$_SESSION['old_ecp_worker']=$_SESSION['logged_worker_id'];
 		
 	}
@@ -40,7 +40,15 @@
 		$ecp_table[$i]['date']=$StartTime->format('Y-m-d');
 		$ecp_table[$i]['start_time1']=$StartTime->format('H:i');
 		$ecp_table[$i]['end_time1']=$EndTime->format('H:i');
-		
+		$ecp_table[$i]['day']= day_eng_to_pl_conv($EndTime->format('l'));
+		if($ecp_table[$i]['day']=="ND"){
+			$ecp_table[$i]['color']="rgba(255, 173, 167, 0.4)";
+		}elseif($ecp_table[$i]['day']=="SO"){
+			$ecp_table[$i]['color']="rgba(154, 240, 255, 0.4)";
+		}
+		if(strripos($ecp_table[$i]['description'],'rlop')){
+			$ecp_table[$i]['color']="rgba(236, 214, 169, 0.8)";
+		}
 	}
 ?>
 
@@ -110,8 +118,8 @@
 				</section>
 				<section>
 					<?php
-						$db_name=array('worker','date','start_time1','end_time1','sum_time','place','project','cell','description');
-						$table_headers=array('WORKER','DATE','START','END','SUM','PLACE','PROJECT','CELL','DESCRIPTION');
+						$db_name=array('day','date','start_time1','end_time1','sum_time','place','project','cell','description');
+						$table_headers=array('DAY','DATE','START','END','SUM','PLACE','PROJECT','CELL','DESCRIPTION');
 						$row_number=$num_ecp_records;
 						$table_title="ECP";
 

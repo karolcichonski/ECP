@@ -137,30 +137,51 @@ function ecp_formfield_hide(){
 function add_click()
 {
 	var AddForm=document.getElementById("Add_form");
-	var UpdateForm=document.getElementById("Update_form").style.display="none";
-	var DeleteForm=document.getElementById("Delete_form").style.display="none";
-		$(document).ready(function(){
-			$("#Add_form").slideToggle(200);
-			});
+	var UpdateForm=document.getElementById("Update_form");
+	var DeleteForm=document.getElementById("Delete_form");
+		$(document).ready(function(){$("#Update_form").slideUp(200);});
+		$(document).ready(function(){$("#Delete_form").slideUp(200);});
+		$(document).ready(function(){$("#Add_form").slideDown(200);});
 }
 
 function update_click(){
-	var AddForm=document.getElementById("Add_form").style.display="none";
+	var AddForm=document.getElementById("Add_form");
 	var UpdateForm=document.getElementById("Update_form");
-	var DeleteForm=document.getElementById("Delete_form").style.display="none";
-		$(document).ready(function(){
-			$("#Update_form").slideToggle(200);
-			});
+	var DeleteForm=document.getElementById("Delete_form");
+		$(document).ready(function(){$("#Add_form").slideUp(200);});
+		$(document).ready(function(){$("#Delete_form").slideUp(200);});
+		$(document).ready(function(){$("#Update_form").slideDown(200);});
 }
 
 function delete_click()
 {
-	var AddForm=document.getElementById("Add_form").style.display="none";
-	var UpdateForm=document.getElementById("Update_form").style.display="none";
+	var AddForm=document.getElementById("Add_form");
+	var UpdateForm=document.getElementById("Update_form");
 	var DeleteForm=document.getElementById("Delete_form");
-		$(document).ready(function(){
-			$("#Delete_form").slideToggle(200);
-			});
+		$(document).ready(function(){$("#Add_form").slideUp(200);});
+		$(document).ready(function(){$("#Update_form").slideUp(200);});
+		$(document).ready(function(){$("#Delete_form").slideDown(200);});
+}
+
+function hide_click()
+{
+	var AddForm=document.getElementById("Add_form");
+	var UpdateForm=document.getElementById("Update_form");
+	var DeleteForm=document.getElementById("Delete_form");
+		$(document).ready(function(){$("#Add_form").slideUp(200);});
+		$(document).ready(function(){$("#Update_form").slideUp(200);});
+		$(document).ready(function(){$("#Delete_form").slideUp(200);});
+}
+
+function show_add_form()
+{
+	var AddForm=document.getElementById("Add_form");
+	var UpdateForm=document.getElementById("Update_form");
+	var DeleteForm=document.getElementById("Delete_form");
+		
+		AddForm.style.display="block";
+		UpdateForm.style.display="none";
+		DeleteForm.style.display="none";
 }
 
 function active_module()

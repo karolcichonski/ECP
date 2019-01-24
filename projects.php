@@ -85,11 +85,11 @@
 								?>
 								
 									<form method="post" id="modul_select_form" >
-										<div class="mode_selector_3">
+										<div class="mode_selector_container">
 											<div class="mode_select" onclick="add_click()" id="worker_add" name="form_action">Add project</div>
 											<div class="mode_select" onclick="update_click()" id="worker_update" name="form_action"> Updadte project </div>
 											<div class="mode_select" onclick="delete_click()" id="worker_delete" name="form_action"> Delete project  </div>
-											<div style="clear:both;"></div>
+											<div class="mode_select mode_select_last" onclick="summary_click()" id="Project_Summary" name="form_action"> Project Summary </div>
 										</div>
 									</form>
 									<div class="form_container">
@@ -158,6 +158,26 @@
 										<form method="post" id="Delete_form">
 											delete test
 										</form>
+										<div>
+											<label> PROJECT <select name="robot_selected_project" class="selector" onchange="this.form.submit()" style="width:200px;">
+												<?php
+													
+													for($i=0; $i<$num_projects; $i++)
+													{
+														echo '<option value="'.$projects_table[$i]['id'].'">'.$projects_table[$i]['project_name'].'</option>';
+			/* 											if( isset($_SESSION['Project_selected_project']) && $_SESSION['Project_selected_project']==$projects_table[$i]['project_name']){
+															echo '<option value="'.$project_id_name_table[$i][0].'" selected>'.$project_id_name_table[$i][1].'</option>';
+														}elseif (!isset($_SESSION['robot_selected_project']) && $i==0){
+															echo '<option value="'.$project_id_name_table[$i][0].'" selected>'.$project_id_name_table[$i][1].'</option>';
+														}else{
+															echo '<option value="'.$projects_table[$i]['project_name'].'">'.$projects_table[$i]['project_name'].'</option>';
+														} */
+													}
+												
+												?>
+											</select></label>
+										</div>
+										
 									</div>
 								</div>
 							</div>
