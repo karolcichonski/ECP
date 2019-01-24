@@ -413,6 +413,26 @@ function Robots_Id_Table($area)
 	}
 }
 
+function Workers_Id_Table()
+{
+	require('connect.php');
+	$sql="SELECT * FROM workers ORDER BY id ASC";
+	$result=$db->query($sql);
+	$WorkersID=$result->fetchAll();
+	
+	for ($i=0; $i<count($WorkersID); $i++ )
+	{
+	$Workers_Id_table[$i]=array($WorkersID[$i]['ID'],$WorkersID[$i]['name'], $WorkersID[$i]['surname']);
+	}
+	
+	if (isset($Workers_Id_table)){
+		return $Workers_Id_table;
+	}else{
+		$Workers_Id_table=array();
+		return $Workers_Id_table;
+	}
+}
+
 class Worker
 {
 	private $id;
@@ -836,16 +856,15 @@ class ECP_record{
 	public function set_start_time(){
 		$Starttime= $_POST['ecp_date']." ".$_POST['ecp_starttime'];
 		$newStarttime= new DateTime($Starttime);
-		$this->start_time=$newStarttime;
-		$this->start_time=$newStarttime->format('U');
-		echo $this->start_time;
+		$this->start_time=$Starttime;
+		/* $this->start_time=$newStarttime->format('U'); */
 	}
 	public function set_end_time(){
 		$Endtime= $_POST['ecp_date']." ".$_POST['ecp_endtime'];
 		$newEndtime= new DateTime($Endtime);
-		$this->end_time=$newEndtime;
-		$this->end_time=$newEndtime->format('U');
-		echo $this->end_time;
+		$this->end_time=$Endtime;
+		/* $this->end_time=$newEndtime->format('U'); */
+
 				
 	}
 	public function set_worker(){
@@ -853,9 +872,13 @@ class ECP_record{
 	}
 	
 	public function set_sum_time(){
-		if (isset($start_timestamp) && isset($end_timestamp)){
-			$this->sum_time=($this->end_time-$this->start_time)/60;
-		}
+		$Starttime= $_POST['ecp_date']." ".$_POST['ecp_starttime'];
+		$TS_Start= new DateTime($Starttime);
+		$Endtime= $_POST['ecp_date']." ".$_POST['ecp_endtime'];
+		$TS_End= new DateTime($Endtime);
+		$sum=($TS_End->format('U')-$TS_Start->format('U'))/60;
+		$this->sum_time=$sum;
+
 	}
 	
 	public function set_AH(){
@@ -884,4 +907,41 @@ class ECP_record{
 		}
 	}
 	
+}
+
+
+function import_csv(){
+require('connect.php');
+$row = 0;
+$dummy_ecp_table=array();
+$uchwyt = fopen ("bazy/ECP_DAMIAN.csv","r");
+while (($data=fgetcsv($uchwyt, 5000, ";"))!==false)
+{
+	$num = count($data);
+    $row++;
+	$dummy_ecp_table[$row]=$data;
+}
+fclose ($uchwyt);
+
+for($i=1; $i<=count($dummy_ecp_table); $i++){
+	if($dummy_ecp_table[$i][6]!=""){
+		$worker= 2;
+		$starttime= $dummy_ecp_table[$i][0]." ".$dummy_ecp_table[$i][7];
+		$endtime= $dummy_ecp_table[$i][0]." ".$dummy_ecp_table[$i][8];
+		$TS_Start= new DateTime($starttime);
+		$TS_End= new DateTime($endtime);
+		$sum=($TS_End->format('U')-$TS_Start->format('U'))/60;
+		if($dummy_ecp_table[$i][5]==""){
+			$place= "Gliwice";
+		}else{
+			$place= $dummy_ecp_table[$i][5];
+		}
+		$project= $dummy_ecp_table[$i][3];
+		$cell= $dummy_ecp_table[$i][4];
+		$description= $dummy_ecp_table[$i][6];
+		$sql="INSERT INTO old_ecp VALUES (null,'$worker', '$starttime', '$endtime', '$sum','$place','$project','$cell','$description')";
+		
+		//$db->query($sql);
+	}
+}
 }

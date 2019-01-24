@@ -91,9 +91,11 @@ footer
 
 #container
 {
-	height:100px; 
+	height:100%; 
 	align:center;
-	margin:auto;
+	margin-left:auto;
+	margin-right:auto;
+	margin-bottom:50px;
 	font-size:20px;
 	padding:30px;
 }
@@ -109,6 +111,7 @@ footer
 .table_column
 {
 	padding:3px;
+	max-width:250px;
 }
 
 .table_row

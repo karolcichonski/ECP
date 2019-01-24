@@ -1,6 +1,7 @@
  <?php
  	session_start();
 	include 'func.php';
+	require_once('connect.php');
 	is_loged_check();
 	$db_table_name="ecp";
 	
@@ -31,7 +32,6 @@
 		$_SESSION['ecp_selected_area']=Get_first_area_in_project($_SESSION['ecp_selected_project']);
 		$_SESSION['ecp_selected_robot']=Get_first_robot_in_area($_SESSION['ecp_selected_area']);
 	}
-	
 
 	$Project_id_name_atable=Projects_Id_aTable();
 	$project_id_name_table=Projects_Id_Table();
@@ -39,6 +39,43 @@
 	$Areas_id_name_atable=Areas_Id_aTable();
 	$Robots_id_name_table=Robots_Id_Table($_SESSION['ecp_selected_area']);	
 	$Robots_id_name_atable=Robots_Id_aTable();
+	
+	$sql="SELECT*FROM {$db_table_name} WHERE worker_id='{$_SESSION['logged_worker_id']}' ORDER BY start_time DESC";
+	
+	if($result=$db->query($sql))
+	{
+		$num_ecp_records=$result->rowCount();
+		$ecp_table=$result->fetchAll();
+	} 
+	
+	for($i=0; $i<$num_ecp_records; $i++){
+		
+		$ecp_table[$i]['project_name']=$Project_id_name_atable[$ecp_table[$i]['project_id']];
+		$ecp_table[$i]['area_name']=$Areas_id_name_atable[$ecp_table[$i]['area_id']];
+		$ecp_table[$i]['robot_name']=$Robots_id_name_atable[$ecp_table[$i]['robot_id']];
+		$StartTime= new DateTime ($ecp_table[$i]['start_time']);
+		$EndTime= new DateTime ($ecp_table[$i]['end_time']);
+		$ecp_table[$i]['date']=$StartTime->format('Y-m-d');
+		$ecp_table[$i]['start_time1']=$StartTime->format('H:i');
+		$ecp_table[$i]['end_time1']=$EndTime->format('H:i');
+		if($ecp_table[$i]['additional_hour']==0){
+			$ecp_table[$i]['AH']="NO";	
+		}else{
+			$ecp_table[$i]['AH']="YES";	
+		}
+		
+ 		if($i==0){
+		$last_date=$ecp_table[$i]['date'];}
+		if($i>0 && $ecp_table[$i]['date']==$last_date){
+			$ecp_table[$i]['date']="";
+			$ecp_table[$i]['start_time1']="";
+			$ecp_table[$i]['end_time1']="";
+			$ecp_table[$i]['sum_time']="";
+			$ecp_table[$i]['place']="";
+		}else{
+			$last_date=$ecp_table[$i]['date'];
+		}
+	}
 ?>
 
 <!DOCTYPE html>
@@ -66,6 +103,7 @@
 				<li> <a href="areas.php" >Areas</a></li>
 				<li> <a href="robots.php" >Robots</a></li>
 				<li> <a href="ecp.php" >ECP</a></li>
+				<li> <a href="old_ecp.php" >OLD ECP</a></li>
 				<li> <a href="logout.php"> Log Out: <?php echo $_SESSION['logged_worker_name']." ".$_SESSION['logged_worker_surname']; ?> </a></li>
 			</ul>
 		</nav>
@@ -73,111 +111,19 @@
 		<main>
 			<div id="container">
 				<section>
-					<table id="table"  border="1" cellspacing="0" align="center">
-						<tr bgcolor="#555555">
-							<th colspan="12"> ECP KAROL CICHOŃSKI</th>
-						</tr>
-						
-						<tr bgcolor="#666666">
-							<td width="80"> ID </td>
-							<td width="80"> Date </td>
-							<td width="80"> Project </td>
-							<td width="80"> Area </td>
-							<td width="80"> Robot </td>
-							<td width="400"> Description </td>
-							<td width="50"> Additional Hours </td>
-							<td width="200"> A. H. Description </td>
-							<td width="50"> Start Time </td>
-							<td width="50"> End Time </td>
-							<td width="100"> Place </td>
-						</tr>
-						
-						
-						<tr class="table_row" bgcolor="#999999" >
-							<td> 1 </td>
-							<td> 01.11.2018 </td>
-							<td> PO99245 </td>
-							<td> ARG1 </td>
-							<td> 116415R01 </td>
-							<td> Optymalizacja tasku KLB </td>
-							<td> 0 </td>
-							<td>  </td>
-							<td> 6:00 </td>
-							<td> 14:00 </td>
-							<td> Gliwice </td>
-						</tr>
-						
-						<tr class="table_row" bgcolor="#999999" >
-							<td> 2 </td>
-							<td> 02.11.2018 </td>
-							<td> PO992 </td>
-							<td> ARG1 </td>
-							<td> 116415R01 </td>
-							<td> Optymalizacja tasku KLB </td>
-							<td> 0 </td>
-							<td>  </td>
-							<td> 6:00 </td>
-							<td> 14:00 </td>
-							<td> Gliwice </td>
-						</tr>
-						
-						<tr class="table_row" bgcolor="#999999" >
-							<td> 3 </td>
-							<td> 03.11.2018 </td>
-							<td> PO992 </td>
-							<td> ARG1 </td>
-							<td> 116415R01 </td>
-							<td> Optymalizacja tasku KLB </td>
-							<td> 0 </td>
-							<td>  </td>
-							<td> 6:00 </td>
-							<td> 14:00 </td>
-							<td> Gliwice </td>
-						</tr>
-						
-						<tr class="table_row" bgcolor="#999999" >
-							<td> 4 </td>
-							<td> 04.11.2018 </td>
-							<td> PO992 </td>
-							<td> ARG1 </td>
-							<td> 116415R01 </td>
-							<td> Optymalizacja tasku KLB </td>
-							<td> 0 </td>
-							<td>  </td>
-							<td> 6:00 </td>
-							<td> 14:00 </td>
-							<td> Gliwice </td>
-						</tr>
-						
-						<tr class="table_row" bgcolor="#999999" >
-							<td> 5 </td>
-							<td> 05.11.2018 </td>
-							<td> PO992 </td>
-							<td> ARG1 </td>
-							<td> 116415R01 </td>
-							<td> Optymalizacja tasku KLB </td>
-							<td> 0 </td>
-							<td>  </td>
-							<td> 6:00 </td>
-							<td> 14:00 </td>
-							<td> Gliwice </td>
-						</tr>
+				<?php
+					$db_name=array('date','start_time1','end_time1','sum_time','place','project_name','area_name','robot_name','operation_time','AH','type_of_work','description');
+					$table_headers=array('DATE','START','END','SUM','PLACE','PROJECT','AREA','ROBOT','TIME','AH','WORK','DESCRIPTION');
+					$row_number=$num_ecp_records;
+					$table_title="ECP";
 
-					</table>
+					$table_array=create_table($ecp_table, $table_title, $db_name, $table_headers, $row_number);
+				
+				?>
 				</section>
 				
 				<form method="post">
 					<div id="form">
-					
-						<div class="form_row">
-						<form method="post">
-						<label> DATE <input type="date" class="form_field" name="ecp_date" value="<?php echo date('Y-m-d')?>"> </label>	
-						<label> START TIME <input type="time"  class="form_field" name="ecp_starttime" value="06:00"> </label>
-						<label> END TIME <input type="time" class="form_field" name="ecp_endtime" value="14:00"> </label>
-						<label> PLACE <input type="text" class="form_field" name="ecp_place" value="Gliwice"> </label>
-						</div>
-						
-						<fieldset>
 						<div class="form_row">
 							<form method="post" class="ecp_filter_form">
 								<label> PROJECT <select name="ecp_selected_project" class="selector" onchange="this.form.submit()">
@@ -226,6 +172,13 @@
 								</select></label>
 							</form>
 						</div>	
+						<form method="post">
+						<div class="form_row">
+							<label> DATE <input type="date" class="form_field" name="ecp_date" value="<?php echo date('Y-m-d')?>"> </label>	
+							<label> START TIME <input type="time"  class="form_field" name="ecp_starttime" value="06:00"> </label>
+							<label> END TIME <input type="time" class="form_field" name="ecp_endtime" value="14:00"> </label>
+							<label> PLACE <input type="text" class="form_field" name="ecp_place" value="Gliwice"> </label>
+						</div>
 						<div class="form_row">
 							<label> TIME <input type="number" class="form_field" name="ecp_time" required> </label>
 							<label> Type of work <select name="ecp_type_of_work" class="selector">
@@ -251,9 +204,8 @@
 							<label> AH <input type="checkbox" class="form_field" name="ecp_additionalhours" value=1 > </label>	
 						</div>
 						<div class="form_row">
-						<label> DESC. <input type="text" class="form_field" name="ecp_description" style="width:600px;"> </label>
+							<label> DESC. <input type="text" class="form_field" name="ecp_description" style="width:600px;"> </label>
 						</div>
-						</fieldset>
 						<?php 
 							if (isset($_SESSION['AddECPStatusOK'])){
 								echo '<div class="form_success">'.$_SESSION['AddECPStatusOK'].'</div>';
@@ -271,7 +223,7 @@
 								}
 						?>
 						<input type="submit" class="form_button" value="ADD TO EPC" id="add_button">
-
+						<?php /*echo import_csv();*/?> 
 					</div>
 				</form>
 			</div>
