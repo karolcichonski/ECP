@@ -99,8 +99,8 @@ elseif(!isset($_SESSION['worker_mode']))
 		<div id="container">
 				<section>
 				<?php
-				$db_name=array('ID','name','surname','email','login','phone','computer_num','birthday','permissions');
-				$table_headers=array('ID','Name','Surname','Email','Login','Phone','Computer number','Birthday','Permissions');
+				$db_name=array('name','surname','email','login','phone','computer_num','birthday','permissions');
+				$table_headers=array('Name','Surname','Email','Login','Phone','Computer number','Birthday','Permissions');
 				$row_number=$num_workers;
 				$table_title="WORKERS LIST";
 

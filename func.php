@@ -210,16 +210,18 @@ function change_password($id, $old_password, $new_password1, $new_password2)
 function create_table($workers_table, $table_title, $db_name, $table_headers, $row_number)
 {
 $column_number=count($db_name);
+$colspan_num=$column_number+1;
 
 //$project_id=$_SESSION['$Project_Id_table'];
 
 echo<<<END
 <table id="table">
 <tr bgcolor="#555555">
-<th colspan="$column_number"> $table_title</th>
+<th colspan="$colspan_num"> $table_title</th>
 </tr>
 <tr bgcolor="#666666">
 END;
+echo "<td>LP</td>";
 for ($i=0;$i<$column_number; $i++)
 {
 	echo "<td>$table_headers[$i]</td>";
@@ -230,6 +232,9 @@ echo"</tr>";
 for ($j = 0; $j < $row_number; $j++) 
 {
 echo '<tr class="table_row" bgcolor="#999999">';
+	
+	$id=$j+1;
+	echo '<td class="table_column">'.$id.'</td>';
 	
 	for ($i=0;$i<$column_number; $i++)
 	{
@@ -411,7 +416,6 @@ class Worker
 		$db->query($sql);
 		}catch(PDOException $error){	
 			$_SESSION['AddStatusER']=$error->getMessage();
-			exit();
 		}
 		
 		
@@ -510,5 +514,61 @@ class Worker
 	
 
 	}
+}
+
+function add_project(){
+	$new_project= new Project;
+	//$new_worker->correct_data_flag=true;
+	//$new_worker->errors_drscriptions="";
+	$new_project->project_name=$_POST['new_project_name'];
+	$new_project->brand=$_POST['new_project_brand'];
+	$new_project->software=$_POST['new_project_software'];
+	$new_project->RCS=$_POST['new_project_rcs'];
+	$new_project->robots_type=$_POST['new_project_robots'];		
+	$new_project->takt_time=$_POST['new_project_takt'];
+	$new_project->upload=$_POST['new_project_upload'];
+	$new_project->customer=$_POST['new_project_customer'];
+	
+	$new_project->insert_project_to_db();
+
+}
+
+class Project{
+	private $id;
+	public $project_name;
+	public $brand;
+	public $software;
+	public $RCS;
+	public $robots_type;
+	public $takt_time;
+	public $upload;
+	public $customer;
+	
+	public function set_project_name($project_name)
+	{
+		$this->project_name=$project_name;
+	}	
+	
+	public function insert_project_to_db()
+	{
+		require('connect.php');
+		$this->id="null";
+		$sql="INSERT INTO projects VALUES ('$this->id', '$this->project_name', '$this->brand', '$this->software',
+		'$this->RCS', '$this->robots_type', '$this->takt_time', '$this->upload', '$this->customer')";
+		try{
+		$db->query($sql);
+		}catch(PDOException $error){	
+			$_SESSION['AddProjectStatusER']=$error->getMessage();
+		}
+		
+		
+		if ($db->errorCode()==0){
+				$_SESSION['AddProjectStatusOK']="Project added successfully";
+			}
+			
+		Header("Location: projects.php");
+		$_POST = array();
+	}
+	
 }
 ?>

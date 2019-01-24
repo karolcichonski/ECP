@@ -74,9 +74,10 @@
 		<main>
 			<div id="container">
 					<div class="form_row">
+						
 						<form method="post">
 							<div class="form_row">			
-							<label> FILTER <select name="areas_project_filter" class="selector" value="<?php echo $project_filter; ?>">
+							<label> PROJECT <select name="areas_project_filter" class="selector" value="<?php echo $project_filter; ?>" onchange="this.form.submit()">
 								<?php
 									for($i=0; $i<count($project_id_name_table); $i++)
 									{
@@ -89,15 +90,14 @@
 								?>
 								<option value="0" <?php  if($project_filter==0) echo "selected "?>>"none"</option>
 							</select></label>
-							<label> LIM <input type="number"  class="form_field" name="areas_limit" value="<?php echo $limit_filter; ?>" style="width:40px;"> </label>
-							<input type="submit" value="FILTER" id="filter_area_button" class="form_button">
+							<label> LIM <input type="number"  class="form_field" name="areas_limit" value="<?php echo $limit_filter; ?>" style="width:40px;" onchange="this.form.submit()"> </label>
 						</form>
 					</div>
 				</br>
 				<section>
 				<?php
-					$db_name=array('id','ProjectName','name','part','number_of_robots');
-					$table_headers=array('ID','Project ID','Area name','Part','Number of robots');
+					$db_name=array('ProjectName','name','part','number_of_robots');
+					$table_headers=array('Project name','Area name','Part','Number of robots');
 					$row_number=$num_areas;
 					$table_title="AREAS LIST";
 

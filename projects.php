@@ -5,13 +5,18 @@
 	is_loged_check();
 	$db_table_name="projects";
 	
-	$sql="SELECT*FROM {$db_table_name}";
+	$sql="SELECT*FROM {$db_table_name} ORDER BY id DESC";
 	
 	if($result=$db->query($sql))
 	{
 		$num_projects=$result->rowCount();
 		$projects_table=$result->fetchAll();
 	} 
+	
+	if(isset($_POST['new_project_name']) and $_SESSION['logged_worker_permissions']>1 )
+	{
+		add_project();
+	}
 	
 ?>
 
@@ -48,8 +53,8 @@
 			<div id="container">
 				<section>
 					<?php
-						$db_name=array('id','project_name','brand','software','rcs','robots_type','takt_time','upload_on_plant','customer');
-						$table_headers=array('ID','Project name','Brand','Software','RCS','Robots type','Takt time','Upload on plant','Customer');
+						$db_name=array('project_name','brand','software','rcs','robots_type','takt_time','upload_on_plant','customer');
+						$table_headers=array('Project name','Brand','Software','RCS','Robots type','Takt time','Upload on plant','Customer');
 						$row_number=$num_projects;
 						$table_title="PROJECTS LIST";
 
@@ -62,21 +67,36 @@
 					<div id="form">
 					
 						<form method="post">
-							<div>
-							<label> PROJECT NAME <input type="text" class="form_field" name="project_name"> </label>				
-							<label> BRAND <input type="text"  class="form_field" name="project_brand"> </label>
+							<div class="form_row">
+							<label> PROJECT NAME <input type="text" class="form_field" name="new_project_name"> </label>				
+							<label> BRAND <input type="text"  class="form_field" name="new_project_brand"> </label>
 							</div>
-							<div>
-							<label> SOFTWARE <input type="text" class="form_field" name="project_software"> </label>
-							<label> RCS <input type="text" class="form_field" name="project_rcs"> </label>
-							<label> ROBOT TYPE<input type="text" class="form_field" name="project_robots"> </label>
+							<div class="form_row">
+							<label> SOFTWARE <input type="text" class="form_field" name="new_project_software"> </label>
+							<label> RCS <input type="text" class="form_field" name="new_project_rcs"> </label>
+							<label> ROBOT TYPE<input type="text" class="form_field" name="new_project_robots"> </label>
 							</div>
-							<div>
-							<label> TAKT TIME<input type="text" class="form_field" name="project_takt"> </label>
-							<label> CUSTOMER<input type="text" class="form_field" name="project_customer"> </label>
+							<div class="form_row">
+							<label> TAKT TIME<input type="text" class="form_field" name="new_project_takt"> </label>
+							<label> CUSTOMER<input type="text" class="form_field" name="new_project_customer"> </label>
+							<label> UPLOAD<select class="selector" name="new_project_upload"> 
+										<option value=0 selected>NO</option>
+										<option value=1>YES</option>
+							</select></label>
 							</div>
-							
-							<input type="submit" value="ADD PROJECT" id="add_button">
+								<?php 
+									if (isset($_SESSION['AddProjectStatusOK'])){
+										echo '<div class="form_success">'.$_SESSION['AddProjectStatusOK'].'</div>';
+										unset($_SESSION['AddProjectStatusOK']);
+										}
+									
+									
+									if(isset($_SESSION['AddProjectStatusER'])){
+										echo '<div class="form_error_com">'.$_SESSION['AddProjectStatusER'].'</div>';
+										unset($_SESSION['AddProjectStatusER']);
+										}
+								?>
+							<input type="submit" value="ADD PROJECT" class="form_button">
 					
 						</form>
 					</div>
