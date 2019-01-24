@@ -23,6 +23,7 @@
 	$Project_id_name_atable=Projects_Id_aTable();
 	$project_id_name_table=Projects_Id_Table();
 	
+	
 ?>
 
 <!DOCTYPE html>
@@ -209,14 +210,17 @@
 							<option value=10>Dokumentation</option>
 							<option value=11>MRS/SOP</option>
 							<option value=12>Simulation changing</option>
-							<option value=13>Upload on plant</option>
-							<option value=14>Others</option>
+							<option value=13>URLOP</option>
+							<option value=13>Wolne</option>
+							<option value=14>L4</option>
+							<option value=15>Święto</option>
+							<option value=16>Upload on plant</option>
+							<option value=17>Others</option>
 						</select></label>
 						<label> DESC. <input type="text" class="form_field" id="f_description" style="width:600px;"> </label>
 						</div>
 						</fieldset>
 						<input type="submit" class="form_button" value="ADD TO EPC" id="add_button">
-
 
 					</div>
 				</form>

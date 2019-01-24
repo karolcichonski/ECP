@@ -55,8 +55,8 @@
 			<div id="container">
 				<section>
 					<?php
-						$db_name=array('project_name','brand','software','rcs','robots_type','takt_time','upload_on_plant','customer');
-						$table_headers=array('Project name','Brand','Software','RCS','Robots type','Takt time','Upload on plant','Customer');
+						$db_name=array('project_name','brand','software','rcs','robots_type','takt_time','customer','main_tasks','service_tasks','signals','downloads','mrs','upload_on_plant');
+						$table_headers=array('Project name','Brand','Software','RCS','Robots type','Takt time','Customer','Main T.','Service T.','Signals','Downl.','MRS','Upload');
 						$row_number=$num_projects;
 						$table_title="PROJECTS LIST";
 
@@ -81,6 +81,28 @@
 							<div class="form_row">
 							<label> TAKT TIME<input type="text" class="form_field" name="new_project_takt"> </label>
 							<label> CUSTOMER<input type="text" class="form_field" name="new_project_customer"> </label>
+							</div>
+							<div class="form_row">
+							<label> MAIN T.<select class="selector" name="new_project_main"> 
+										<option value=0 selected>NO</option>
+										<option value=1>YES</option>
+							</select></label>
+							<label> SERVICE T.<select class="selector" name="new_project_service"> 
+										<option value=0 selected>NO</option>
+										<option value=1>YES</option>
+							</select></label>
+							<label> SIGNALS <select class="selector" name="new_project_signals"> 
+										<option value=0 selected>NO</option>
+										<option value=1>YES</option>
+							</select></label>
+							<label> DOWNLOADS<select class="selector" name="new_project_download"> 
+										<option value=0 selected>NO</option>
+										<option value=1>YES</option>
+							</select></label>
+							<label> MRS/SOP<select class="selector" name="new_project_mrs"> 
+										<option value=0 selected>NO</option>
+										<option value=1>YES</option>
+							</select></label>
 							<label> UPLOAD<select class="selector" name="new_project_upload"> 
 										<option value=0 selected>NO</option>
 										<option value=1>YES</option>

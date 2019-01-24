@@ -1,7 +1,53 @@
  <?php
  	session_start();
 	include 'func.php';
+	require_once('connect.php');
 	is_loged_check();
+	$db_table_name="robots";
+	$sql="SELECT*FROM {$db_table_name} ORDER BY id DESC lIMIT 15";
+	
+	if(isset($_POST['robot_selected_project'])){
+		$_SESSION['robot_selected_project']=$_POST['robot_selected_project'];
+	}
+	
+	if(isset($_POST['robot_selected_area'])){
+		$_SESSION['robot_selected_area']=$_POST['robot_selected_area'];
+	}
+	
+	
+	if(isset($_POST['robot_selected_area'])){
+		$_SESSION['robot_selected_area']=$_POST['robot_selected_area'];
+	}
+	
+	if (isset($_SESSION['robot_selected_project'])){
+		$Areas_id_name_table=Areas_Id_Table($_SESSION['robot_selected_project']);	
+		if ($_SESSION['robot_selected_project']==0){
+			$sql="SELECT*FROM {$db_table_name} ORDER BY id DESC";
+		}else{
+		if(isset($_POST['robot_selected_area'])){
+			$sql="SELECT*FROM {$db_table_name} WHERE project_id='{$_SESSION['robot_selected_project']}' AND area_id='{$_SESSION['robot_selected_area']}' ORDER BY id DESC";			
+		}else{
+			$sql="SELECT*FROM {$db_table_name} WHERE project_id='{$_SESSION['robot_selected_project']}' ORDER BY id DESC";
+		}
+	}
+	}
+	
+	$Areas_id_name_atable=Areas_Id_aTable();
+	$Project_id_name_atable=Projects_Id_aTable();
+	$project_id_name_table=Projects_Id_Table();
+	
+	
+	if($result=$db->query($sql))
+	{
+		$num_robots=$result->rowCount();
+		$robots_table=$result->fetchAll();
+	} 
+	
+	for($i=0; $i<$num_robots; $i++){
+		
+		$robots_table[$i]['project_name']=$Project_id_name_atable[$robots_table[$i]['project_id']];
+		$robots_table[$i]['area_name']=$Areas_id_name_atable[$robots_table[$i]['area_id']];
+	}
 ?>
 
 <!DOCTYPE html>
@@ -36,96 +82,73 @@
 		<main>
 			<div id="container">
 				<section>
-					<table id="table">
-						<tr bgcolor="#555555">
-							<th colspan="10"> ROBOTS LIST</th>
-						</tr>
-						
-						<tr bgcolor="#666666">
-							<td width="80"> ID </td>
-							<td width="80"> Name </td>
-							<td width="80"> Robot Brand </td>
-							<td width="80"> Project ID </td>
-							<td width="80"> Project NAME </td>
-							<td width="80"> AREA ID </td>
-							<td width="80"> AREA NAME </td>
-							<td width="80"> TASKS </td>
-							<td width="80"> 7th AXIS </td>
-							<td width="80"> TYPE </td>
-							
-						</tr>
-						
-						
-						<tr class="table_row" bgcolor="#999999" >
-							<td> 1 </td>
-							<td> 116415R01 </td>
-							<td> ABB </td>
-							<td> 1 </td>
-							<td> PO992</td>
-							<td> 1 </td>
-							<td> ARG1 </td>
-							<td> Handlings, ext Gluing, Clinchen</td>
-							<td> YES </td>
-							<td> ROB1_7600_2.80_340</td>
-							
-						</tr>
-						
-						<tr class="table_row" bgcolor="#999999" >
-							<td> 2 </td>
-							<td> 116465R01 </td>
-							<td> ABB </td>
-							<td> 1</td>
-							<td> PO992 </td>
-							<td> 1</td>
-							<td> ARG2 </td>
-							<td> Handlings, ext. Clinchen, KG_LESEN </td>
-							<td> YES </td>
-							<td> ROB1_7600_2.80_340</td>
-							
+				<?php
+					$db_name=array('name','brand','project_name','area_name','tasks','seveth_axis','type');
+					$table_headers=array('Name','Brand','Project','Area','Tasks','7th Axis', 'Type');
+					$row_number=$num_robots;
+					$table_title="ROBOTS LIST";
 
-						</tr>
-						
-						<tr class="table_row" bgcolor="#999999" >
-							<td> 3 </td>
-							<td> 116465R01 </td>
-							<td> KUKA </td>
-							<td> 1</td>
-							<td> PO992 </td>
-							<td> 1</td>
-							<td> ARG2 </td>
-							<td> Handlings, ext. Clinchen, KG_LESEN </td>
-							<td> YES </td>
-							<td> ROB1_7600_2.80_340</td>
-						</tr>
-					</table>
+					$table_array=create_table($robots_table, $table_title, $db_name, $table_headers, $row_number);
+				
+				?>
 				</section>
 				
 				<section>
 					<div id="form">
-					
+						<div id="robots_filter">
+								<div id="robots_filterL">
+								<form method="post">
+									<label> PROJECT <select name="robot_selected_project" class="selector" onchange="this.form.submit()" style="width:200px;">
+										<?php
+											for($i=0; $i<count($project_id_name_table); $i++)
+											{
+												if( isset($_SESSION['robot_selected_project']) && $_SESSION['robot_selected_project']==$project_id_name_table[$i][0]){
+													echo '<option value="'.$project_id_name_table[$i][0].'" selected>'.$project_id_name_table[$i][1].'</option>';
+												}elseif (!isset($_SESSION['robot_selected_project']) && $i==0){
+													echo '<option value="'.$project_id_name_table[$i][0].'" selected>'.$project_id_name_table[$i][1].'</option>';
+												}else{
+													echo '<option value="'.$project_id_name_table[$i][0].'">'.$project_id_name_table[$i][1].'</option>';
+												}
+											}
+										
+										?>
+									</select></label>
+								</form>
+								</div>
+								<div id="robots_filterR">
+								<form method="post">
+									<label> AREA <select name="robot_selected_area" class="selector" onchange="this.form.submit()" style="width:200px;">
+										<?php
+											for($i=0; $i<count($Areas_id_name_table); $i++)
+											{
+												if( isset($_SESSION['robot_selected_area']) && $_SESSION['robot_selected_area']==$Areas_id_name_table[$i][0]){
+													echo '<option value="'.$Areas_id_name_table[$i][0].'" selected>'.$Areas_id_name_table[$i][1].'</option>';
+												}else{
+													echo '<option value="'.$Areas_id_name_table[$i][0].'" >'.$Areas_id_name_table[$i][1].'</option>';
+												}
+											}
+										?>
+										
+									</select></label>
+								</form>
+								</div>
+								<div style="clear:both;"></div>
+						</div>
 						<form method="post">
-							<div>
-								<label> ROBOT NAME <input type="text" class="form_field" style="width:120px;" name="robot_name" </label>				
-								<label> PROJECT ID <input type="text"  class="form_field" style="width:30px;" name="robot_project_id"> </label>
-								<label> PROJECT NAME <input type="text"  class="form_field_disabled" style="width:120px;" disabled> </label>
-							</div>
-							<div>
-								<label> AREA ID <input type="text"  class="form_field" style="width:30px;" name="robot_area_id" > </label>
-								<label> AREA NAME <input type="text"  class="form_field_disabled" style="width:120px;" disabled> </label>
-								<label> TASKS <input type="text" class="form_field" style="width:400px;" name="robot_tasks" > </label>
-							</div>
-							<div>
+							<div class="form_row">
+								<label> ROBOT NAME <input type="text" class="form_field" style="width:120px;" name="robot_name"> </label>	
 								<label> 7yh Axis
-									<select id="ax_select" name="robot_7th_axis"  >
+									<select id="ax_select" name="robot_7th_axis" class="selector">
 										<option value="YES" > YES </option>
 										<option value="NO" selected> NO </option>
 									</select>
 								</label>
 								<label> ROBOT TYPE<input type="text" class="form_field" style="width:120px;" name="robot_type" > </label>
 							</div>
-							
-							<input type="submit" value="ADD ROBOT" id="add_button"> 
-					
+							<div class="form_row">
+								<label> TASKS <input type="text" class="form_field" style="width:400px;" name="robot_tasks" > </label>
+							</div>
+								<input type="submit" value="ADD ROBOT" class="form_button"> 
 						</form>
 					</div>
 				</section>

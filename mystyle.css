@@ -234,3 +234,24 @@ footer
 {
 	padding:20px;
 }
+
+#robots_filter{
+	align:center;
+	min-width:450px;
+	max-width:600px;
+	margin-left:auto;
+	margin-right:auto;
+	/*border: 2px solid white; */
+}
+
+#robots_filterL{
+	padding:20px 2px;
+	float:left;
+	/* border: 2px solid white; */
+}
+
+#robots_filterR{
+	padding:20px 2px;
+	float:left;
+	/* border: 2px solid white; */
+}

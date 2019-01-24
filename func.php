@@ -277,10 +277,10 @@ function Projects_Id_Table()
 }
 
 //generate assotiative table where id is name 
-function Areas_Id_aTable($selected_project)
+function Areas_Id_aTable()
 {
 	require('connect.php');
-	$sql="SELECT * FROM areas WHERE project_id='{$selected_project}'  ORDER BY id ASC";
+	$sql="SELECT * FROM areas ORDER BY id ASC";
 	$result=$db->query($sql);
 	$AreasID=$result->fetchAll();
 	
@@ -567,8 +567,13 @@ function add_project(){
 	$new_project->RCS=$_POST['new_project_rcs'];
 	$new_project->robots_type=$_POST['new_project_robots'];		
 	$new_project->takt_time=$_POST['new_project_takt'];
-	$new_project->upload=$_POST['new_project_upload'];
 	$new_project->customer=$_POST['new_project_customer'];
+	$new_project->range_main_tasks=$_POST['new_project_main'];
+	$new_project->range_service_tasks=$_POST['new_project_service'];
+	$new_project->range_signals=$_POST['new_project_signals'];
+	$new_project->range_download=$_POST['new_project_download'];
+	$new_project->range_mrs=$_POST['new_project_mrs'];
+	$new_project->range_upload=$_POST['new_project_upload'];
 	
 	$new_project->insert_project_to_db();
 
@@ -595,8 +600,13 @@ class Project{
 	public $RCS;
 	public $robots_type;
 	public $takt_time;
-	public $upload;
 	public $customer;
+	public $range_main_tasks;
+	public $range_service_tasks;
+	public $range_signals;
+	public $range_download;
+	public $range_mrs;
+	public $range_upload;
 	
 	
 	public function insert_project_to_db()
@@ -604,7 +614,8 @@ class Project{
 		require('connect.php');
 		$this->id="null";
 		$sql="INSERT INTO projects VALUES ('$this->id', '$this->project_name', '$this->brand', '$this->software',
-		'$this->RCS', '$this->robots_type', '$this->takt_time', '$this->upload', '$this->customer')";
+		'$this->RCS', '$this->robots_type', '$this->takt_time', '$this->customer', '$this->range_main_tasks',
+		'$this->range_service_tasks', '$this->range_signals', '$this->range_download', '$this->range_mrs', '$this->range_upload')";
 		try{
 		$db->query($sql);
 		}catch(PDOException $error){	
@@ -615,9 +626,6 @@ class Project{
 		if ($db->errorCode()==0){
 				$_SESSION['AddProjectStatusOK']="Project added successfully";
 			}
-			
-		//Header("Location: projects.php");
-		$_POST = array();
 	}
 	
 }

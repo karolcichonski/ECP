@@ -53,3 +53,8 @@ function change_password_selected()
 	PasswordForm.style.display="block";
 	PassSelector.checked=true;
 }
+
+function ecp_formfield_hide(){
+	var AddForm=document.getElementById("ecp_formfield");
+	AddForm.style.display="none";
+}
