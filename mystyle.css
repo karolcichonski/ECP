@@ -134,6 +134,50 @@ select:focus{
 	height:45px;
 }
 
+.mode_navigation{
+	margin:20px;
+	font-size:0px;
+}
+
+.mode_navigation>li
+{
+	font-size:18px;
+	list-style-type:none;
+	display: inline-block;
+	padding:8px 30px;
+	font-size:18px;
+	font-weight:700;
+	border-top: 2px solid black;
+	border-bottom: 2px solid black;
+	border-right: 2px solid black;
+	/line-height:200%; 
+	background-color:#595959;
+	
+}
+
+.mode_navigation> li:first-child
+{
+	border-left: 2px solid black;
+	border-radius:5px 0px 0px 5px;
+}
+
+.mode_navigation> li:last-child
+{
+	border-radius:0px 5px 5px 0px;
+}
+
+.mode_navigation>li:hover
+{
+	border:3px solid #888888;
+	background-color: #888888;
+	border-color:white;
+	cursor:pointer;
+}
+
+.single_mode_container{
+	display:none;
+}
+
 #container
 {
 	height:100%; 

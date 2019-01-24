@@ -1,3 +1,32 @@
+function module_nav_click(mode_number, number_of_modes){
+	
+	for (i=1; i<=number_of_modes; i++){
+		var elementID="mode"+i;
+		if(mode_number==i){
+			var jQID="#mode"+i;
+			$(document).ready(function(){$(jQID).slideToggle(200);});
+			document.getElementById("mode_butt_"+i).style.backgroundColor="#888888";
+		}else{
+			document.getElementById(elementID).style.display="none";
+			document.getElementById("mode_butt_"+i).style.backgroundColor="#595959";
+		}
+	}
+	
+	sessionStorage.setItem("worker_mode", "mode"+mode_number);
+}
+
+function module_nav_hide(number_of_modes){
+		for (i=1; i<=number_of_modes; i++){
+		var elementID="mode"+i;
+			document.getElementById(elementID).style.display="none";
+			document.getElementById("mode_butt_"+i).style.backgroundColor="#595959";
+	}
+}
+
+function onload_module(){
+alert(sessionStorage.getItem("worker_mode"));
+}
+
 function add_worker_click()
 {
 		var AddForm=document.getElementById("Add_form");
