@@ -1,4 +1,10 @@
- <!DOCTYPE html>
+ <?php
+ 	session_start();
+	include 'func.php';
+	is_loged_check();
+?>
+
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -18,11 +24,12 @@
 		
 		<nav> 
 			<ul class="navigation">
-				<li> <a href="workers.html" >Workers</a></li>
-				<li> <a href="projects.html" >Projects</a></li>
-				<li> <a href="areas.html" >Areas</a></li>
-				<li> <a href="robots.html" >Robots</a></li>
-				<li> <a href="ecp.html" >ECP</a></li>
+				<li> <a href="workers.php" >Workers</a></li>
+				<li> <a href="projects.php" >Projects</a></li>
+				<li> <a href="areas.php" >Areas</a></li>
+				<li> <a href="robots.php" >Robots</a></li>
+				<li> <a href="ecp.php" >ECP</a></li>
+				<li> <a href="logout.php"> Log Out: <?php echo $_SESSION['logged_worker_name']." ".$_SESSION['logged_worker_surname']; ?> </a></li>
 			</ul>
 		</nav>
 		
@@ -31,7 +38,7 @@
 				<section>
 					<table id="table">
 						<tr bgcolor="#555555">
-							<th colspan="9"> ROBOTS LIST</th>
+							<th colspan="10"> ROBOTS LIST</th>
 						</tr>
 						
 						<tr bgcolor="#666666">
@@ -81,6 +88,7 @@
 						<tr class="table_row" bgcolor="#999999" >
 							<td> 3 </td>
 							<td> 116465R01 </td>
+							<td> KUKA </td>
 							<td> 1</td>
 							<td> PO992 </td>
 							<td> 1</td>
@@ -95,7 +103,7 @@
 				<section>
 					<div id="form">
 					
-						<form action="add_to_robots.php" method="post" enctype="text/plain">
+						<form method="post">
 							<div>
 								<label> ROBOT NAME <input type="text" class="form_field" style="width:120px;" name="robot_name" </label>				
 								<label> PROJECT ID <input type="text"  class="form_field" style="width:30px;" name="robot_project_id"> </label>

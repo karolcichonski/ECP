@@ -211,6 +211,8 @@ function create_table($workers_table, $table_title, $db_name, $table_headers, $r
 {
 $column_number=count($db_name);
 
+//$project_id=$_SESSION['$Project_Id_table'];
+
 echo<<<END
 <table id="table">
 <tr bgcolor="#555555">
@@ -233,11 +235,40 @@ echo '<tr class="table_row" bgcolor="#999999">';
 	{
 		$table_val=$workers_table[$j][$db_name[$i]];
 		echo '<td class="table_column">'.$table_val.'</td>';
+		
 	}
 echo '</tr>';
 }
 echo '</table>';
 
+}
+
+function Projects_Id_aTable()
+{
+	require('connect.php');
+	$sql="SELECT * FROM projects  ORDER BY id DESC";
+	$result=$db->query($sql);
+	$ProjectID=$result->fetchAll();
+	
+	for ($i=0; $i<count($ProjectID); $i++ )
+	{
+		$Project_Id_table[$ProjectID[$i]['id']]=$ProjectID[$i]['project_name'];
+	}
+	return $Project_Id_table;
+}
+
+function Projects_Id_Table()
+{
+	require('connect.php');
+	$sql="SELECT * FROM projects ORDER BY id DESC";
+	$result=$db->query($sql);
+	$ProjectID=$result->fetchAll();
+	
+	for ($i=0; $i<count($ProjectID); $i++ )
+	{
+		$Project_Id_table[$i]=array($ProjectID[$i]['id'],$ProjectID[$i]['project_name']);
+	}
+	return $Project_Id_table;
 }
 
 

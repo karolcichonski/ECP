@@ -1,4 +1,10 @@
- <!DOCTYPE html>
+ <?php
+ 	session_start();
+	include 'func.php';
+	is_loged_check();
+?>
+
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -18,11 +24,12 @@
 		
 		<nav> 
 			<ul class="navigation">
-				<li> <a href="workers.html" >Workers</a></li>
-				<li> <a href="projects.html" >Projects</a></li>
-				<li> <a href="areas.html" >Areas</a></li>
-				<li> <a href="robots.html" >Robots</a></li>
-				<li> <a href="ecp.html" >ECP</a></li>
+				<li> <a href="workers.php" >Workers</a></li>
+				<li> <a href="projects.php" >Projects</a></li>
+				<li> <a href="areas.php" >Areas</a></li>
+				<li> <a href="robots.php" >Robots</a></li>
+				<li> <a href="ecp.php" >ECP</a></li>
+				<li> <a href="logout.php"> Log Out: <?php echo $_SESSION['logged_worker_name']." ".$_SESSION['logged_worker_surname']; ?> </a></li>
 			</ul>
 		</nav>
 		
@@ -122,7 +129,7 @@
 					</table>
 				</section>
 				
-				<form action="add_to_ecp.php" method="post" enctype="text/plain">
+				<form method="post">
 					<div id="form">
 					
 						<div>

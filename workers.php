@@ -106,12 +106,6 @@ elseif(!isset($_SESSION['worker_mode']))
 
 				$table_array=create_table($workers_table, $table_title, $db_name, $table_headers, $row_number);
 				
-/* 				for($i=1; $i<=$num_workers; $i++)
-				{
-					$row = mysqli_fetch_assoc($result);
-					$Worker_ID_table[$i]=$row['ID'];
-					$Worker_login_table[$i]=$row['login'];
-				} */
 				?>
 
 				</section>

@@ -1,4 +1,21 @@
- <!DOCTYPE html>
+ <?php
+ 	session_start();
+	include 'func.php';
+	require_once('connect.php');
+	is_loged_check();
+	$db_table_name="projects";
+	
+	$sql="SELECT*FROM {$db_table_name}";
+	
+	if($result=$db->query($sql))
+	{
+		$num_projects=$result->rowCount();
+		$projects_table=$result->fetchAll();
+	} 
+	
+?>
+
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -18,77 +35,33 @@
 		
 		<nav> 
 			<ul class="navigation">
-				<li> <a href="workers.html" >Workers</a></li>
-				<li> <a href="projects.html" >Projects</a></li>
-				<li> <a href="areas.html" >Areas</a></li>
-				<li> <a href="robots.html" >Robots</a></li>
-				<li> <a href="ecp.html" >ECP</a></li>
+				<li> <a href="workers.php" >Workers</a></li>
+				<li> <a href="projects.php" >Projects</a></li>
+				<li> <a href="areas.php" >Areas</a></li>
+				<li> <a href="robots.php" >Robots</a></li>
+				<li> <a href="ecp.php" >ECP</a></li>
+				<li> <a href="logout.php"> Log Out: <?php echo $_SESSION['logged_worker_name']." ".$_SESSION['logged_worker_surname']; ?> </a></li>
 			</ul>
 		</nav>
 		
 		<main>
 			<div id="container">
 				<section>
-					<table id="table">
-						<tr bgcolor="#555555">
-							<th colspan="8"> PROJECT LIST</th>
-						</tr>
-						
-						<tr bgcolor="#666666">
-							<td width="80"> ID </td>
-							<td width="80"> Project name </td>
-							<td width="80"> Brand </td>
-							<td width="80"> Software </td>
-							<td width="80"> RCS </td>
-							<td width="80"> Robots Type </td>
-							<td width="80"> Takt Time </td>
-							<td width="80"> Customer </td>
-							
-						</tr>
-						
-						
-						<tr class="table_row" bgcolor="#999999" >
-							<td> 1 </td>
-							<td> PO992 </td>
-							<td> VW</td>
-							<td> Process Simulate</td>
-							<td> XXX </td>
-							<td> ABB</td>
-							<td> 90s </td>
-							<td> ASE</td>
-							
-						</tr>
-						
-						<tr class="table_row" bgcolor="#999999" >
-							<td> 2 </td>
-							<td> W206 </td>
-							<td> Daimler</td>
-							<td> Delmia </td>
-							<td> KRC4</td>
-							<td> KUKA </td>
-							<td> 120s </td>
-							<td> EngRoTec </td>
-							
+					<?php
+						$db_name=array('id','project_name','brand','software','rcs','robots_type','takt_time','upload_on_plant','customer');
+						$table_headers=array('ID','Project name','Brand','Software','RCS','Robots type','Takt time','Upload on plant','Customer');
+						$row_number=$num_projects;
+						$table_title="PROJECTS LIST";
 
-						</tr>
-						
-						<tr class="table_row" bgcolor="#999999" >
-							<td> 3 </td>
-							<td> V177_MFA2 </td>
-							<td> daimler </td>
-							<td> Delmia </td>
-							<td> KRC4 </td>
-							<td> KUKA</td>
-							<td> 150s </td>
-							<td> TKSY </td>
-						</tr>
-					</table>
+						$table_array=create_table($projects_table, $table_title, $db_name, $table_headers, $row_number);
+					
+					?>
 				</section>
 				
 				<section>
 					<div id="form">
 					
-						<form action="add_to_projects.php" method="post" enctype="text/plain">
+						<form method="post">
 							<div>
 							<label> PROJECT NAME <input type="text" class="form_field" name="project_name"> </label>				
 							<label> BRAND <input type="text"  class="form_field" name="project_brand"> </label>
