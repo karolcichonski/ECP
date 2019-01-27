@@ -243,7 +243,7 @@
 </head>
 
 
-<body onload='onload_module(3,"ecp_mode_number")'>	
+<body onload='onload_module(3,"ecp_mode_number"), set_form_inputs()'>	
 		<header>
 			<h1 id="logo"> 
 				<font color="#cc3333" size="7">alpha </font>
@@ -390,36 +390,43 @@
 								</form>
 							</div>	
 							<form method="post">
-							<div class="form_row">
-								<label> DATE <input type="date" class="form_field" name="ecp_date" value="<?php echo date('Y-m-d')?>"> </label>	
-								<label> START TIME <input type="time"  class="form_field" name="ecp_starttime" value="06:00"> </label>
-								<label> END TIME <input type="time" class="form_field" name="ecp_endtime" value="14:00"> </label>
-								<label> PLACE <input type="text" class="form_field" name="ecp_place" value="Gliwice"> </label>
-							</div>
-							<div class="form_row">
-								<label> TIME <input type="number" class="form_field" name="ecp_time" required> </label>
-								<label> WORK <select name="ecp_type_of_work" class="selector">
-									<?php $type_of_work_table=get_type_of_work_table();
-									for($i=0; $i<count($type_of_work_table); $i++){
-										echo "<option value='$type_of_work_table[$i]'>$type_of_work_table[$i]</option>";
-									}?>
-								</select></label>
-								<label> AH <input type="checkbox" class="form_field" name="ecp_additionalhours" value=1 > </label>	
-							</div>
-							<div class="form_row">
-								<label> DESC. <input type="text" class="form_field" name="ecp_description" style="width:600px;"> </label>
-							</div>
-							<?php 
-								if (isset($_SESSION['AddECPStatusOK'])){
-									echo '<div class="form_success">'.$_SESSION['AddECPStatusOK'].'</div>';
-									unset($_SESSION['AddECPStatusOK']);
-									}
-								if(isset($_SESSION['AddECPStatusER'])){
-									echo '<div class="form_error_com">'.$_SESSION['AddECPStatusER'].'</div>';
-									unset($_SESSION['AddECPStatusER']);
-									}
-							?>
-							<input type="submit" class="form_button" value="ADD TO EPC" id="add_button">
+								<div class="form_row">
+									<label> DATE <input id="ecp_form_date" type="date" class="form_field" name="ecp_date" 
+											value="<?php echo date('Y-m-d')?>" onchange='change_form_data("date")'> </label>	
+									<label> START TIME <input id="ecp_form_start_time" type="time"  class="form_field" name="ecp_starttime" 
+											value="06:00" onchange='change_form_data("start_time")'> </label>
+									<label> END TIME <input id="ecp_form_end_time" type="time" class="form_field" name="ecp_endtime" 
+											value="14:00" onchange='change_form_data("end_time")'> </label>
+									<label> PLACE <input id="ecp_form_place" type="text" class="form_field" name="ecp_place" 
+											value="Gliwice" onchange='change_form_data("place")'> </label>
+								</div>
+								<div class="form_row">
+									<label> TIME <input id="ecp_form_time" type="number" class="form_field" name="ecp_time" 
+											onchange='change_form_data("time")' required> </label>
+									<label> WORK <select id="ecp_form_work" name="ecp_type_of_work" class="selector" onchange='change_form_data("work")'>
+										<?php $type_of_work_table=get_type_of_work_table();
+										for($i=0; $i<count($type_of_work_table); $i++){
+											echo "<option value='$type_of_work_table[$i]'>$type_of_work_table[$i]</option>";
+										}?>
+									</select></label>
+									<label> AH <input id="ecp_form_ah" type="checkbox" class="form_field" name="ecp_additionalhours" value=1 
+											onchange='change_form_data("ah")' > </label>	
+								</div>
+								<div class="form_row">
+									<label> DESC. <input id="ecp_form_desc" type="text" class="form_field" name="ecp_description" style="width:600px;" 
+											onchange='change_form_data("desc")'> </label>
+								</div>
+								<?php 
+									if (isset($_SESSION['AddECPStatusOK'])){
+										echo '<div class="form_success">'.$_SESSION['AddECPStatusOK'].'</div>';
+										unset($_SESSION['AddECPStatusOK']);
+										}
+									if(isset($_SESSION['AddECPStatusER'])){
+										echo '<div class="form_error_com">'.$_SESSION['AddECPStatusER'].'</div>';
+										unset($_SESSION['AddECPStatusER']);
+										}
+								?>
+								<input type="submit" class="form_button" value="ADD TO EPC" id="add_button" onclick="clear_form_inputs()">
 						</form>
 					</div>
 					<div id="mode2" class="single_mode_container">
@@ -440,7 +447,7 @@
 									unset($_SESSION['RemoveRecordErr']);
 									}
 							?>
-							<input type="submit" class="form_button" value="REMOVE" style="width:100px;" ></input>
+							<input type="submit" class="form_button" value="REMOVE" style="width:100px;"></input>
 						</form>
 					</div>					
 					<div id="mode3" class="single_mode_container">

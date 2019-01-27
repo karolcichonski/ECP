@@ -1089,13 +1089,14 @@ function get_overtime_num($sumTime, $date){
 function get_type_of_work_table(){
 	$table=array("Sprawdzanie symulacji","Przygotowanie robota do OLP","Przejazdy- główne programy","Przejazdy- serwisowe programy",
 	"Clash","Sygnały/actiony","Standard w programach","Download","Przygotowanie celek do wysłania","Dokumentacja",
-	"MRS/SOP","Zmiany symulacyjne","URLOP","Wolne","L4","Święto","Wgrywanie na fabryce","Inne");
+	"MRS/SOP","Zmiany symulacyjne","Wgrywanie na fabryce","Inne","URLOP","Wolne","L4","Święto");
 	return $table;
 }
 
 
 function create_summary_table($table, $projectID)
 {
+require('connect.php');
 $column_number=6;
 $colspan_num=6;
 $project_name=$table[0]['project_name'];
@@ -1109,9 +1110,10 @@ $sql="SELECT * FROM areas WHERE project_id=".$projectID;
 $num_of_areas=how_many_in_db1($sql);
 $sql="SELECT * FROM robots WHERE project_id=".$projectID." ORDER BY name ASC;";
 $num_of_robots=how_many_in_db1($sql);
-
+$sql="SELECT DISTINCT robot_id FROM ecp WHERE project_id=".$projectID.";";
+$num_of_teached_robots=how_many_in_db1($sql);
 $sql_old_ecp="SELECT * FROM old_ecp WHERE project LIKE '%".$project_name."%'";
-$sql_new_ecp="SELECT * FROM ecp WHERE project_id=".$projectID;
+$sql_new_ecp="SELECT DISTINCT start_time FROM ecp WHERE project_id=".$projectID;
 $NOR_old=how_many_in_db1($sql_old_ecp);
 $NOR_new=how_many_in_db1($sql_new_ecp);
 $NOR_sum=$NOR_old+$NOR_new;
@@ -1119,21 +1121,35 @@ $NOR_sum=$NOR_old+$NOR_new;
 	if($NOR_sum>0){
 			$sum_day_array[$row_number][0]="SUMARY";
 			$sum_day_array[$row_number][1]=$NOR_sum;
+			$sql="SELECT SUM(operation_time) FROM ecp WHERE project_id=$projectID";
+			if($result=$db->query($sql)){
+				$sum_time_for_project=$result->fetchAll();
+				$sum_day_array[$row_number][2]=$sum_time_for_project[0][0];
+			}
 			$row_number++;
 	}
 	
 for ($i=0; $i<count($workers_table); $i++){
 	$sql_old_ecp="SELECT * FROM old_ecp WHERE project LIKE '%".$project_name."%' and worker=".$workers_table[$i][0]."";
-	$sql_new_ecp="SELECT * FROM ecp WHERE project_id=".$projectID." and worker_id=".$workers_table[$i][0]."";
+	$sql_new_ecp="SELECT DISTINCT start_time FROM ecp WHERE project_id=".$projectID." and worker_id=".$workers_table[$i][0]."";
 	$NOR_old=how_many_in_db1($sql_old_ecp);
 	$NOR_new=how_many_in_db1($sql_new_ecp);
 	$NOR_sum=$NOR_old+$NOR_new;
+	
 	if($NOR_sum>0){
-			$sum_day_array[$row_number][0]=$workers_table[$i][1];
-			$sum_day_array[$row_number][1]=$NOR_sum;
+		$sum_day_array[$row_number][0]=$workers_table[$i][1];
+		$sum_day_array[$row_number][1]=$NOR_sum;
+			$sql="SELECT SUM(operation_time) FROM ecp WHERE project_id=$projectID AND worker_id=".$workers_table[$i][0];
+			if($result=$db->query($sql)){
+				$sum_time_for_worker=$result->fetchAll();
+				$sum_day_array[$row_number][2]=$sum_time_for_worker[0][0];
+				//$sum_day_array[$row_number][2]=999;
+			}
 			$row_number++;
-	}		
+	}
+		
 }
+
 
 
 echo '<div class="summary_graph" >';
@@ -1141,7 +1157,7 @@ $module_jq_name="summary_module1";
 echo "<div class='graph_header' onclick='toggle_summary($module_jq_name)'>";
 echo "<h3>Project $project_name overview</h3>";
 echo "</div>";
-echo '<div id="summary_module1" style:"display:none;" class="summary_module">';
+echo '<div id="summary_module1" style="display:none;" class="summary_module">';
 echo<<<END
 <table class="table">
 <tr bgcolor="#666666">
@@ -1199,7 +1215,7 @@ $module_jq_name="summary_module2";
 echo "<div class='graph_header' onclick='toggle_summary($module_jq_name)'>";
 echo "<h3>Areas/Robots table</h3>";
 echo "</div>";
-echo '<div id="summary_module2" style:"display:none;" class="summary_module">';
+echo '<div id="summary_module2" style="display:none;" class="summary_module">';
 echo '<table class="table">';
 echo "<tr bgcolor='#666666'>";
 echo "<th colspan=3>Areas ($num_of_areas)</th>";
@@ -1210,16 +1226,15 @@ echo "<th colspan=3>Robots ($num_of_robots)</th>";
 	for($i=0;$i<count($Areas_id_name_table);$i++){
 		$Robots_id_name_table=Robots_Id_Table($Areas_id_name_table[$i][0]);
 		$robots_count=count($Robots_id_name_table);
-		if($robots_count>0){
 			echo '<tr class="table_row" bgcolor="#BBBBBB"> ';
 			echo "<td rowspan=$robots_count colspan=3>".$Areas_id_name_table[$i][1]."</td>";
 				for($j=0;$j<$robots_count;$j++){
 					echo "<td class='table_row' colspan=3 bgcolor='#BBBBBB'>".$Robots_id_name_table[$j][1]."</td>";
 				echo '</tr>'; 
 				}
-		}else{		}
+
+		}
 		echo '<tr></tr>'; 
-	}
 echo "</tr>";
 echo '</table>';
 echo "</div>";
@@ -1231,28 +1246,34 @@ $module_jq_name="summary_module3";
 echo "<div class='graph_header' onclick='toggle_summary($module_jq_name)'>";
 echo "<h3>Sum of days on project</h3>";
 echo '</div>';
-echo '<div id="summary_module3" style:"display:none;" class="summary_module">';
+echo '<div id="summary_module3" style="display:none;" class="summary_module">';
 echo '<table class="no_border_table">';
-echo '<tr style="background-color:rgba(155, 155, 155,0.2);"">';
-echo '<td colspan=3 style="padding:5px;">Worker name</td>';
-echo '<td colspan=3 style="padding:5px;">Sum of day</td>';
+echo '<tr style="background-color:rgba(155, 155, 155,0.2);">';
+echo '<td style="padding:5px;">Worker name</td>';
+echo '<td style="padding:5px;">Sum of day</td>';
+echo '<td style="padding:5px;">Sum of hour</td>';
 echo '</tr>';
 echo '<tr></tr>';
 for ($i=0; $i<count($sum_day_array);$i++){
 	echo '<tr>';
-	echo '<td colspan=3 style="padding:5px;">'.$sum_day_array[$i][0].'</td>';
-	echo '<td colspan=3 style="padding:5px;">'.$sum_day_array[$i][1].'</td>';
+	echo '<td style="padding:5px;">'.$sum_day_array[$i][0].'</td>';
+	echo '<td style="padding:5px;">'.$sum_day_array[$i][1].'</td>';
+	echo '<td style="padding:5px;">'.$sum_day_array[$i][2].'</td>';
 	echo '</tr>';	
 }
 echo '<tr></tr>';
 echo '<tr bgcolor="#555555">';
-echo '<td colspan=6>Days/robots</td>';
+echo '<td></td><td>Days/robot</td><td> Hours/robot</td>';
 echo '</tr>';
 echo '<tr>';
-if ($num_of_robots!=0 && $sum_day_array[0][1]!=0){
-	echo '<td colspan=6>'.($sum_day_array[0][1]/$num_of_robots).'</td>';
+if ($num_of_teached_robots!=0 && $sum_day_array[0][1]!=0 && $sum_day_array[0][2]!=0){
+	//echo '<td colspan=3>'.($sum_day_array[0][1]/$num_of_robots).'</td>';
+	echo '<td></td><td>'.round($sum_day_array[0][1]/$num_of_teached_robots,1)."</td><td>".round($sum_day_array[0][2]/$num_of_teached_robots,1).'</td>';
+}elseif($num_of_teached_robots!=0 && $sum_day_array[0][1]!=0 && $sum_day_array[0][2]=0){
+	echo '<td>'.round($sum_day_array[0][1]/$num_of_teached_robots,1).'</td>';
+	//echo '<td colspan=3>'.($sum_day_array[0][1]/$num_of_robots)." / ".($sum_day_array[0][2]/$num_of_robots).'</td>';
 }else{
-	echo '<td colspan=6>No data</td>';	
+	echo '<td colspan=3>No data</td>';	
 }
 echo '</tr>';	
 echo '</table><br/></br>';
@@ -1270,7 +1291,7 @@ function workers_time_tasks_array($projectID){
 	$work_type=get_type_of_work_table();
 	$work_sum_table=array();
 	$workers_array=Workers_Id_aTable();
-	$num_of_work_type=12;
+	$num_of_work_type=14;
 	$sum_time_on_project=0;
 	if($result=$db->query($sql))
 	{

@@ -175,7 +175,7 @@ select:focus{
 }
 
 .single_mode_container{
-	display:none;
+	display:block;
 	margin-bottom:100px;
 }
 
