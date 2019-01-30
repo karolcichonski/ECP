@@ -1,8 +1,8 @@
 	<?php
-	$host="";
-	$db_user="";
+	$host="localhost";
+	$db_user="root";
 	$db_password="";
-	$db_name="";
+	$db_name="pfgliwice";
 	
 	try{
 	$db= new PDO("mysql:host={$host};dbname={$db_name};charset=utf8",$db_user, $db_password, [

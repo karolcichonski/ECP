@@ -447,11 +447,29 @@
 									unset($_SESSION['RemoveRecordErr']);
 									}
 							?>
-							<input type="submit" class="form_button" value="REMOVE" style="width:100px;"></input>
+							<input type="submit" class="form_button" value="REMOVE" style="width:100px;">
 						</form>
 					</div>					
 					<div id="mode3" class="single_mode_container">
-						test
+						<?php
+							$ecp_new_order=array();
+							$ecp_row_count=count($ecp_full_table);
+							//$handle = fopen("C:\Users\User\Desktop\\ecp.csv", "a");
+							for ($i=0; $i<$ecp_row_count; $i++){
+								$ecp_new_order[$i]= $ecp_full_table[$ecp_row_count-$i-1];
+								/*fwrite($handle, $ecp_new_order[$i]['KW'].";".$ecp_new_order[$i]['date'].";".$ecp_new_order[$i]['day'].";".
+								$ecp_new_order[$i]['place'].";".$ecp_new_order[$i]['project_name'].";".$ecp_new_order[$i]['area_name'].";".
+								$ecp_new_order[$i]['robot_name'].";".$ecp_new_order[$i]['description'].";".$ecp_new_order[$i]['start_time1'].";".
+								$ecp_new_order[$i]['end_time1'].";".$ecp_new_order[$i]['sum_time'].";"."\r\n");*/
+							}		
+							$db_name=array('KW','date','day','place','project_name','area_name','robot_name','description','start_time1','end_time1','sum_time');
+							$table_headers=array('KW','DATE','DAY','PLACE','PROJECT','AREA','ROBOT','DESCRIPTION','START','END','SUM');
+							$row_number=$NumberOfRecords;
+							$table_title="ECP";
+							$table_array=create_table($ecp_new_order, $table_title, $db_name, $table_headers, $row_number);
+							
+							//fclose($handle);
+						?>
 					</div>
 				</div>
 			</div>
